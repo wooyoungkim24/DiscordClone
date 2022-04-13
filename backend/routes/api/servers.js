@@ -1,0 +1,131 @@
+const express = require('express')
+const asyncHandler = require('express-async-handler');
+
+const { setTokenCookie, requireAuth } = require('../../utils/auth');
+
+const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
+const router = express.Router();
+const { Op } = require('sequelize');
+const {Member, Admin, Moderator, Server, TextChannel, VoiceChannel} = require('../../db/models')
+
+//Servers
+router.get("/all/:id", asyncHandler(async(req,res) =>{
+    const userId = req.params.id;
+
+    const members = await Member.findAll({
+        where:{
+            userId
+        },
+        include: Server
+    })
+    const moderators = await Moderator.findAll({
+        where:{
+            userId
+        },
+        include: Server
+    })
+    const admins = await Admin.findAll({
+        where:{
+            userId
+        },
+        include: Server
+    })
+    return res.json({
+        members,
+        moderators,
+        admins
+    })
+}))
+
+//Create new server and adds admin
+router.post("/", asyncHandler(async(req,res) =>{
+    const {userId} = req.body
+    const newServer = await Server.create(req.body)
+    const newServerId = newServer.id
+    const newAdmin = await Admin.create({
+        userId,
+        serverId: newServerId
+    })
+    return res.json({newServer,newAdmin})
+}))
+
+//New Member
+router.post("/new/member", asyncHandler(async(req,res) =>{
+    const newMember = await Member.create(req.body)
+    return res.json(newMember)
+}))
+
+router.post("/demote/member", asyncHandler(async(req,res) =>{
+
+    const {userId, serverId} = req.body
+    await Moderator.destroy({
+        where:{
+            [Op.and]:[
+                {userId:userId},
+                {serverId:serverId}
+            ]
+        }
+    })
+    const newMember = await Member.create(req.body)
+    return res.json(newMember)
+}))
+
+
+router.post("/new/moderator", asyncHandler(async(req,res) =>{
+    const {userId, serverId} = req.body;
+    await Member.destroy({
+        where:{
+            [Op.and]:[
+                {userId:userId},
+                {serverId:serverId}
+            ]
+        }
+    })
+    const newModerator = await Member.create(req.body)
+    return res.json(newModerator)
+}))
+
+
+//Text Channels
+router.get("/all/text/:id", asyncHandler(async(req,res) =>{
+    const serverId = req.params.id
+    const textChannels = await TextChannel.findAll({
+        where:{
+            serverId
+        }
+    })
+    return res.json(textChannels)
+}))
+router.post("/text", asyncHandler(async(req,res)=>{
+    const newTextChannel = await TextChannel.create(req.body)
+    return res.json(newTextChannel)
+}))
+router.put("/text", asyncHandler(async(req,res)=>{
+    const {id} = req.body
+    const updateText = await TextChannel.findByPk(id);
+    const updatedText = await updateText.update(req.body)
+    return res.json(updatedText)
+}))
+
+
+//Voice Channels
+router.get("/all/voice/:id", asyncHandler(async(req,res) =>{
+    const serverId = req.params.id
+    const voiceChannels = await VoiceChannel.findAll({
+        where:{
+            serverId
+        }
+    })
+    return res.json(voiceChannels)
+}))
+router.post("/voice", asyncHandler(async(req,res)=>{
+    const newVoiceChannel = await VoiceChannel.create(req.body)
+    return res.json(newVoiceChannel)
+}))
+
+
+
+
+
+module.exports = router;
