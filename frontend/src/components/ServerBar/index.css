@@ -1,0 +1,35 @@
+.serverBar{
+    border: black 2px solid;
+    width: 60px;
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow: scroll;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.serverBar::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+.home-button{
+    border: 2px solid blue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height:50px;
+}
+.home-button i{
+    font-size:30px;
+}
+.single-your-server img{
+    width: 50px;
+    height:50px;
+}
+.single-server-container{
+    border:2px solid red;
+    width: 60px;
+    height: 60px;
+}

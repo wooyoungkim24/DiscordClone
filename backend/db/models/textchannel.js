@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   TextChannel.associate = function(models) {
     // associations can be defined here
+    TextChannel.belongsTo(models.Server, {foreignKey:"serverId"})
   };
   return TextChannel;
 };

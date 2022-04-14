@@ -12,7 +12,7 @@ const { Member, Admin, Moderator, Server, TextChannel, VoiceChannel } = require(
 //Servers
 router.get("/all/:id", asyncHandler(async (req, res) => {
     const userId = req.params.id;
-
+    console.log("###myid", userId)
     const members = await Member.findAll({
         where: {
             userId
@@ -31,6 +31,7 @@ router.get("/all/:id", asyncHandler(async (req, res) => {
         },
         include: Server
     })
+    
     return res.json({
         members,
         moderators,
