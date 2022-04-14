@@ -31,7 +31,7 @@ router.get("/all/:id", asyncHandler(async (req, res) => {
         },
         include: Server
     })
-    
+
     return res.json({
         members,
         moderators,

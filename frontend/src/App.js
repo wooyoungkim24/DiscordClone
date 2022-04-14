@@ -6,8 +6,12 @@ import SignupFormPage from "./components/SignupFormPage";
 import * as sessionActions from "./store/session";
 import Navigation from "./components/Navigation";
 import ServerBar from "./components/ServerBar";
+import Server from "./components/Server";
+import io from "socket.io-client";
+import "./index.css"
+import { getServers } from "../../frontend/src/store/server";
 
-
+const socket = io.connect('/');
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -16,6 +20,7 @@ function App() {
   })
   useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
+
   }, [dispatch]);
 
 
@@ -25,14 +30,17 @@ function App() {
 
       {isLoaded && (
         <div className="app-holder">
-          <ServerBar user={user} />
+          <ServerBar user={user} socket={socket} />
           <Switch>
-            <Route path="/login">
+            <Route exact path = "/servers/:id">
+              <Server socket={socket} />
+            </Route>
+            {/* <Route path="/login">
               <LoginFormPage />
             </Route>
             <Route path="/signup">
               <SignupFormPage />
-            </Route>
+            </Route> */}
           </Switch>
         </div>
 

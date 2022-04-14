@@ -7,12 +7,14 @@ import "./index.css"
 
 
 
-function ServerBar({ user }) {
+function ServerBar({ user, socket }) {
     const dispatch = useDispatch();
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         dispatch(getServers(user.id)).then(() => setIsLoaded(true))
+
+
     }, [dispatch]);
     const yourServers = useSelector(state => {
         return state.myServers.myServers
@@ -26,10 +28,13 @@ function ServerBar({ user }) {
             <div className="home-button">
                 <i className="fab fa-discord"></i>
             </div>
+            <div className="server-divider">
+
+            </div>
             {isLoaded &&
                 <div className="your-servers">
                     {yourServers.map((ele, i) => (
-                        <IndividualServerButton key={i} server={ele}/>
+                        <IndividualServerButton key={i} server={ele} user={user} socket={socket}/>
                     ))}
                 </div>}
 

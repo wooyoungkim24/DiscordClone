@@ -1,6 +1,6 @@
 .serverBar{
-    border: black 2px solid;
-    width: 60px;
+    background-color: rgb(32,34,37);
+    width: 70px;
     min-height: 100vh;
     max-height: 100vh;
     overflow: scroll;
@@ -14,22 +14,24 @@
     background: transparent;  /* Optional: just make scrollbar invisible */
 }
 .home-button{
-    border: 2px solid blue;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 50px;
     height:50px;
+    background-color: rgb(88,101,242);
+    border-radius:10px;
+    margin-top: 10px;
+    cursor:pointer;
 }
 .home-button i{
     font-size:30px;
+    color:white;
 }
-.single-your-server img{
+.server-divider{
+    background-color: rgb(54,57,63);
+    height:2px;
     width: 50px;
-    height:50px;
-}
-.single-server-container{
-    border:2px solid red;
-    width: 60px;
-    height: 60px;
+    margin-top:10px;
+    margin-bottom:5px;
 }

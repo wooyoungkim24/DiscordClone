@@ -5,12 +5,16 @@ const csurf = require('csurf');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { environment } = require('./config');
+
+
 const isProduction = environment === 'production';
 const app = express();
+
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
 const { ValidationError } = require('sequelize');
+const { get_Current_User, user_Disconnect, join_User } = require("./utils/server");
 const routes = require('./routes');
 
 
@@ -43,6 +47,12 @@ app.use(
 app.use(routes); // Connect all the routes
 
 
+// const io = socket(server);
+
+
+
+
+
 app.use((_req, _res, next) => {
     const err = new Error("The requested resource couldn't be found.");
     err.title = "Resource Not Found";
@@ -68,4 +78,12 @@ app.use((err, _req, res, _next) => {
         stack: isProduction ? null : err.stack
     });
 });
+
+
+
+
+
+
+
+
 module.exports = app;

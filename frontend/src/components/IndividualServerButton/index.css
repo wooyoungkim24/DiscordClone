@@ -1,0 +1,70 @@
+@font-face{
+    font-family:GintoBold;
+    src: url("../../../public/ABCGintoNormal-Bold-Trial.woff2")
+}
+
+.single-your-server img{
+    width: 50px;
+    height:50px;
+    border-radius: 30px;
+}
+.single-server-container{
+
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.single-your-server{
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+}
+.hover-bubble{
+    position: absolute;
+    left: 90px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.little-arrow{
+    transform:rotate(45deg);
+    width: 30px;
+    height:30px;
+    z-index:-1;
+    background-color: black;
+    position: absolute;
+    left: 0px;
+}
+.single-server-hover{
+    background-color: black;
+    width: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 50px;
+    color:white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-family: GintoBold;
+    font-size: 16px;
+}
+.single-your-server img:hover{
+    animation-duration: .5s;
+    animation-name: onServerHover;
+}
+@keyframes onServerHover {
+    from{
+        border-radius:30px;
+    }
+    to{
+        border-radius: 10px;
+    }
+}
