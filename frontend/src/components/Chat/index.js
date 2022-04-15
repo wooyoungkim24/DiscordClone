@@ -20,22 +20,24 @@ function Chat({ socket, user, roomName, textId }) {
         return state.myServers.messageHistories
     })
 
+    const messageDispatch = (data) =>{
+        let messageHistory = data.text
+
+        let username = data.username
+        console.log('how many times does this hit')
+        const payload = {
+            messageHistory,
+            textId: textId,
+            username
+        }
+        dispatch(setMessages(payload))
+    }
 
     useEffect(() => {
-        
-        socket.on("message", (data) => {
-            let messageHistory = data.text
 
-            let username = data.username
-            console.log('how many times does this hit')
-            const payload = {
-                messageHistory,
-                textId: textId,
-                username
-            }
-            dispatch(setMessages(payload))
+        socket.on("message", messageDispatch);
 
-        });
+        return () => socket.off("message", messageDispatch)
     }, [socket]);
 
     const sendData = () => {
