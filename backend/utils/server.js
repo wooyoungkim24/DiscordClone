@@ -1,14 +1,21 @@
-const c_users = [];
+let c_users = [];
 
 // joins the user to the specific chatroom
 function join_User(id, username, room) {
-    const p_user = { id, username, room };
 
+    const p_user = { id, username, room };
+    let indexOfOld = c_users.findIndex(ele => ele.username === username)
+
+    if (indexOfOld  !== -1) {
+        c_users.splice(indexOfOld, 1);
+    }
     c_users.push(p_user);
     console.log(c_users, "users");
 
     return p_user;
 }
+
+
 
 console.log("user out", c_users);
 

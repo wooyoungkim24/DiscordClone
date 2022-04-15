@@ -20,6 +20,7 @@ db.sequelize
       //for a new user joining the room
       socket.on("joinRoom", ({ username, roomId }) => {
         //* create user
+
         const p_user = join_User(socket.id, username, roomId);
         console.log(socket.id, "=id");
         socket.join(p_user.room);

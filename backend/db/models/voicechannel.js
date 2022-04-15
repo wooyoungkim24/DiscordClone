@@ -1,7 +1,8 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const VoiceChannel = sequelize.define('VoiceChannel', {
-    serverId: DataTypes.INTEGER
+    serverId: DataTypes.INTEGER,
+    channelName: DataTypes.STRING,
   }, {});
   VoiceChannel.associate = function(models) {
     // associations can be defined here

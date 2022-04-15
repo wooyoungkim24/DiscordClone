@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, useLocation } from "react-router-dom";
 import LoginFormPage from "./components/LoginFormPage";
 import SignupFormPage from "./components/SignupFormPage";
 import * as sessionActions from "./store/session";
@@ -18,29 +18,47 @@ function App() {
   const user = useSelector(state => {
     return state.session.user
   })
+
+  const current_location = useLocation().pathname.split("/")[2]
+
+  const yourServers = useSelector(state => {
+    return state.myServers.myServers
+  })
+
   useEffect(() => {
-    dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
+    dispatch(sessionActions.restoreUser())
+      .then((user) => dispatch(getServers(user.id)))
+      .then(() => setIsLoaded(true));
 
   }, [dispatch]);
 
 
   return (
     <>
-      {/* <Navigation isLoaded={isLoaded} /> */}
+      {/* <Navigation isLoaded={isLoaded} />
+      <Switch>
+        <Route path="/login">
+          <LoginFormPage />
+        </Route>
+        <Route path="/signup">
+          <SignupFormPage />
+        </Route>
+      </Switch> */}
+
 
       {isLoaded && (
         <div className="app-holder">
-          <ServerBar user={user} socket={socket} />
+          <ServerBar user={user} socket={socket} servers={yourServers} />
           <Switch>
-            <Route exact path = "/servers/:id">
-              <Server socket={socket} />
+            <Route exact path="/servers/:id/:textId">
+              <Server key={current_location} socket={socket} servers = {yourServers} user = {user}/>
             </Route>
-            {/* <Route path="/login">
+            <Route path="/login">
               <LoginFormPage />
             </Route>
             <Route path="/signup">
               <SignupFormPage />
-            </Route> */}
+            </Route>
           </Switch>
         </div>
 

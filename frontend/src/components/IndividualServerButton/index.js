@@ -14,16 +14,17 @@ function IndividualServerButton({ server,user , socket}) {
     const history = useHistory();
 
 
-    const sendData= () =>{
+    // const sendData= () =>{
 
-        const username = user.username
-        const roomId =textChannels[server.id][0].id
-        socket.emit("joinRoom", {username, roomId})
+    //     const username = user.username
+    //     console.log('what are my channels', textChannels[server.id][0].id)
+    //     const roomId =textChannels[server.id][0].id
+    //     socket.emit("joinRoom", {username, roomId})
 
-    }
+    // }
     const handleServerClick = (e) =>{
         // sendData()
-        history.push(`/servers/${server.id}`)
+        history.push(`/servers/${server.id}/${textChannels[server.id][0].id}`)
 
     }
 
