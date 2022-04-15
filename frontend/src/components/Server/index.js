@@ -25,8 +25,9 @@ function Server({ socket, servers, user, isFirstLoaded }) {
     useEffect(() => {
         if (isFirstLoaded) {
             const username = user.username
+            const picture = user.profilePicture
 
-            socket.emit("joinRoom", { username, roomId: textId })
+            socket.emit("joinRoom", { username, roomId: textId, picture })
 
 
             setMyServer(servers.find(ele => (ele.id === parseInt(id))))
@@ -67,6 +68,7 @@ function Server({ socket, servers, user, isFirstLoaded }) {
                                 if (ele.id === parseInt(textId)) {
                                     if (textIndex !== i) {
                                         setTextIndex(i)
+                                        
                                     }
                                     return (
                                         <div key={i} className="selected-text-channel">

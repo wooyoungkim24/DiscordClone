@@ -1,9 +1,9 @@
 let c_users = [];
 
 // joins the user to the specific chatroom
-function join_User(id, username, room) {
+function join_User(id, username, room, picture) {
 
-    const p_user = { id, username, room };
+    const p_user = { id, username, room, picture };
     let indexOfOld = c_users.findIndex(ele => ele.username === username)
 
     if (indexOfOld  !== -1) {

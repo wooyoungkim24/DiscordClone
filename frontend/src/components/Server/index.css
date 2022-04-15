@@ -2,3 +2,17 @@
     border: none;
     border: 2px solid blue;
 }
+
+.server-page{
+    display: flex;
+    flex-direction: row;
+}
+
+.server-nav{
+    border:2px solid black;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 240px;
+    background-color: rgb(47,49,54);
+}

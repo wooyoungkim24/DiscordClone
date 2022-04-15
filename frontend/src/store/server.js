@@ -26,6 +26,12 @@ const setTextChannels = (channels) => {
     }
 }
 
+export const setInitialMessages = (id) => async dispatch =>{
+    const res = await csrfFetch(`/api/servers/single/text/${id}`)
+    const textChannelHistory = await res.json();
+    dispatch(setMessages(textChannelHistory.messageHistory))
+    return textChannelHistory
+}
 
 
 export const getTextChannels = (id) => async dispatch => {
@@ -64,7 +70,7 @@ export const getServers = (id) => async dispatch => {
 
 
 
-const initialState = { myServers: [], textChannels: {}, messageHistories: {} };
+const initialState = { myServers: [], textChannels: {}, messageHistory: [] };
 const serverReducer = (state = initialState, action) => {
 
     switch (action.type) {
@@ -89,25 +95,31 @@ const serverReducer = (state = initialState, action) => {
 
             }
         case SET_MESSAGES:
-            const { username, messageHistory, textId } = action.payload
+            const messageHistory  = action.payload
+            // console.log('what does history look like', messageHistory, Array.isArray(messageHistory))
             // console.log('please tell me', textId)
-            const temp = {...state.messageHistories}
-            let newObj = {
-                username: username,
-                message: messageHistory[messageHistory.length - 1]
+            let temp = [...state.messageHistory]
+            if(!messageHistory){
+                return {
+                    ...state,
+                    messageHistory: temp
+                }
             }
+            // const temp = {...state.messageHistories}
+            // let newObj = {
+            //     username: username,
+            //     message: messageHistory[messageHistory.length - 1]
+            // }
 
-            if (!temp[parseInt(textId)]) {
-                temp[textId] = [newObj]
-            }else{
-                temp[textId] = [...temp[textId], newObj]
-            }
-
-
+            // if (!temp[parseInt(textId)]) {
+            //     temp[textId] = [newObj]
+            // }else{
+            //     temp[textId] = [...temp[textId], newObj]
+            // }
 
             return {
                 ...state,
-                messageHistories: temp
+                messageHistory: [...messageHistory]
             }
         default:
             return state;

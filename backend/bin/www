@@ -18,10 +18,10 @@ db.sequelize
     io = socket(server);
     io.on("connection", (socket) => {
       //for a new user joining the room
-      socket.on("joinRoom", ({ username, roomId }) => {
+      socket.on("joinRoom", ({ username, roomId, picture }) => {
         //* create user
 
-        const p_user = join_User(socket.id, username, roomId);
+        const p_user = join_User(socket.id, username, roomId, picture);
         console.log(socket.id, "=id");
         socket.join(p_user.room);
 
@@ -37,11 +37,12 @@ db.sequelize
         let oldChannelName = toUpdate.channelName
         let oldServerId = toUpdate.serverId
         let oldMessageHistory = toUpdate.messageHistory
+
         if (oldMessageHistory.length < 30) {
           let newBody = {
             channelName: oldChannelName,
             serverId: oldServerId,
-            messageHistory: [...oldMessageHistory, text]
+            messageHistory: [...oldMessageHistory, {username: p_user.username,picture:p_user.picture, text: text}]
           }
           const updated = await toUpdate.update(newBody)
           io.to(p_user.room).emit("message", {
@@ -53,7 +54,7 @@ db.sequelize
           let newBody = {
             channelName: oldChannelName,
             serverId: oldServerId,
-            messageHistory: [...oldMessageHistory, text]
+            messageHistory: [...oldMessageHistory, {username: p_user.username, picture:p_user.picture,text: text}]
           }
           const updated = await toUpdate.update(newBody)
           io.to(p_user.room).emit("message", {

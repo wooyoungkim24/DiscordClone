@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
 
-import { getServers, getTextChannels, setMessages } from "../../store/server";
+import { getServers, getTextChannels, setMessages , setInitialMessages} from "../../store/server";
 
 
 
@@ -17,28 +17,29 @@ function Chat({ socket, user, roomName, textId }) {
     }
     const dispatch = useDispatch();
     const messages = useSelector(state => {
-        return state.myServers.messageHistories
+        return state.myServers.messageHistory
     })
 
     const messageDispatch = (data) =>{
         let messageHistory = data.text
-
+        console.log('what type is it', messageHistory)
         let username = data.username
-        console.log('how many times does this hit')
-        const payload = {
-            messageHistory,
-            textId: textId,
-            username
-        }
-        dispatch(setMessages(payload))
+        // console.log('how many times does this hit')
+
+        dispatch(setMessages(messageHistory))
     }
 
     useEffect(() => {
+
 
         socket.on("message", messageDispatch);
 
         return () => socket.off("message", messageDispatch)
     }, [socket]);
+
+    useEffect(() =>{
+        dispatch(setInitialMessages(textId))
+    }, [dispatch])
 
     const sendData = () => {
         if (text !== "") {
@@ -51,7 +52,7 @@ function Chat({ socket, user, roomName, textId }) {
             setText("");
         }
     };
-    console.log("where is it", messages[parseInt(textId)])
+
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -67,21 +68,23 @@ function Chat({ socket, user, roomName, textId }) {
                 {roomName}
             </div>
             <div className="text-channel-content">
-                {messages[parseInt(textId)] &&
+                {messages &&
 
                     <>
-                        {messages[parseInt(textId)].map((i) => {
+                        {messages.map((i) => {
                             if (i.username === user.username) {
                                 return (
                                     <div className="message-mine">
-                                        <p>{i.message}</p>
+                                        <img src={i.picture}></img>
+                                        <p>{i.text}</p>
                                         <span>{i.username}</span>
                                     </div>
                                 );
                             } else {
                                 return (
                                     <div className="message">
-                                        <p>{i.message} </p>
+                                        <img src={i.picture}></img>
+                                        <p>{i.text} </p>
                                         <span>{i.username}</span>
                                     </div>
                                 );

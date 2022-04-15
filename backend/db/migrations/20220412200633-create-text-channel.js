@@ -13,7 +13,7 @@ module.exports = {
         defaultValue: 'New Text Channel'
       },
       messageHistory:{
-        type: Sequelize.ARRAY(Sequelize.TEXT),
+        type: Sequelize.JSONB,
         defaultValue: []
       },
       serverId: {
