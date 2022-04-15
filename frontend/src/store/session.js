@@ -16,6 +16,14 @@ const removeUser = () => {
     };
 };
 
+export const getMyFriends = (id) => async dispatch =>{
+    const res = await csrfFetch(`/api/users/friends/${id}`)
+    const data = await res.json();
+    console.log('these are my friends',data)
+    // dispatch(setFriends(data))
+    // return data
+}
+
 export const login = (user) => async (dispatch) => {
     const { credential, password } = user;
     const response = await csrfFetch('/api/session', {

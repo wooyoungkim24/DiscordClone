@@ -42,11 +42,12 @@ db.sequelize
           let newBody = {
             channelName: oldChannelName,
             serverId: oldServerId,
-            messageHistory: [...oldMessageHistory, {username: p_user.username,picture:p_user.picture, text: text}]
+            messageHistory: [...oldMessageHistory, {date: new Date(), username: p_user.username,picture:p_user.picture, text: text}]
           }
           const updated = await toUpdate.update(newBody)
           io.to(p_user.room).emit("message", {
-            username: p_user.username,
+
+
             text: updated.messageHistory
           });
         }else{
@@ -54,12 +55,12 @@ db.sequelize
           let newBody = {
             channelName: oldChannelName,
             serverId: oldServerId,
-            messageHistory: [...oldMessageHistory, {username: p_user.username, picture:p_user.picture,text: text}]
+            messageHistory: [...oldMessageHistory, {date: new Date(),username: p_user.username, picture:p_user.picture,text: text}]
           }
           const updated = await toUpdate.update(newBody)
           io.to(p_user.room).emit("message", {
 
-            username: p_user.username,
+
             text: updated.messageHistory
           });
         }

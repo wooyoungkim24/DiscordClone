@@ -46,13 +46,15 @@ router.post(
 );
 router.get("/friends/:id", asyncHandler(async (req, res) => {
     const id = req.params.id
+    console.log('###what why', id)
     const friends = await UserFriend.findAll({
         where: {
             [Op.or]: [
                 { friend1: id },
                 { friend2: id }
             ]
-        }
+        },
+        include: User
     })
     let friendObjs = []
     friends.forEach(ele => {

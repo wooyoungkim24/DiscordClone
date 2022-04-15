@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
-
+import moment from 'moment'
 import { getServers, getTextChannels, setMessages , setInitialMessages} from "../../store/server";
 
 
@@ -22,8 +22,8 @@ function Chat({ socket, user, roomName, textId }) {
 
     const messageDispatch = (data) =>{
         let messageHistory = data.text
-        console.log('what type is it', messageHistory)
-        let username = data.username
+
+
         // console.log('how many times does this hit')
 
         dispatch(setMessages(messageHistory))
@@ -76,6 +76,9 @@ function Chat({ socket, user, roomName, textId }) {
                                 return (
                                     <div className="message-mine">
                                         <img src={i.picture}></img>
+                                        <div>
+                                            {moment(i.date).format("MMMM D YYYY")}
+                                        </div>
                                         <p>{i.text}</p>
                                         <span>{i.username}</span>
                                     </div>
@@ -84,6 +87,9 @@ function Chat({ socket, user, roomName, textId }) {
                                 return (
                                     <div className="message">
                                         <img src={i.picture}></img>
+                                        <div>
+                                            {moment(i.date).format("MMMM D YYYY")}
+                                        </div>
                                         <p>{i.text} </p>
                                         <span>{i.username}</span>
                                     </div>

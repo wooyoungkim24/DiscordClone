@@ -61,6 +61,10 @@ export const getServers = (id) => async dispatch => {
     return response;
 };
 
+export const addNewMember = (payload) => async dispatch => {
+    
+}
+
 // export const setInitialMessages = (textId) => async dispatch => {
 //     const res = await csrfFetch(`/api/single/text/${textId}`)
 //     const channel = await res.json();

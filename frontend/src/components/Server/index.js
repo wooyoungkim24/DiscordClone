@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
-
+import { Modal } from "../../context/modal"
 import { getServers, getTextChannels } from "../../store/server";
 import Chat from "../Chat";
 import "./index.css"
+import InvitePeopleModal from "../InvitePeopleModal";
+
 
 function Server({ socket, servers, user, isFirstLoaded }) {
     const { id, textId } = useParams();
@@ -15,6 +17,8 @@ function Server({ socket, servers, user, isFirstLoaded }) {
     const [myServer, setMyServer] = useState({})
     const [myTextChannels, setMyTextChannels] = useState({})
     const [isLoaded, setIsLoaded] = useState(false)
+    const [showServerDropDown, setShowServerDropDown] = useState(false)
+    const [showServerModal, setShowServerModal] = useState(false)
     // const textChannels = useSelector(state => {
     //     return state.myServers.textChannels
     // })
@@ -27,7 +31,7 @@ function Server({ socket, servers, user, isFirstLoaded }) {
             const username = user.username
             const picture = user.profilePicture
 
-            socket.emit("joinRoom", { username, roomId: textId, picture })
+            socket.emit("joinRoom", { username, roomId: `text${textId}`, picture })
 
 
             setMyServer(servers.find(ele => (ele.id === parseInt(id))))
@@ -46,6 +50,19 @@ function Server({ socket, servers, user, isFirstLoaded }) {
 
     // }
 
+    const handleServerDropDown = () => {
+        if (showServerDropDown) {
+            setShowServerDropDown(false)
+        }
+        else {
+            setShowServerDropDown(true)
+        }
+    }
+
+    const handleAddPeople = () =>{
+        setShowServerModal(true)
+    }
+
     const handleTextChange = (id) => {
         // sendData(id);
         history.push(`/servers/${myServer.id}/${id}`)
@@ -61,14 +78,32 @@ function Server({ socket, servers, user, isFirstLoaded }) {
 
                     <div className="server-nav">
                         <div className="server-title">
-                            {myServer.serverName}
+                            <button type="button" onClick={handleServerDropDown}>
+                                {myServer.serverName}
+                            </button>
+                            {showServerDropDown &&
+                                <div className="server-drop-down">
+                                    <button className="invite-people" type="button" onClick={handleAddPeople}>
+                                        Invite People
+                                    </button>
+                                    <button className="leave-server" type="button">
+                                        Leave Server
+                                    </button>
+                                </div>
+                            }
+                            {showServerModal &&
+                                <Modal onClose = {() => setShowServerModal(false)}>
+                                    <InvitePeopleModal user = {user} />
+                                </Modal>
+                            }
+
                         </div>
                         <div className="server-text-channels">
                             {myTextChannels.map((ele, i) => {
                                 if (ele.id === parseInt(textId)) {
                                     if (textIndex !== i) {
                                         setTextIndex(i)
-                                        
+
                                     }
                                     return (
                                         <div key={i} className="selected-text-channel">
@@ -90,9 +125,12 @@ function Server({ socket, servers, user, isFirstLoaded }) {
 
                             })}
                         </div>
+                        <div className="server-voice-channels">
+
+                        </div>
                     </div>
 
-                    <Chat socket={socket} user={user} key = {parseInt(textId)} textId={textId} roomName={myTextChannels[textIndex].channelName} />
+                    <Chat socket={socket} user={user} key={parseInt(textId)} textId={textId} roomName={myTextChannels[textIndex].channelName} />
 
 
                     <div className="server-members">
