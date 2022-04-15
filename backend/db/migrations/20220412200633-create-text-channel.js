@@ -12,6 +12,10 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: 'New Text Channel'
       },
+      messageHistory:{
+        type: Sequelize.ARRAY(Sequelize.TEXT),
+        defaultValue: []
+      },
       serverId: {
         allowNull: false,
         type: Sequelize.INTEGER,

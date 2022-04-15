@@ -2,49 +2,62 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
 
-import { getServers, getTextChannels } from "../../store/server";
+import { getServers, getTextChannels, setMessages } from "../../store/server";
 
 
 
 
-function Chat({ socket, user, roomName, setMessages, messages }) {
-
+function Chat({ socket, user, roomName, textId }) {
 
     const [text, setText] = useState("");
-
+    const [textChannelId, setTextChannelId] = useState(textId)
 
     const updateText = (e) => {
         setText(e.target.value)
     }
     const dispatch = useDispatch();
+    const messages = useSelector(state => {
+        return state.myServers.messageHistories
+    })
+
 
     useEffect(() => {
+        
         socket.on("message", (data) => {
-            let temp = messages;
-            temp.push({
-                userId: data.userId,
-                username: data.username,
-                text: data.text,
-            });
-            setMessages([...temp]);
+            let messageHistory = data.text
+
+            let username = data.username
+            console.log('how many times does this hit')
+            const payload = {
+                messageHistory,
+                textId: textId,
+                username
+            }
+            dispatch(setMessages(payload))
+
         });
     }, [socket]);
 
     const sendData = () => {
         if (text !== "") {
             //encrypt here
-
-            socket.emit("chat", text);
+            const payload = {
+                text,
+                textId
+            }
+            socket.emit("chat", payload);
             setText("");
         }
     };
+    console.log("where is it", messages[parseInt(textId)])
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     };
 
-    useEffect(scrollToBottom, [messages]);
+    useEffect(scrollToBottom,
+        [messages]);
     console.log("#######", roomName)
     return (
         <div className="text-channel-caontainer">
@@ -52,23 +65,30 @@ function Chat({ socket, user, roomName, setMessages, messages }) {
                 {roomName}
             </div>
             <div className="text-channel-content">
-                {messages.map((i) => {
-                    if (i.username === user.username) {
-                        return (
-                            <div className="message-mine">
-                                <p>{i.text}</p>
-                                <span>{i.username}</span>
-                            </div>
-                        );
-                    } else {
-                        return (
-                            <div className="message">
-                                <p>{i.text} </p>
-                                <span>{i.username}</span>
-                            </div>
-                        );
-                    }
-                })}
+                {messages[parseInt(textId)] &&
+
+                    <>
+                        {messages[parseInt(textId)].map((i) => {
+                            if (i.username === user.username) {
+                                return (
+                                    <div className="message-mine">
+                                        <p>{i.message}</p>
+                                        <span>{i.username}</span>
+                                    </div>
+                                );
+                            } else {
+                                return (
+                                    <div className="message">
+                                        <p>{i.message} </p>
+                                        <span>{i.username}</span>
+                                    </div>
+                                );
+                            }
+                        })}
+                    </>
+                }
+
+
                 <div ref={messagesEndRef} />
             </div>
             <div className="text-channel-input">

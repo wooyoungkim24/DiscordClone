@@ -46,12 +46,12 @@ function App() {
       </Switch> */}
 
 
-      {isLoaded && (
+
         <div className="app-holder">
-          <ServerBar user={user} socket={socket} servers={yourServers} />
+          <ServerBar isLoaded = {isLoaded} user={user} socket={socket} servers={yourServers} />
           <Switch>
             <Route exact path="/servers/:id/:textId">
-              <Server key={current_location} socket={socket} servers = {yourServers} user = {user}/>
+              <Server isFirstLoaded = {isLoaded} key={useLocation().pathname.split("/")[2]} socket={socket} servers = {yourServers} user = {user}/>
             </Route>
             <Route path="/login">
               <LoginFormPage />
@@ -62,7 +62,7 @@ function App() {
           </Switch>
         </div>
 
-      )}
+
     </>
   );
 }

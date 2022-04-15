@@ -147,6 +147,12 @@ router.get("/all/text/:id", asyncHandler(async (req, res) => {
     })
     return res.json(textChannels)
 }))
+
+router.get("/single/text/:id", asyncHandler(async(req,res)=>{
+    const channelId = req.params.id
+    const textChannel = await TextChannel.findByPk(channelId)
+    return res.json(textChannel)
+}))
 router.post("/text", asyncHandler(async (req, res) => {
     const newTextChannel = await TextChannel.create(req.body)
     return res.json(newTextChannel)

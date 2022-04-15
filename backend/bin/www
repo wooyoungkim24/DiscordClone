@@ -5,7 +5,7 @@ const socket = require("socket.io");
 const app = require('../app');
 const { get_Current_User, user_Disconnect, join_User } = require("../utils/server");
 const db = require('../db/models');
-
+const { TextChannel } = require("../db/models")
 // Check the database connection before starting the app
 let io;
 db.sequelize
@@ -28,15 +28,44 @@ db.sequelize
       });
 
       //user sending message
-      socket.on("chat", (text) => {
+      socket.on("chat", async (payload) => {
         //gets the room user and the message sent
+        const { text, textId } = payload
         const p_user = get_Current_User(socket.id);
 
-        io.to(p_user.room).emit("message", {
-          userId: p_user.id,
-          username: p_user.username,
-          text: text,
-        });
+        let toUpdate = await TextChannel.findByPk(parseInt(textId))
+        let oldChannelName = toUpdate.channelName
+        let oldServerId = toUpdate.serverId
+        let oldMessageHistory = toUpdate.messageHistory
+        if (oldMessageHistory.length < 30) {
+          let newBody = {
+            channelName: oldChannelName,
+            serverId: oldServerId,
+            messageHistory: [...oldMessageHistory, text]
+          }
+          const updated = await toUpdate.update(newBody)
+          io.to(p_user.room).emit("message", {
+            username: p_user.username,
+            text: updated.messageHistory
+          });
+        }else{
+          let remove = oldMessageHistory.shift()
+          let newBody = {
+            channelName: oldChannelName,
+            serverId: oldServerId,
+            messageHistory: [...oldMessageHistory, text]
+          }
+          const updated = await toUpdate.update(newBody)
+          io.to(p_user.room).emit("message", {
+
+            username: p_user.username,
+            text: updated.messageHistory
+          });
+        }
+
+
+
+
       });
 
       //when the user exits the room

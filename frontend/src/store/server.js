@@ -1,10 +1,10 @@
 
-
 import { csrfFetch } from './csrf';
 
 
 const SET_SERVERS = 'session/setServers'
 const SET_TEXT = 'session/setText'
+const SET_MESSAGES = 'session/setMessages'
 
 const setServers = (servers) => {
     return {
@@ -12,15 +12,23 @@ const setServers = (servers) => {
         payload: servers,
     };
 };
-const setTextChannels = (channels) =>{
+
+export const setMessages = (payload) => {
+    return {
+        type: SET_MESSAGES,
+        payload: payload
+    }
+}
+const setTextChannels = (channels) => {
     return {
         type: SET_TEXT,
-        payload:channels
+        payload: channels
     }
 }
 
 
-export const getTextChannels = (id) => async dispatch =>{
+
+export const getTextChannels = (id) => async dispatch => {
     const res = await csrfFetch(`/api/servers/all/text/${id}`)
     const textChannelsData = await res.json();
 
@@ -32,25 +40,31 @@ export const getServers = (id) => async dispatch => {
     const response = await csrfFetch(`/api/servers/all/${id}`);
     const data = await response.json();
     // console.log('thesea re my servers',data)
-    const {members, moderators, admins} = data;
+    const { members, moderators, admins } = data;
     const myServers = [];
-    members.forEach(ele =>{
+    members.forEach(ele => {
         myServers.push(ele.Server)
     })
-    moderators.forEach(ele =>{
+    moderators.forEach(ele => {
         myServers.push(ele.Server)
     })
-    admins.forEach(ele =>{
+    admins.forEach(ele => {
         myServers.push(ele.Server)
     })
     dispatch(setServers(myServers));
     return response;
 };
 
+// export const setInitialMessages = (textId) => async dispatch => {
+//     const res = await csrfFetch(`/api/single/text/${textId}`)
+//     const channel = await res.json();
+
+// }
 
 
 
-const initialState = { myServers:[], textChannels:{}};
+
+const initialState = { myServers: [], textChannels: {}, messageHistories: {} };
 const serverReducer = (state = initialState, action) => {
 
     switch (action.type) {
@@ -58,21 +72,42 @@ const serverReducer = (state = initialState, action) => {
             // console.log('what are my servers', action.payload)
             return {
                 ...state,
-                myServers:[...action.payload]
+                myServers: [...action.payload]
             }
         case SET_TEXT:
             let placeholder = initialState.textChannels
-            action.payload.forEach(ele =>{
-                if(!placeholder[ele.serverId]){
+            action.payload.forEach(ele => {
+                if (!placeholder[ele.serverId]) {
                     placeholder[ele.serverId] = [ele]
-                }else{
+                } else {
                     placeholder[ele.serverId] = [...placeholder[ele.serverId], ele]
                 }
             })
             return {
                 ...state,
-                textChannels:placeholder
+                textChannels: placeholder
 
+            }
+        case SET_MESSAGES:
+            const { username, messageHistory, textId } = action.payload
+            // console.log('please tell me', textId)
+            const temp = {...state.messageHistories}
+            let newObj = {
+                username: username,
+                message: messageHistory[messageHistory.length - 1]
+            }
+
+            if (!temp[parseInt(textId)]) {
+                temp[textId] = [newObj]
+            }else{
+                temp[textId] = [...temp[textId], newObj]
+            }
+
+
+
+            return {
+                ...state,
+                messageHistories: temp
             }
         default:
             return state;

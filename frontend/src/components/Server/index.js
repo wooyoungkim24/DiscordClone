@@ -6,10 +6,11 @@ import { getServers, getTextChannels } from "../../store/server";
 import Chat from "../Chat";
 import "./index.css"
 
-function Server({ socket, servers, user }) {
+function Server({ socket, servers, user, isFirstLoaded }) {
     const { id, textId } = useParams();
 
     const dispatch = useDispatch();
+
 
     const [myServer, setMyServer] = useState({})
     const [myTextChannels, setMyTextChannels] = useState({})
@@ -17,20 +18,23 @@ function Server({ socket, servers, user }) {
     // const textChannels = useSelector(state => {
     //     return state.myServers.textChannels
     // })
-    const [messages, setMessages] = useState([]);
+
     const [textIndex, setTextIndex] = useState(0)
 
     const history = useHistory();
     useEffect(() => {
-        const username = user.username
+        if (isFirstLoaded) {
+            const username = user.username
 
-        socket.emit("joinRoom", { username, roomId: textId })
+            socket.emit("joinRoom", { username, roomId: textId })
 
 
-        setMyServer(servers.find(ele => (ele.id === parseInt(id))))
-        dispatch(getTextChannels(id)).then((channels) => setMyTextChannels(channels))
-            .then(() => setIsLoaded(true))
-    }, [dispatch, id, textId])
+            setMyServer(servers.find(ele => (ele.id === parseInt(id))))
+            dispatch(getTextChannels(id)).then((channels) => setMyTextChannels(channels))
+                .then(() => setIsLoaded(true))
+        }
+
+    }, [textId, isFirstLoaded])
 
     // const sendData = (id) => {
 
@@ -86,7 +90,7 @@ function Server({ socket, servers, user }) {
                         </div>
                     </div>
 
-                    <Chat socket={socket} messages={messages} setMessages = {setMessages} user={user} roomName={myTextChannels[textIndex].channelName} />
+                    <Chat socket={socket} user={user} key = {parseInt(textId)} textId={textId} roomName={myTextChannels[textIndex].channelName} />
 
 
                     <div className="server-members">

@@ -7,7 +7,7 @@ import "./index.css"
 
 
 
-function ServerBar({ user, socket, servers }) {
+function ServerBar({ user, socket, servers , isLoaded}) {
     const dispatch = useDispatch();
 
 
@@ -24,12 +24,14 @@ function ServerBar({ user, socket, servers }) {
             <div className="server-divider">
 
             </div>
+            {isLoaded &&
+                <div className="your-servers">
+                    {servers.map((ele, i) => (
+                        <IndividualServerButton key={i} server={ele} user={user} socket={socket} />
+                    ))}
+                </div>
+            }
 
-            <div className="your-servers">
-                {servers.map((ele, i) => (
-                    <IndividualServerButton key={i} server={ele} user={user} socket={socket} />
-                ))}
-            </div>
 
         </div>
     );
