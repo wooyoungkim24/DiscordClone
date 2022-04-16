@@ -62,7 +62,7 @@ function App() {
           <Switch>
 
             <Route exact path="/">
-              {user !== null ? <Redirect to="/servers/me" /> : <Redirect to="/login" />}
+              {user !== null ? <Redirect to="/home" /> : <Redirect to="/login" />}
             </Route>
 
 
@@ -71,9 +71,10 @@ function App() {
             </Route>
 
 
-            <Route exact path="/servers/me">
+            <Route exact path="/home">
               <Home user={user} />
             </Route>
+
 
 
 

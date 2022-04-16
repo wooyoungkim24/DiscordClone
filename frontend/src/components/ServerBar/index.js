@@ -14,7 +14,7 @@ function ServerBar({ user, socket, servers , isLoaded}) {
     const history = useHistory();
 
     const handleHomePush = () =>{
-        history.push("/servers/me")
+        history.push("/home")
     }
 
 

@@ -10,7 +10,7 @@ import UserBar from "../UserBar";
 
 function Server({ socket, servers, user, isFirstLoaded }) {
     const { id, textId } = useParams();
-
+    console.log('are you hitting here?')
     const dispatch = useDispatch();
 
 
