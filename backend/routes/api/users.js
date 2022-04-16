@@ -2,7 +2,7 @@ const express = require('express')
 const asyncHandler = require('express-async-handler');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User, UserFriend } = require('../../db/models');
+const { User, UserFriend, DirectMessage } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { Op } = require('sequelize');
@@ -45,17 +45,62 @@ router.post(
     }),
 );
 
-router.get("/active/messages/:id", asyncHandler(async(req,res) =>{
+router.get("/active/messages/:id", asyncHandler(async (req, res) => {
     const id = req.params.id
     const activeDirectMessages = await User.findOne({
-        where :{
-            id:id
+        where: {
+            id: id
         },
         include: ["messager", "messagee"]
     })
+
     let dms = [...activeDirectMessages.messager, ...activeDirectMessages.messagee]
     return res.json(dms)
 }))
+
+
+router.post("/create/dm", asyncHandler(async (req, res) => {
+    const { userId, friendId } = req.body
+    let oldCheck = await DirectMessage.findOne({
+        where: {
+            [Op.or]:
+                [
+                    {
+                        [Op.and]: [
+                            { user1: userId },
+                            { user2: friendId }
+                        ]
+                    },
+                    {
+                        [Op.and]: [
+                            { user1: friendId },
+                            { user2: userId }
+                        ]
+                    }
+                ]
+        }
+    })
+
+    if (!oldCheck) {
+        await DirectMessage.create({
+            user1: userId,
+            user2: friendId
+        })
+    }
+    const activeDirectMessages = await User.findOne({
+        where: {
+            id: userId
+        },
+        include: ["messager", "messagee"]
+    })
+
+    let dms = [...activeDirectMessages.messager, ...activeDirectMessages.messagee]
+    return res.json(dms)
+}))
+
+
+
+
 router.get("/friends/:id", asyncHandler(async (req, res) => {
     const id = req.params.id
 
@@ -63,7 +108,7 @@ router.get("/friends/:id", asyncHandler(async (req, res) => {
         where: {
             id: id
         },
-        include:["User_Friends", "Friends"]
+        include: ["User_Friends", "Friends"]
     })
     // const friendsOtherWay = await User.findOne({
     //     where: {

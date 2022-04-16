@@ -32,8 +32,9 @@ function App() {
   useEffect(() => {
     dispatch(sessionActions.restoreUser())
       .then((user) => {
-        dispatch(getServers(user.id))
-
+        if(user){
+          dispatch(getServers(user.id))
+        }
       })
       .then(() => setIsLoaded(true));
 
@@ -53,38 +54,40 @@ function App() {
         </Route>
       </Switch> */}
 
+      {isLoaded &&
 
+        <div className="app-holder">
+          <ServerBar isLoaded={isLoaded} user={user} socket={socket} servers={yourServers} />
 
-      <div className="app-holder">
-        <ServerBar isLoaded={isLoaded} user={user} socket={socket} servers={yourServers} />
+          <Switch>
 
-        <Switch>
-          {isLoaded &&
             <Route exact path="/">
               {user !== null ? <Redirect to="/servers/me" /> : <Redirect to="/login" />}
             </Route>
-          }
 
 
-          <Route exact path="/servers/:id/:textId">
-            <Server isFirstLoaded={isLoaded} key={useLocation().pathname.split("/")[2]} socket={socket} servers={yourServers} user={user} />
-          </Route>
+            <Route exact path="/servers/:id/:textId">
+              <Server isFirstLoaded={isLoaded} socket={socket} servers={yourServers} user={user} />
+            </Route>
 
-          {isLoaded &&
+
             <Route exact path="/servers/me">
               <Home user={user} />
             </Route>
-          }
 
 
-          <Route path="/login">
-            <LoginFormPage />
-          </Route>
-          <Route path="/signup">
-            <SignupFormPage />
-          </Route>
-        </Switch>
-      </div>
+
+            <Route path="/login">
+              <LoginFormPage />
+            </Route>
+            <Route path="/signup">
+              <SignupFormPage />
+            </Route>
+          </Switch>
+        </div>
+      }
+
+
 
 
     </>

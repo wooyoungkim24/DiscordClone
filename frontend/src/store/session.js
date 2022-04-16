@@ -36,6 +36,16 @@ export const getDMs = (id) => async dispatch =>{
     dispatch(setMyMessages(data))
     return data
 }
+export const createDM = (payload) => async dispatch =>{
+
+    const res = await csrfFetch(`/api/users/create/dm`,{
+        method: "POST",
+        body: JSON.stringify(payload)
+    })
+    const newDM = await res.json();
+    dispatch(setMyMessages(newDM))
+    return newDM
+}
 
 export const getMyFriends = (id) => async dispatch =>{
     const res = await csrfFetch(`/api/users/friends/${id}`)
@@ -106,6 +116,8 @@ const sessionReducer = (state = initialState, action) => {
                 friends:[...action.payload]
             }
         case SET_MY_MESSAGES:
+            console.log('what are my messages', action.payload)
+
             return {
                 ...state,
                 myMessages:[...action.payload]
