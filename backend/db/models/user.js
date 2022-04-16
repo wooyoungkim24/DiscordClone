@@ -88,7 +88,14 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Admin, {foreignKey:"userId"})
     User.hasMany(models.Member, {foreignKey: "userId"})
     User.hasMany(models.Moderator, {foreignKey: "userId"})
-    User.belongsToMany(models.User, {as:'Children', through:"UserFriend"})
+
+    User.belongsToMany(models.User, {as:'Friends', through:"UserFriends", foreignKey:"friend1"})
+    User.belongsToMany(models.User, {as:'User_Friends', through:"UserFriends", foreignKey:"friend2"})
+
+
+    User.belongsToMany(models.User, {as:'messager', through:"DirectMessages", foreignKey:"user1"})
+    User.belongsToMany(models.User, {as:'messagee', through:"DirectMessages", foreignKey:"user2"})
+
   };
 
   return User;

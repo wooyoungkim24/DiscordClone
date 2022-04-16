@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, useHistory } from "react-router-dom";
 import { getServers } from "../../store/server";
 import IndividualServerButton from "../IndividualServerButton";
 import "./index.css"
@@ -10,16 +10,16 @@ import "./index.css"
 function ServerBar({ user, socket, servers , isLoaded}) {
     const dispatch = useDispatch();
 
-
+    const history = useHistory();
 
 
 
 
     return (
-
+        // onClick ={history.push("/servers/me")}
         <div className="serverBar">
-            <div className="home-button">
-                <i className="fab fa-discord"></i>
+            <div  className="home-button">
+                <i  className="fab fa-discord"></i>
             </div>
             <div className="server-divider">
 

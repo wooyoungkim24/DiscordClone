@@ -44,29 +44,49 @@ router.post(
         });
     }),
 );
+
+router.get("/active/messages/:id", asyncHandler(async(req,res) =>{
+    const id = req.params.id
+    const activeDirectMessages = await User.findOne({
+        where :{
+            id:id
+        },
+        include: ["messager", "messagee"]
+    })
+    let dms = [...activeDirectMessages.messager, ...activeDirectMessages.messagee]
+    return res.json(dms)
+}))
 router.get("/friends/:id", asyncHandler(async (req, res) => {
     const id = req.params.id
-    console.log('###what why', id)
-    const friends = await UserFriend.findAll({
+
+    const friendsOneWay = await User.findOne({
         where: {
-            [Op.or]: [
-                { friend1: id },
-                { friend2: id }
-            ]
+            id: id
         },
-        include: User
+        include:["User_Friends", "Friends"]
     })
-    let friendObjs = []
-    friends.forEach(ele => {
-        if (ele.friend1 === id) {
-            friendObjs.push(ele)
-        } else {
-            let currObj = {}
-            currObj["friend1"] = ele.friend2
-            currObj["friend2"] = ele.friend1
-            friendObjs.push(currObj)
-        }
-    })
+    // const friendsOtherWay = await User.findOne({
+    //     where: {
+    //         id: id
+    //     },
+    //     include:"Friends"
+    // })
+
+    let friendObjs = [...friendsOneWay.User_Friends, ...friendsOneWay.Friends]
+    // friendsOneWay.User_Friends.forEach(ele =>{
+    //     console.log('myfriendids', ele.id)
+    // })
+    // console.log('###what why', friendObjs)
+    // friends.forEach(ele => {
+    //     if (ele.friend1 === id) {
+    //         friendObjs.push(ele)
+    //     } else {
+    //         let currObj = {}
+    //         currObj["friend1"] = ele.friend2
+    //         currObj["friend2"] = ele.friend1
+    //         friendObjs.push(currObj)
+    //     }
+    // })
     return res.json(friendObjs)
 }))
 

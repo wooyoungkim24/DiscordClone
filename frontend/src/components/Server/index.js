@@ -6,7 +6,7 @@ import { getServers, getTextChannels } from "../../store/server";
 import Chat from "../Chat";
 import "./index.css"
 import InvitePeopleModal from "../InvitePeopleModal";
-
+import UserBar from "../UserBar";
 
 function Server({ socket, servers, user, isFirstLoaded }) {
     const { id, textId } = useParams();
@@ -67,7 +67,7 @@ function Server({ socket, servers, user, isFirstLoaded }) {
         // sendData(id);
         history.push(`/servers/${myServer.id}/${id}`)
     }
-    console.log('empty?', myTextChannels)
+    // console.log('empty?', myTextChannels)
 
     return (
 
@@ -93,7 +93,7 @@ function Server({ socket, servers, user, isFirstLoaded }) {
                             }
                             {showServerModal &&
                                 <Modal onClose = {() => setShowServerModal(false)}>
-                                    <InvitePeopleModal user = {user} />
+                                    <InvitePeopleModal user = {user} server={myServer} />
                                 </Modal>
                             }
 
@@ -127,6 +127,9 @@ function Server({ socket, servers, user, isFirstLoaded }) {
                         </div>
                         <div className="server-voice-channels">
 
+                        </div>
+                        <div className="user-bar">
+                            <UserBar  user = {user}/>
                         </div>
                     </div>
 

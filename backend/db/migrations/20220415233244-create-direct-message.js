@@ -1,18 +1,15 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('UserFriends', {
+    return queryInterface.createTable('DirectMessages', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      pending:{
-        type:Sequelize.BOOLEAN,
-        defaultValue: false
-      },
-      friend1: {
+      user1: {
+        allowNull:false,
         type: Sequelize.INTEGER,
         references:{
           model:{
@@ -20,13 +17,18 @@ module.exports = {
           }
         }
       },
-      friend2: {
+      user2: {
+        allowNull:false,
         type: Sequelize.INTEGER,
         references:{
           model:{
             tableName: "Users"
           }
         }
+      },
+      messageHistory: {
+        type: Sequelize.JSONB,
+        defaultValue: []
       },
       createdAt: {
         allowNull: false,
@@ -41,6 +43,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('UserFriends');
+    return queryInterface.dropTable('DirectMessages');
   }
 };
