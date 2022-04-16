@@ -3,9 +3,13 @@
 const { port } = require('../config');
 const socket = require("socket.io");
 const app = require('../app');
-const { get_Current_User, user_Disconnect, join_User } = require("../utils/server");
+const { get_Current_User, user_Disconnect, join_User, user_online } = require("../utils/server");
 const db = require('../db/models');
-const { TextChannel } = require("../db/models")
+const { TextChannel, DirectMessage, User } = require("../db/models")
+
+const { Op } = require('sequelize');
+
+
 // Check the database connection before starting the app
 let io;
 db.sequelize
@@ -15,9 +19,31 @@ db.sequelize
 
     // Start listening for connections
     let server = app.listen(port, () => console.log(`Listening on port ${port}...`));
-    io = socket(server);
+    io = socket(server,{
+      pingTimeout: 3000,
+      pingInterval: 3000
+    });
+
     io.on("connection", (socket) => {
       //for a new user joining the room
+
+
+      socket.on("online", async ({ username, userId }) => {
+        user_online(socket.id, username, userId)
+        let userUpdate = await User.findByPk(userId)
+        let oldProfilePicture = userUpdate.profilePicture
+        let oldEmail = userUpdate.email
+        let oldHashed = userUpdate.hashedPassword
+        let newBody = {
+          profilePicture: oldProfilePicture,
+          username,
+          email: oldEmail,
+          hashedPassword: oldHashed,
+          online: true
+        }
+        let userUpdated = await userUpdate.update(newBody)
+      })
+
       socket.on("joinRoom", ({ username, roomId, picture }) => {
         //* create user
 
@@ -42,7 +68,7 @@ db.sequelize
           let newBody = {
             channelName: oldChannelName,
             serverId: oldServerId,
-            messageHistory: [...oldMessageHistory, {date: new Date(), username: p_user.username,picture:p_user.picture, text: text}]
+            messageHistory: [...oldMessageHistory, { date: new Date(), username: p_user.username, picture: p_user.picture, text: text }]
           }
           const updated = await toUpdate.update(newBody)
           io.to(p_user.room).emit("message", {
@@ -50,12 +76,12 @@ db.sequelize
 
             text: updated.messageHistory
           });
-        }else{
+        } else {
           let remove = oldMessageHistory.shift()
           let newBody = {
             channelName: oldChannelName,
             serverId: oldServerId,
-            messageHistory: [...oldMessageHistory, {date: new Date(),username: p_user.username, picture:p_user.picture,text: text}]
+            messageHistory: [...oldMessageHistory, { date: new Date(), username: p_user.username, picture: p_user.picture, text: text }]
           }
           const updated = await toUpdate.update(newBody)
           io.to(p_user.room).emit("message", {
@@ -64,16 +90,83 @@ db.sequelize
             text: updated.messageHistory
           });
         }
-
-
-
-
       });
+      socket.on("dm", async (payload) => {
+        console.log('are you working ###', socket.id)
+        const { text, userId, otherId } = payload
+        const p_user = get_Current_User(socket.id);
+        const toUpdate = await DirectMessage.findOne({
+          where: {
+            [Op.or]: [
+              {
+                [Op.and]: [
+                  { user1: userId },
+                  { user2: otherId }
+                ]
+              },
+              {
+                [Op.and]: [
+                  { user1: otherId },
+                  { user2: userId }
+                ]
+              }
+            ]
+          }
+        })
+
+        let oldUser1 = toUpdate.user1
+        let oldUser2 = toUpdate.user2
+        let oldMessageHistory = toUpdate.messageHistory
+
+
+        if (oldMessageHistory.length < 30) {
+          let newBody = {
+            user1: oldUser1,
+            user2: oldUser2,
+            messageHistory: [...oldMessageHistory, { date: new Date(), username: p_user.username, picture: p_user.picture, text: text }]
+          }
+
+          const updated = await toUpdate.update(newBody)
+          io.to(p_user.room).emit("DMmessage", {
+            text: updated.messageHistory
+          });
+        } else {
+          let remove = oldMessageHistory.shift()
+          let newBody = {
+            user1: oldUser1,
+            user2: oldUser2,
+            messageHistory: [...oldMessageHistory, { date: new Date(), username: p_user.username, picture: p_user.picture, text: text }]
+          }
+
+          const updated = await toUpdate.update(newBody)
+          io.to(p_user.room).emit("DMmessage", {
+            text: updated.messageHistory
+          });
+        }
+
+      })
 
       //when the user exits the room
-      socket.on("disconnect", () => {
+      socket.on("disconnect", async (reason) => {
         //the user is deleted from array of users and a left room message displayed
         const p_user = user_Disconnect(socket.id);
+        console.log("###reason", reason)
+        if (p_user) {
+          let userUpdate = await User.findByPk(p_user)
+          let oldProfilePicture = userUpdate.profilePicture
+          let oldEmail = userUpdate.email
+          let oldHashed = userUpdate.hashedPassword
+          let oldUsername = userUpdate.username
+          let newBody = {
+            profilePicture: oldProfilePicture,
+            username: oldUsername,
+            email: oldEmail,
+            hashedPassword: oldHashed,
+            online: false
+          }
+          let userUpdated = await userUpdate.update(newBody)
+        }
+
       });
     });
 

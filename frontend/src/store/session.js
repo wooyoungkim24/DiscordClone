@@ -4,6 +4,7 @@ const SET_USER = 'session/setUser';
 const REMOVE_USER = 'session/removeUser';
 const SET_FRIENDS = 'session/setFriends'
 const SET_MY_MESSAGES= 'session/setMyMessages'
+const SET_MY_DMS = 'session/setMyDMs'
 
 const setMyMessages = (messages) =>{
     return {
@@ -11,7 +12,12 @@ const setMyMessages = (messages) =>{
         payload: messages
     }
 }
-
+export const setDMs = (messages) =>{
+    return {
+        type: SET_MY_DMS,
+        payload: messages
+    }
+}
 const setUser = (user) => {
     return {
         type: SET_USER,
@@ -36,6 +42,17 @@ export const getDMs = (id) => async dispatch =>{
     dispatch(setMyMessages(data))
     return data
 }
+
+export const setInitialDMs = (payload) => async dispatch =>{
+    const {userId, id} = payload
+    const res = await csrfFetch(`/api/users/single/dm/${userId}/${id}`)
+    const data = await res.json();
+    // console.log("is this wrong data", data)
+    dispatch(setDMs(data.messageHistory))
+    return data
+}
+
+
 export const createDM = (payload) => async dispatch =>{
 
     const res = await csrfFetch(`/api/users/create/dm`,{
@@ -96,7 +113,7 @@ export const logout = () => async (dispatch) => {
     dispatch(removeUser());
     return response;
   };
-const initialState = { user: null, friends:[] , myMessages:[]};
+const initialState = { user: null, friends:[] , myMessages:[], mySingleDMs:[]};
 
 const sessionReducer = (state = initialState, action) => {
     let newState;
@@ -121,6 +138,12 @@ const sessionReducer = (state = initialState, action) => {
             return {
                 ...state,
                 myMessages:[...action.payload]
+            }
+        case SET_MY_DMS:
+
+            return {
+                ...state,
+                mySingleDMs:[...action.payload]
             }
         default:
             return state;

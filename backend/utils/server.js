@@ -1,4 +1,5 @@
 let c_users = [];
+let online = [];
 
 // joins the user to the specific chatroom
 function join_User(id, username, room, picture) {
@@ -15,21 +16,34 @@ function join_User(id, username, room, picture) {
     return p_user;
 }
 
+function user_online(id,username,userId){
+    online.push({
+        id,
+        username,
+        userId
+    })
+    return online
+
+}
 
 
 console.log("user out", c_users);
 
 // Gets a particular user id to return the current user
 function get_Current_User(id) {
+    console.log('these are the users', c_users, id)
     return c_users.find((p_user) => p_user.id === id);
 }
 
 // called when the user leaves the chat and its user object deleted from array
 function user_Disconnect(id) {
     const index = c_users.findIndex((p_user) => p_user.id === id);
+    const onlineIndex = online.findIndex((p_user) => p_user.id === id);
+    console.log("what are myu oline", online, onlineIndex, id)
+    if (onlineIndex !== -1) {
 
-    if (index !== -1) {
-        return c_users.splice(index, 1)[0];
+        // return c_users.splice(index, 1)[0];
+        return online.splice(onlineIndex, 1)[0].userId;
     }
 }
 
@@ -37,4 +51,5 @@ module.exports = {
     join_User,
     get_Current_User,
     user_Disconnect,
+    user_online
 };

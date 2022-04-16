@@ -16,6 +16,7 @@ import Home from "./components/Home";
 
 const socket = io.connect('/');
 function App() {
+
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
   const [myUser, setMyUser] = useState({})
@@ -30,6 +31,9 @@ function App() {
   })
 
   useEffect(() => {
+
+
+
     dispatch(sessionActions.restoreUser())
       .then((user) => {
         if(user){
@@ -39,6 +43,13 @@ function App() {
       .then(() => setIsLoaded(true));
 
   }, [dispatch]);
+
+  useEffect(() =>{
+
+    if(isLoaded){
+      socket.emit("online", {username: user.username, userId: user.id})
+    }
+  },[isLoaded])
 
 
   // console.log('why is there no user', user)
@@ -71,8 +82,8 @@ function App() {
             </Route>
 
 
-            <Route exact path="/home">
-              <Home user={user} />
+            <Route path="/home">
+              <Home user={user} socket={socket}/>
             </Route>
 
 

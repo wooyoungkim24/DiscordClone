@@ -11,6 +11,10 @@ module.exports = {
       profilePicture:{
         type:Sequelize.STRING
       },
+      online:{
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       username: {
         type: Sequelize.STRING(30),
         allowNull: false,

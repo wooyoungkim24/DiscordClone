@@ -58,6 +58,29 @@ router.get("/active/messages/:id", asyncHandler(async (req, res) => {
     return res.json(dms)
 }))
 
+router.get("/single/dm/:userId/:id",asyncHandler(async(req,res) =>{
+    const {userId, id} = req.params
+    const singleDM = await DirectMessage.findOne({
+        where: {
+          [Op.or]: [
+            {
+              [Op.and]: [
+                { user1: userId },
+                { user2: id }
+              ]
+            },
+            {
+              [Op.and]: [
+                { user1: id },
+                { user2: userId }
+              ]
+            }
+          ]
+        }
+      })
+      return res.json(singleDM)
+}))
+
 
 router.post("/create/dm", asyncHandler(async (req, res) => {
     const { userId, friendId } = req.body

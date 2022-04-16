@@ -1,15 +1,15 @@
 
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter, Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, useHistory, useRouteMatch, Link , useLocation} from "react-router-dom";
 import { getServers, getTextChannels } from "../../store/server";
 import { getMyFriends, getDMs, createDM } from "../../store/session";
 import DirectMessage from "../DirectMessage";
+import FriendsList from "../FriendsList";
 
+function Home({ user ,socket}) {
 
-function Home({ user }) {
-
-    let {path, url} = useRouteMatch()
+    let { path, url } = useRouteMatch()
 
     const history = useHistory()
     const dispatch = useDispatch()
@@ -55,70 +55,79 @@ function Home({ user }) {
     return (
 
 
-            <div className="home-container">
-                <div className="home-nav">
-
-                </div>
-
-                <div className="home-friends">
-                    <div className="new-dm-button">
-                        DIRECT MESSAGES
-                        <button type="button" onClick={handleNewDm}>
-                            <i className="fas fa-plus"></i>
-                        </button>
-                        {showNewDm &&
-                            <div className="new-dm-popout">
-                                <div className="new-dm-popout-title">
-                                    Select Friend
-                                </div>
-                                <div className="new-dm-popout-friends">
-                                    {friends.map(ele => {
-                                        return (
-                                            <div>
-                                                <div className="new-dm-popout-friends-name">
-                                                    {ele.username}
-                                                </div>
-                                                <input
-                                                    type="radio"
-                                                    value={ele.id}
-                                                    onChange={selectFriend}
-                                                    checked={dmId === ele.id ? true : false}
-                                                >
-                                                </input>
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-                                <button type="button" onClick={handleCreateNewDm}>
-                                    Create DM
-                                </button>
-                            </div>
-                        }
-                    </div>
-                    <div className="active-dms">
-                        {dms.map(ele => {
-                            return (
-                                <div key={ele.id} onClick={() => history.push(`/home/${ele.id}`)} className="list-element-active-dm">
-                                    {ele.username}
-                                </div>
-                            )
-                        })}
-                    </div>
-
-                </div>
-
-                <Switch>
-                    <Route exact path={`/home/:id`}>
-                        {console.log('whywhwywhywhwywwhy')}
-                        <DirectMessage user={user} />
-                    </Route>
-
-                </Switch>
-
-
-
+        <div className="home-container">
+            <div className="home-nav">
 
             </div>
+
+            <div className="home-friends">
+                <div className="new-dm-button">
+                    DIRECT MESSAGES
+                    <button type="button" onClick={handleNewDm}>
+                        <i className="fas fa-plus"></i>
+                    </button>
+                    {showNewDm &&
+                        <div className="new-dm-popout">
+                            <div className="new-dm-popout-title">
+                                Select Friend
+                            </div>
+                            <div className="new-dm-popout-friends">
+                                {friends.map(ele => {
+                                    return (
+                                        <div>
+                                            <div className="new-dm-popout-friends-name">
+                                                {ele.username}
+                                            </div>
+                                            <input
+                                                type="radio"
+                                                value={ele.id}
+                                                onChange={selectFriend}
+                                                checked={dmId === ele.id ? true : false}
+                                            >
+                                            </input>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                            <button type="button" onClick={handleCreateNewDm}>
+                                Create DM
+                            </button>
+                        </div>
+                    }
+                </div>
+                <div className="active-dms">
+                    {dms.map(ele => {
+                        return (
+                            <div key={ele.id} onClick={() => history.push(`/home/${ele.id}`)} className="list-element-active-dm">
+                                {ele.username}
+                            </div>
+                            // <Link key={ele.id} to={`/home/${ele.id}`}>
+                            //     {ele.username}
+                            // </Link>
+                        )
+                    })}
+                </div>
+
+            </div>
+
+            <Switch>
+                <Route exact path ="/home">
+                    <FriendsList friends = {friends} />
+                </Route>
+                <Route exact path={`/home/:id`}>
+                    <DirectMessage user={user} socket={socket} key={useLocation().pathname.split("/")[1]}/>
+                </Route>
+            </Switch>
+
+
+
+
+
+
+
+
+
+        </div>
 
 
 

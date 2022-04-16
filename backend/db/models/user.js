@@ -16,6 +16,9 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
+    online:{
+      type: DataTypes.BOOLEAN
+    },
     profilePicture:{
       type: DataTypes.STRING
     },
