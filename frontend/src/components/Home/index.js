@@ -146,7 +146,7 @@ function Home({ user, socket }) {
                                     <button type="button" onClick={() => handleServerAccept(ele.id)}>
                                         Accept
                                     </button>
-                                    <button type="button" onClick={handleServerReject}>
+                                    <button type="button" onClick={() => handleServerReject(ele.id)}>
                                         Reject
                                     </button>
                                 </div>

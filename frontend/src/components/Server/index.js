@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
 import { Modal } from "../../context/modal"
-import { getServers, getTextChannels } from "../../store/server";
+import { deleteServer, getServers, getTextChannels, leaveServer } from "../../store/server";
 import Chat from "../Chat";
 import "./index.css"
 import InvitePeopleModal from "../InvitePeopleModal";
@@ -10,7 +10,7 @@ import UserBar from "../UserBar";
 
 function Server({ socket, servers, user, isFirstLoaded }) {
     const { id, textId } = useParams();
-    console.log('are you hitting here?')
+    console.log('are you hitting here?', servers)
     const dispatch = useDispatch();
 
 
@@ -32,10 +32,11 @@ function Server({ socket, servers, user, isFirstLoaded }) {
             const picture = user.profilePicture
 
             socket.emit("joinRoom", { username, roomId: `text${textId}`, picture })
-
+            console.log('waht about here', servers)
 
             setMyServer(servers.find(ele => (ele.id === parseInt(id))))
-            dispatch(getTextChannels(id)).then((channels) => setMyTextChannels(channels))
+            dispatch(getTextChannels(id))
+                .then((channels) => setMyTextChannels(channels))
                 .then(() => setIsLoaded(true))
         }
 
@@ -70,11 +71,17 @@ function Server({ socket, servers, user, isFirstLoaded }) {
     // console.log('empty?', myTextChannels)
 
     const handleDeleteServer = () =>{
-
+        dispatch(deleteServer(myServer.id))
+        history.push("/");
     }
 
     const handleLeaveServer = () =>{
-
+        const payload = {
+            userId: user.id,
+            serverId: myServer.id
+        }
+        dispatch(leaveServer(payload))
+        history.push("/");
     }
     const serverDropdown = () => {
         if (parseInt(myServer.userId) === parseInt(user.id)) {

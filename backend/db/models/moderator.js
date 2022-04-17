@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   Moderator.associate = function(models) {
     // associations can be defined here
     Moderator.belongsTo(models.User, {foreignKey:"userId"})
-    Moderator.belongsTo(models.Server, {foreignKey:"serverId"})
+    Moderator.belongsTo(models.Server, {foreignKey:"serverId",onDelete: 'CASCADE',hooks: true,})
   };
   return Moderator;
 };

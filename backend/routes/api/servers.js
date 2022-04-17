@@ -127,21 +127,21 @@ router.put("/", asyncHandler(async (req, res) => {
 }))
 
 router.delete("/", asyncHandler(async (req, res) => {
-    const { id, userId } = req.body
+    const { id} = req.body
     const deletedServer = await Server.findByPk(id)
     await Server.destroy({
         where: {
             id: id
         }
     })
-    await Admin.destroy({
-        where: {
-            [Op.and]: [
-                { serverId: id },
-                { userId: userId }
-            ]
-        }
-    })
+    // await Admin.destroy({
+    //     where: {
+    //         [Op.and]: [
+    //             { serverId: id },
+    //             { userId: userId }
+    //         ]
+    //     }
+    // })
     return res.json(deletedServer)
 }))
 
@@ -160,6 +160,28 @@ router.put("/edit/member", asyncHandler(async(req,res) =>{
     const updatedMember = await updateMember.update({pending:false})
     return res.json(updatedMember)
 }))
+
+router.delete("/delete/member/leave", asyncHandler(async(req,res) =>{
+    const {userId, serverId} = req.body
+    const deletedMember = await Member.findOne({
+        where:{
+            [Op.and]:[
+                {userId},
+                {serverId}
+            ]
+        },
+        include: Server
+    })
+    await Member.destroy({
+        where:{
+            [Op.and]:[
+                {userId},
+                {serverId}
+            ]
+        }
+    })
+    return res.json(deletedMember)
+}))
 router.delete("/delete/member", asyncHandler(async (req, res) => {
     const { id } = req.body
     const deletedMember = await Member.findByPk(id)
@@ -168,6 +190,7 @@ router.delete("/delete/member", asyncHandler(async (req, res) => {
             id: id
         }
     })
+    console.log('###did you delete')
     return res.json(deletedMember)
 }))
 

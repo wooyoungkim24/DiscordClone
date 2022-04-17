@@ -14,6 +14,7 @@ module.exports = {
       },
       friend1: {
         type: Sequelize.INTEGER,
+
         references:{
           model:{
             tableName: "Users"

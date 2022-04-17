@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Member.belongsTo(models.User, {as:"receivor",foreignKey:"userId"})
     Member.belongsTo(models.User, {as:"sender", foreignKey:"inviterId"})
-    Member.belongsTo(models.Server, {foreignKey:"serverId"})
+    Member.belongsTo(models.Server, {foreignKey:"serverId",onDelete: 'CASCADE',hooks: true,})
   };
   return Member;
 };

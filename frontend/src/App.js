@@ -23,6 +23,7 @@ function App() {
   const user = useSelector(state => {
     return state.session.user
   })
+  // const [yourServers, setYourServers] = useState([])
 
   const current_location = useLocation().pathname.split("/")[2]
 
@@ -38,6 +39,7 @@ function App() {
       .then((user) => {
         if (user) {
           dispatch(getServers(user.id))
+          // .then(servers => setYourServers(servers))
         }
       })
       .then(() => setIsLoaded(true));
@@ -80,7 +82,7 @@ function App() {
 
       }
 
-      {isLoaded && user &&
+      {isLoaded && user && yourServers.length &&
 
         <div className="app-holder">
           <ServerBar isLoaded={isLoaded} user={user} socket={socket} servers={yourServers} />

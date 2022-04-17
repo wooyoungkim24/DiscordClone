@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   VoiceChannel.associate = function(models) {
     // associations can be defined here
-    VoiceChannel.belongsTo(models.Server, {foreignKey:"serverId"})
+    VoiceChannel.belongsTo(models.Server, {foreignKey:"serverId",onDelete: 'CASCADE',hooks: true,})
   };
   return VoiceChannel;
 };

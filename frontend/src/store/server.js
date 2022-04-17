@@ -10,7 +10,8 @@ const SET_PENDING_SERVERS = 'session/setPendingServers'
 const CLEAR_PENDING_SERVER = 'session/clearPendingServer'
 const SET_ALL_SERVER_MEMBERS= 'session/setAllServerMembers'
 const CLEAR_PENDING_ADD_SERVER = 'session/clearPendingAddServer'
-const SET_ALL_SERVER_MEMBERS_PENDING= 'sessoin/setAllServerMembersPending'
+const SET_ALL_SERVER_MEMBERS_PENDING= 'session/setAllServerMembersPending'
+const REMOVE_SERVER = 'session/removeServer'
 
 
 const setServers = (servers) => {
@@ -39,6 +40,12 @@ const setPendingServers = (servers) =>{
     }
 }
 
+const removeServer = (server) => {
+    return {
+        type: REMOVE_SERVER,
+        payload: server
+    }
+}
 const setNewServer =(server) =>{
     return{
         type: SET_NEW_SERVER,
@@ -124,6 +131,16 @@ export const createNewServer = (payload) => async dispatch =>{
     return data
 }
 
+export const leaveServer = (payload) => async dispatch =>{
+
+    const res = await csrfFetch("/api/servers/delete/member/leave", {
+        method: "DELETE",
+        body: JSON.stringify(payload)
+    })
+    const data = await res.json()
+    dispatch(removeServer(data.Server))
+}
+
 export const setInitialMessages = (id) => async dispatch =>{
     const res = await csrfFetch(`/api/servers/single/text/${id}`)
     const textChannelHistory = await res.json();
@@ -164,18 +181,27 @@ export const getServers = (id) => async dispatch => {
         myServers.push(ele.Server)
     })
     dispatch(setServers(myServers));
-    return response;
+    return myServers;
 };
 
-export const addNewMember = (payload) => async dispatch => {
+// export const addNewMember = (payload) => async dispatch => {
 
-}
+// }
 
 // export const setInitialMessages = (textId) => async dispatch => {
 //     const res = await csrfFetch(`/api/single/text/${textId}`)
 //     const channel = await res.json();
 
 // }
+
+export const deleteServer = (id) => async dispatch =>{
+    const res = await csrfFetch("/api/servers", {
+        method: "DELETE",
+        body:JSON.stringify({id})
+    })
+    const data = await res.json();
+    dispatch(removeServer(data))
+}
 
 
 
@@ -288,6 +314,14 @@ const serverReducer = (state = initialState, action) => {
             return {
                 ...state,
                 pendingServers: [...servers]
+            }
+        case REMOVE_SERVER:
+            let currentServers = [...state.myServers]
+            let serverIndex = currentServers.findIndex(ele => parseInt(ele.id) === parseInt(action.payload.id))
+            currentServers.splice(serverIndex, 1)
+            return {
+                ...state,
+                myServers: currentServers
             }
         default:
             return state;
