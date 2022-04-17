@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
 import { Modal } from "../../context/modal"
-
+import UserSettings from "../UserSettings";
 
 function UserBar({user}) {
 
@@ -38,13 +38,13 @@ function UserBar({user}) {
                 {user.username}
             </div>
             <div>
-                <button type = "button">
+                <button type = "button" onClick={() => setShowUserSettings(true)}>
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
             {showUserSettings &&
                 <Modal onClose = {() => setShowUserSettings(false)}>
-
+                    <UserSettings />
                 </Modal>
             }
         </div>
