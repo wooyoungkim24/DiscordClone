@@ -44,6 +44,9 @@ const removeUser = () => {
     };
 };
 
+
+
+
 export const getDMs = (id) => async dispatch =>{
     const res = await csrfFetch(`/api/users/active/messages/${id}`)
     const data= await res.json()

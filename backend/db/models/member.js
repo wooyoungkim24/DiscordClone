@@ -2,11 +2,13 @@
 module.exports = (sequelize, DataTypes) => {
   const Member = sequelize.define('Member', {
     userId: DataTypes.INTEGER,
-    serverId: DataTypes.INTEGER
+    serverId: DataTypes.INTEGER,
+    pending: DataTypes.BOOLEAN
   }, {});
   Member.associate = function(models) {
     // associations can be defined here
-    Member.belongsTo(models.User, {foreignKey:"userId"})
+    Member.belongsTo(models.User, {as:"receivor",foreignKey:"userId"})
+    Member.belongsTo(models.User, {as:"sender", foreignKey:"inviterId"})
     Member.belongsTo(models.Server, {foreignKey:"serverId"})
   };
   return Member;

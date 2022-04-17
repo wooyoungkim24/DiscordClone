@@ -17,6 +17,19 @@ module.exports = {
           }
         }
       },
+      inviterId:{
+        type: Sequelize.INTEGER,
+        references:{
+          model:{
+            tableName: "Users"
+          }
+        }
+      },
+      pending:{
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       serverId: {
         allowNull: false,
         type: Sequelize.INTEGER,

@@ -90,6 +90,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     User.hasMany(models.Admin, {foreignKey:"userId"})
     User.hasMany(models.Member, {foreignKey: "userId"})
+    User.hasMany(models.Member, {foreignKey: "inviterId"})
     User.hasMany(models.Moderator, {foreignKey: "userId"})
 
     User.belongsToMany(models.User, {as:'Friends', through:"UserFriends", foreignKey:"friend1"})

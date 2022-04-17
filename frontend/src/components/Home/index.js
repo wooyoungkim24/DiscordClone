@@ -1,17 +1,19 @@
 
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter, Route, Switch, useHistory, useRouteMatch, Link , useLocation} from "react-router-dom";
-import { getServers, getTextChannels } from "../../store/server";
+import { BrowserRouter, Route, Switch, useHistory, useRouteMatch, Link, useLocation } from "react-router-dom";
+
+import { acceptInvite, getPendingServers, getServers, getTextChannels, rejectInvite } from "../../store/server";
 import { getMyFriends, getDMs, createDM } from "../../store/session";
 import DirectMessage from "../DirectMessage";
 import FriendsList from "../FriendsList";
 import UserBar from "../UserBar";
 
-function Home({ user ,socket}) {
+function Home({ user, socket }) {
 
     let { path, url } = useRouteMatch()
-
+    const [showFriends, setShowFriends] = useState(true)
+    const [showInvites, setShowInvites] = useState(false)
     const history = useHistory()
     const dispatch = useDispatch()
     const [isLoaded, setIsLoaded] = useState(false)
@@ -24,9 +26,14 @@ function Home({ user ,socket}) {
     const dms = useSelector(state => {
         return state.session.myMessages
     })
+
+    const serverInvites = useSelector(state => {
+        return state.myServers.pendingServers
+    })
     useEffect(() => {
         dispatch(getMyFriends(user.id))
             .then(() => dispatch(getDMs(user.id)))
+            .then(() => dispatch(getPendingServers(user.id)))
             .then(() => setIsLoaded(true))
     }, [dispatch])
 
@@ -62,8 +69,8 @@ function Home({ user ,socket}) {
         }
     }
 
-    const updateDM = (data) =>{
-        if(parseInt(data.friendId) === parseInt(user.id)){
+    const updateDM = (data) => {
+        if (parseInt(data.friendId) === parseInt(user.id)) {
             dispatch(getDMs(user.id))
         }
     }
@@ -86,14 +93,73 @@ function Home({ user ,socket}) {
         }
 
         dispatch(createDM(payload))
-        socket.emit("DMCreation", payload )
+        socket.emit("DMCreation", payload)
         setShowNewDm(false)
+    }
+
+    const handleSeeFriends = () => {
+        setShowFriends(true)
+        setShowInvites(false)
+    }
+    const handleCheckInvites = () => {
+        setShowFriends(false)
+        setShowInvites(true)
+    }
+
+    const handleServerAccept = (id) => {
+        dispatch(acceptInvite(id))
+    }
+    const handleServerReject = (id) => {
+        dispatch(rejectInvite(id))
     }
 
     return (
 
 
         <div className="home-container">
+            <div className="home-nav">
+                <button type="button" onClick={handleSeeFriends}>
+                    Friends
+                </button>
+                <button type="button" onClick={handleCheckInvites}>
+                    Invites
+                </button>
+            </div>
+
+            {showInvites &&
+                <div className="home-invites">
+                    {serverInvites.map(ele => {
+                        return (
+                            <div className="invite-container-individual">
+                                <div className="inviter">
+                                    <img src={ele.inviter.profilePicture}></img>
+                                    {ele.inviter.username}
+                                </div>
+                                <div className="invites-you-to">
+                                    Invites you to
+                                </div>
+                                <div className="server-invite">
+                                    <img src={ele.server.serverImage}></img>
+                                    {ele.server.serverName}
+                                </div>
+                                <div className="server-invite-buttons">
+                                    <button type="button" onClick={() => handleServerAccept(ele.id)}>
+                                        Accept
+                                    </button>
+                                    <button type="button" onClick={handleServerReject}>
+                                        Reject
+                                    </button>
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+
+            }
+
+
+
+
             <div className="home-friends">
                 <div className="new-dm-button">
                     DIRECT MESSAGES
@@ -148,16 +214,20 @@ function Home({ user ,socket}) {
                     })}
                 </div>
                 <div>
-                    <UserBar  user = {user}/>
+                    <UserBar user={user} />
                 </div>
             </div>
 
+
             <Switch>
-                <Route exact path ="/home">
-                    <FriendsList user = {user} friends = {friends} socket = {socket}/>
+                <Route exact path="/home">
+                    {showFriends &&
+                        <FriendsList user={user} friends={friends} socket={socket} />
+                    }
+
                 </Route>
                 <Route exact path={`/home/:id`}>
-                    <DirectMessage user={user} socket={socket} key={useLocation().pathname.split("/")[1]}/>
+                    <DirectMessage user={user} socket={socket} key={useLocation().pathname.split("/")[1]} />
                 </Route>
             </Switch>
 

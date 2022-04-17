@@ -7,7 +7,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const router = express.Router();
 const { Op } = require('sequelize');
-const { Member, Admin, Moderator, Server, TextChannel, VoiceChannel } = require('../../db/models')
+const { Member, Admin, Moderator, Server, TextChannel, VoiceChannel, User } = require('../../db/models')
 
 //Servers
 router.get("/all/:id", asyncHandler(async (req, res) => {
@@ -15,7 +15,10 @@ router.get("/all/:id", asyncHandler(async (req, res) => {
 
     const members = await Member.findAll({
         where: {
-            userId
+            [Op.and]:[
+                {userId:userId},
+                {pending:false}
+            ]
         },
         include: Server
     })
@@ -39,6 +42,56 @@ router.get("/all/:id", asyncHandler(async (req, res) => {
     })
 }))
 
+router.get("/all/members/:id", asyncHandler(async(req,res) =>{
+    const serverId = req.params.id
+    const members = await Member.findAll({
+        where:{
+            [Op.and]:[
+                {serverId},
+                {pending:false}
+            ]
+
+        }
+    })
+    const admin = await Admin.findOne({
+        where:{
+            serverId
+        }
+    })
+    let returnArray = [...members, admin]
+    return res.json(returnArray)
+}))
+
+
+router.get("/all/pending/members/:id", asyncHandler(async(req,res) =>{
+    const serverId = req.params.id
+    const members = await Member.findAll({
+        where:{
+            [Op.and]:[
+                {serverId},
+                {pending:true}
+            ]
+
+        }
+    })
+    return res.json(members)
+}))
+
+
+router.get("/all/pending/:id", asyncHandler(async(req,res) =>{
+    const userId = req.params.id
+    const pendingMembers = await Member.findAll({
+        where:{
+            [Op.and]:[
+                {userId:userId},
+                {pending:true}
+            ]
+        },
+        include:[Server,{model:User, as:'receivor'},{model:User, as:'sender'}]
+    })
+
+    return res.json(pendingMembers)
+}))
 //Create new server and adds admin
 router.post("/", asyncHandler(async (req, res) => {
     const { userId, serverImage, serverName } = req.body
@@ -48,11 +101,7 @@ router.post("/", asyncHandler(async (req, res) => {
         userId,
         serverId: newServerId
     })
-    const newMember = await Member.create({
-        userId: userId,
-        serverId: newServerId
-    })
-    const findNewMember = await Member.findOne({
+    const findNewAdmin = await Admin.findOne({
         where:{
             [Op.and]:[
                 {userId:userId},
@@ -67,7 +116,7 @@ router.post("/", asyncHandler(async (req, res) => {
         serverId: newServerId
     })
     // console.log("###what is the memebr object", findNewMember.Server)
-    return res.json(findNewMember.Server)
+    return res.json(findNewAdmin.Server)
 }))
 
 router.put("/", asyncHandler(async (req, res) => {
@@ -102,6 +151,14 @@ router.delete("/", asyncHandler(async (req, res) => {
 router.post("/new/member", asyncHandler(async (req, res) => {
     const newMember = await Member.create(req.body)
     return res.json(newMember)
+}))
+
+
+router.put("/edit/member", asyncHandler(async(req,res) =>{
+    const{id} = req.body
+    const updateMember = await Member.findByPk(id, {include:Server})
+    const updatedMember = await updateMember.update({pending:false})
+    return res.json(updatedMember)
 }))
 router.delete("/delete/member", asyncHandler(async (req, res) => {
     const { id } = req.body

@@ -59,7 +59,7 @@ function Server({ socket, servers, user, isFirstLoaded }) {
         }
     }
 
-    const handleAddPeople = () =>{
+    const handleAddPeople = () => {
         setShowServerModal(true)
     }
 
@@ -69,6 +69,38 @@ function Server({ socket, servers, user, isFirstLoaded }) {
     }
     // console.log('empty?', myTextChannels)
 
+    const handleDeleteServer = () =>{
+
+    }
+
+    const handleLeaveServer = () =>{
+
+    }
+    const serverDropdown = () => {
+        if (parseInt(myServer.userId) === parseInt(user.id)) {
+            return (
+                <div className="server-drop-down">
+                    <button className="invite-people" type="button" onClick={handleAddPeople}>
+                        Invite People
+                    </button>
+                    <button className="leave-server" onClick={handleDeleteServer} type="button">
+                        Delete Server
+                    </button>
+                </div>
+            )
+        } else {
+            return (
+                <div className="server-drop-down">
+                    <button className="invite-people" type="button" onClick={handleAddPeople}>
+                        Invite People
+                    </button>
+                    <button className="leave-server" onClick = {handleLeaveServer} type="button">
+                        Leave Server
+                    </button>
+                </div>
+            )
+        }
+    }
     return (
 
         <>
@@ -82,18 +114,11 @@ function Server({ socket, servers, user, isFirstLoaded }) {
                                 {myServer.serverName}
                             </button>
                             {showServerDropDown &&
-                                <div className="server-drop-down">
-                                    <button className="invite-people" type="button" onClick={handleAddPeople}>
-                                        Invite People
-                                    </button>
-                                    <button className="leave-server" type="button">
-                                        Leave Server
-                                    </button>
-                                </div>
+                                serverDropdown()
                             }
                             {showServerModal &&
-                                <Modal onClose = {() => setShowServerModal(false)}>
-                                    <InvitePeopleModal user = {user} server={myServer} />
+                                <Modal onClose={() => setShowServerModal(false)}>
+                                    <InvitePeopleModal user={user} server={myServer} />
                                 </Modal>
                             }
 
@@ -129,7 +154,7 @@ function Server({ socket, servers, user, isFirstLoaded }) {
 
                         </div>
                         <div className="user-bar">
-                            <UserBar  user = {user}/>
+                            <UserBar user={user} />
                         </div>
                     </div>
 
