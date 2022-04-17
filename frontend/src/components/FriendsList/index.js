@@ -2,17 +2,17 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router-dom";
+import {getMyFriends} from "../../store/session";
 
 
 
-
-function FriendsList({ friends }) {
+function FriendsList({ user,friends, socket }) {
 
     const [showAll, setShowAll] = useState(true)
     const [showOnline, setShowOnline] = useState(false)
     const [showPending, setShowPending] = useState(false)
 
-
+    const dispatch = useDispatch();
     const onlineDot = (ele) => {
         if (ele.online) {
             return (
@@ -44,6 +44,26 @@ function FriendsList({ friends }) {
             )
         }
     }
+
+    const reloadFriends = (data) =>{
+        let userId = data.userId
+        if(userId !== user.id){
+            console.log('are you even running #####')
+            dispatch(getMyFriends(user.id))
+        }
+
+    }
+
+
+    useEffect(() =>{
+        socket.on("loggedOn", reloadFriends)
+        socket.on("loggedOff", reloadFriends)
+
+        return () => {
+            socket.off("loggedOn", reloadFriends)
+            socket.off("loggedOff", reloadFriends)
+        }
+    }, [socket])
 
     const handleAll = () => {
         setShowOnline(false)

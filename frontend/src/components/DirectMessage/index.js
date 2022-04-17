@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router-dom";
-import { setDMs, setInitialDMs } from "../../store/session"
+import { setDMs, setInitialDMs, getDMs} from "../../store/session"
 import moment from 'moment'
 
 
@@ -45,7 +45,15 @@ function DirectMessage({ user, socket }) {
 
     const messageDispatch = (data) => {
         let messageHistory = data.text
+        let sender = data.userId
+        // future audio notif work around?
+        console.log('differences', sender, user.id)
+        if(parseInt(sender) !== parseInt(user.id)){
+            const audio = new Audio("https://citybrbphotos.s3.amazonaws.com/Discord_notification_-_sound_effect.mp3");
+            audio.play();
+        }
 
+        dispatch(getDMs(user.id))
         dispatch(setDMs(messageHistory))
     }
 
@@ -76,9 +84,9 @@ function DirectMessage({ user, socket }) {
             <div className="direct-message-title">
                 {id}
             </div>
+
             <div className="direct-message-chat-box">
                 {dmHistory &&
-
                     <>
                         {dmHistory.map((i) => {
                             if (i.username === user.username) {

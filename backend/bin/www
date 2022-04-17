@@ -29,7 +29,7 @@ db.sequelize
 
 
       socket.on("online", async ({ username, userId }) => {
-        user_online(socket.id, username, userId)
+        let online = user_online(socket.id, username, userId)
         let userUpdate = await User.findByPk(userId)
         let oldProfilePicture = userUpdate.profilePicture
         let oldEmail = userUpdate.email
@@ -42,6 +42,9 @@ db.sequelize
           online: true
         }
         let userUpdated = await userUpdate.update(newBody)
+        io.emit("loggedOn", {
+          userId
+        })
       })
 
       socket.on("joinRoom", ({ username, roomId, picture }) => {
@@ -128,6 +131,7 @@ db.sequelize
 
           const updated = await toUpdate.update(newBody)
           io.to(p_user.room).emit("DMmessage", {
+            userId,
             text: updated.messageHistory
           });
         } else {
@@ -140,6 +144,7 @@ db.sequelize
 
           const updated = await toUpdate.update(newBody)
           io.to(p_user.room).emit("DMmessage", {
+            userId,
             text: updated.messageHistory
           });
         }
@@ -165,6 +170,9 @@ db.sequelize
             online: false
           }
           let userUpdated = await userUpdate.update(newBody)
+          io.emit("loggedOff", {
+            userId: userUpdated.id
+          })
         }
 
       });

@@ -6,6 +6,7 @@ import { getServers, getTextChannels } from "../../store/server";
 import { getMyFriends, getDMs, createDM } from "../../store/session";
 import DirectMessage from "../DirectMessage";
 import FriendsList from "../FriendsList";
+import UserBar from "../UserBar";
 
 function Home({ user ,socket}) {
 
@@ -42,7 +43,21 @@ function Home({ user ,socket}) {
         }
     }
 
-
+    const onlineDot = (ele) => {
+        if (ele.online) {
+            return (
+                <div className="online-dot">
+                    <i class="fas fa-circle"></i>
+                </div>
+            )
+        } else {
+            return (
+                <div className="offline-dot">
+                    <i class="fas fa-circle"></i>
+                </div>
+            )
+        }
+    }
     const handleCreateNewDm = () => {
         const payload = {
             userId: user.id,
@@ -56,10 +71,6 @@ function Home({ user ,socket}) {
 
 
         <div className="home-container">
-            <div className="home-nav">
-
-            </div>
-
             <div className="home-friends">
                 <div className="new-dm-button">
                     DIRECT MESSAGES
@@ -99,6 +110,12 @@ function Home({ user ,socket}) {
                     {dms.map(ele => {
                         return (
                             <div key={ele.id} onClick={() => history.push(`/home/${ele.id}`)} className="list-element-active-dm">
+                                <div className="active-dm-image-container">
+                                    <img src={ele.profilePicture}></img>
+                                    <div className="active-dm-online-dot">
+                                        {onlineDot(ele)}
+                                    </div>
+                                </div>
                                 {ele.username}
                             </div>
                             // <Link key={ele.id} to={`/home/${ele.id}`}>
@@ -107,12 +124,14 @@ function Home({ user ,socket}) {
                         )
                     })}
                 </div>
-
+                <div>
+                    <UserBar  user = {user}/>
+                </div>
             </div>
 
             <Switch>
                 <Route exact path ="/home">
-                    <FriendsList friends = {friends} />
+                    <FriendsList user = {user} friends = {friends} socket = {socket}/>
                 </Route>
                 <Route exact path={`/home/:id`}>
                     <DirectMessage user={user} socket={socket} key={useLocation().pathname.split("/")[1]}/>

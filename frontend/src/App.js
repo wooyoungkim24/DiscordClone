@@ -36,7 +36,7 @@ function App() {
 
     dispatch(sessionActions.restoreUser())
       .then((user) => {
-        if(user){
+        if (user) {
           dispatch(getServers(user.id))
         }
       })
@@ -44,12 +44,12 @@ function App() {
 
   }, [dispatch]);
 
-  useEffect(() =>{
+  useEffect(() => {
 
-    if(isLoaded){
-      socket.emit("online", {username: user.username, userId: user.id})
+    if (isLoaded && user) {
+      socket.emit("online", { username: user.username, userId: user.id })
     }
-  },[isLoaded])
+  }, [isLoaded])
 
 
   // console.log('why is there no user', user)
@@ -64,18 +64,31 @@ function App() {
           <SignupFormPage />
         </Route>
       </Switch> */}
+      {isLoaded && !user &&
+        <>
+          <Redirect to="/login" />
+          <Switch>
+            <Route path="/login">
+              <LoginFormPage />
+            </Route>
+            <Route path="/signup">
+              <SignupFormPage />
+            </Route>
+          </Switch>
 
-      {isLoaded &&
+        </>
+
+      }
+
+      {isLoaded && user &&
 
         <div className="app-holder">
           <ServerBar isLoaded={isLoaded} user={user} socket={socket} servers={yourServers} />
 
           <Switch>
-
             <Route exact path="/">
-              {user !== null ? <Redirect to="/home" /> : <Redirect to="/login" />}
+              <Redirect to="/home" />
             </Route>
-
 
             <Route exact path="/servers/:id/:textId">
               <Server isFirstLoaded={isLoaded} socket={socket} servers={yourServers} user={user} />
@@ -83,11 +96,8 @@ function App() {
 
 
             <Route path="/home">
-              <Home user={user} socket={socket}/>
+              <Home user={user} socket={socket} />
             </Route>
-
-
-
 
             <Route path="/login">
               <LoginFormPage />
