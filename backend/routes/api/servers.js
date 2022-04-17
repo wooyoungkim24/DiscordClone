@@ -41,14 +41,23 @@ router.get("/all/:id", asyncHandler(async (req, res) => {
 
 //Create new server and adds admin
 router.post("/", asyncHandler(async (req, res) => {
-    const { userId } = req.body
+    const { userId, serverImage, serverName } = req.body
     const newServer = await Server.create(req.body)
     const newServerId = newServer.id
     const newAdmin = await Admin.create({
         userId,
         serverId: newServerId
     })
-    return res.json({ newServer, newAdmin })
+    const members = await Member.findOne({
+        where: {
+            [Op.and]:[
+                {userId:userId},
+                {serverId: newServer.id}
+            ]
+        },
+        include: Server
+    })
+    return res.json(members.Server)
 }))
 
 router.put("/", asyncHandler(async (req, res) => {

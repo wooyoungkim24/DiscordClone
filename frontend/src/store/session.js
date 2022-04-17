@@ -12,6 +12,14 @@ const setMyMessages = (messages) =>{
         payload: messages
     }
 }
+// export const setInitialActiveDms = (messages) =>{
+//     return {
+//         type: SET_MY_MESSAGES,
+
+//     }
+// }
+
+
 export const setDMs = (messages) =>{
     return {
         type: SET_MY_DMS,

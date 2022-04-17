@@ -30,6 +30,9 @@ function Home({ user ,socket}) {
             .then(() => setIsLoaded(true))
     }, [dispatch])
 
+
+
+
     const handleNewDm = () => {
         setShowNewDm(true)
     }
@@ -58,12 +61,32 @@ function Home({ user ,socket}) {
             )
         }
     }
+
+    const updateDM = (data) =>{
+        if(parseInt(data.friendId) === parseInt(user.id)){
+            dispatch(getDMs(user.id))
+        }
+    }
+
+
+    useEffect(() => {
+
+
+        socket.on("updateDM", updateDM);
+
+        return () => socket.off("updateDM", updateDM)
+    }, [socket]);
+
+
+
     const handleCreateNewDm = () => {
         const payload = {
             userId: user.id,
             friendId: dmId
         }
+
         dispatch(createDM(payload))
+        socket.emit("DMCreation", payload )
         setShowNewDm(false)
     }
 

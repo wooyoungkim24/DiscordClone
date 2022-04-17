@@ -4,6 +4,7 @@ import { csrfFetch } from './csrf';
 
 const SET_SERVERS = 'session/setServers'
 const SET_TEXT = 'session/setText'
+const SET_NEW_SERVER = 'session/setNewServer'
 const SET_MESSAGES = 'session/setMessages'
 
 const setServers = (servers) => {
@@ -12,6 +13,13 @@ const setServers = (servers) => {
         payload: servers,
     };
 };
+
+const setNewServer =(server) =>{
+    return{
+        type: SET_NEW_SERVER,
+        payload: server
+    }
+}
 
 export const setMessages = (payload) => {
     return {
@@ -24,6 +32,18 @@ const setTextChannels = (channels) => {
         type: SET_TEXT,
         payload: channels
     }
+}
+
+
+
+export const createNewServer = (payload) => async dispatch =>{
+    const res = await csrfFetch(`/api/servers`, {
+        method: "POST",
+        body: JSON.stringify(payload)
+    })
+    const data = await res.json();
+    dispatch(setNewServer(data))
+    return data
 }
 
 export const setInitialMessages = (id) => async dispatch =>{
@@ -62,7 +82,7 @@ export const getServers = (id) => async dispatch => {
 };
 
 export const addNewMember = (payload) => async dispatch => {
-    
+
 }
 
 // export const setInitialMessages = (textId) => async dispatch => {
@@ -124,6 +144,13 @@ const serverReducer = (state = initialState, action) => {
             return {
                 ...state,
                 messageHistory: [...messageHistory]
+            }
+        case SET_NEW_SERVER:
+            let x = [...state.myServers, action.payload];
+
+            return {
+                ...state,
+                myServers: x
             }
         default:
             return state;

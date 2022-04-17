@@ -47,6 +47,14 @@ db.sequelize
         })
       })
 
+      socket.on("DMCreation", ({userId, friendId}) =>{
+        io.emit("updateDM", {
+          userId,
+          friendId
+        })
+
+      })
+
       socket.on("joinRoom", ({ username, roomId, picture }) => {
         //* create user
 

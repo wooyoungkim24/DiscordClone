@@ -4,13 +4,15 @@ import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { getServers } from "../../store/server";
 import IndividualServerButton from "../IndividualServerButton";
 import "./index.css"
+import { Modal } from "../../context/modal"
+import NewServerModal from "../NewServerModal";
 
 
 
 function ServerBar({ user, socket, servers , isLoaded}) {
     const dispatch = useDispatch();
     const current_location = useLocation()
-
+    const [newServer, setNewServer] = useState(false)
     const history = useHistory();
 
     const handleHomePush = () =>{
@@ -36,6 +38,15 @@ function ServerBar({ user, socket, servers , isLoaded}) {
                 </div>
             }
 
+            <div className="new-server">
+                <i onClick = {() => setNewServer(true)} className="fas fa-plus"></i>
+            </div>
+
+            {newServer &&
+                <Modal onClose={() => setNewServer(false)}>
+                    <NewServerModal user={user} setNewServer = {setNewServer}/>
+                </Modal>
+            }
 
         </div>
     );
