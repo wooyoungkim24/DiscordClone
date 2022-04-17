@@ -48,16 +48,26 @@ router.post("/", asyncHandler(async (req, res) => {
         userId,
         serverId: newServerId
     })
-    const members = await Member.findOne({
-        where: {
+    const newMember = await Member.create({
+        userId: userId,
+        serverId: newServerId
+    })
+    const findNewMember = await Member.findOne({
+        where:{
             [Op.and]:[
                 {userId:userId},
-                {serverId: newServer.id}
+                {serverId: newServerId}
             ]
         },
         include: Server
     })
-    return res.json(members.Server)
+
+    const newTextChannel = await TextChannel.create({
+        channelName: "General",
+        serverId: newServerId
+    })
+    // console.log("###what is the memebr object", findNewMember.Server)
+    return res.json(findNewMember.Server)
 }))
 
 router.put("/", asyncHandler(async (req, res) => {
