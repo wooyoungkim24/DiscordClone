@@ -15,6 +15,7 @@ const REMOVE_SERVER = 'session/removeServer'
 const SET_ALL_NOT_ADMIN_MEMBERS = 'session/setAllNotAdminMembers'
 const REMOVE_NOT_ADMIN_MEMBER = 'session/kickMember'
 const SET_MY_TEXT = 'session/setMyText'
+const SET_MEMBERS_AND_ADMINS = 'session/setMembersAndAdmins'
 
 const setServers = (servers) => {
     return {
@@ -98,6 +99,25 @@ const setAllNotAdminMembers = (members) =>{
         type: SET_ALL_NOT_ADMIN_MEMBERS,
         payload: members
     }
+}
+const setMembersAndAdmins = (people) =>{
+    return {
+        type: SET_MEMBERS_AND_ADMINS,
+        payload: people
+    }
+}
+
+
+export const getMembersAndAdmins = (serverId) => async dispatch =>{
+    const res = await csrfFetch(`/api/servers/all/members/only/${serverId}`)
+    const members = await res.json();
+    const res2 = await csrfFetch(`/api/servers/all/admins/${serverId}`)
+    const admin = await res2.json()
+    const payload = {
+        members:members,
+        admin:admin
+    }
+    dispatch(setMembersAndAdmins(payload))
 }
 
 export const getAllServerMembers = (serverId) => async dispatch =>{
@@ -292,7 +312,7 @@ export const deleteServer = (id) => async dispatch =>{
 
 
 
-const initialState = {myTextChannels:[],nonAdminServerMembers:[],serverMembers:[],pendingServerMembers:[], myServers: [], textChannels: {}, messageHistory: [], pendingServers:[] };
+const initialState = {membersAndAdmins: {}, myTextChannels:[],nonAdminServerMembers:[],serverMembers:[],pendingServerMembers:[], myServers: [], textChannels: {}, messageHistory: [], pendingServers:[] };
 const serverReducer = (state = initialState, action) => {
 
     switch (action.type) {
@@ -301,6 +321,14 @@ const serverReducer = (state = initialState, action) => {
             return {
                 ...state,
                 myServers: [...action.payload]
+            }
+        case SET_MEMBERS_AND_ADMINS:
+            let MA = {}
+            MA["members"] = action.payload.members
+            MA["admin"] = action.payload.admin
+            return {
+                ...state,
+                membersAndAdmins:MA
             }
         case SET_TEXT:
             let placeholder = initialState.textChannels

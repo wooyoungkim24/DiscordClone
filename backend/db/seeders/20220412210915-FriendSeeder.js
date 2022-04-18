@@ -26,11 +26,11 @@ module.exports = {
 
       { friend1: 3, friend2: 4 , pending:false},
       { friend1: 3, friend2: 5 , pending:false},
-      { friend1: 3, friend2: 6 , pending:true},
+      { friend1: 3, friend2: 6 , pending:false},
 
 
       { friend1: 4, friend2: 5 , pending:false},
-      { friend1: 4, friend2: 6 , pending:true},
+      { friend1: 4, friend2: 6 , pending:false},
 
 
       { friend1: 5, friend2: 6 , pending:false},

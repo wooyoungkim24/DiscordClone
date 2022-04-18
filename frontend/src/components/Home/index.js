@@ -37,7 +37,25 @@ function Home({ user, socket }) {
             .then(() => setIsLoaded(true))
     }, [dispatch])
 
+    const handleYouGotAdded = (data) => {
 
+        if (data.otherUser.id === user.id) {
+            alert(`${data.user.username} added you!`)
+        }
+
+    }
+
+    useEffect(() => {
+        socket.on("youGotAdded", handleYouGotAdded)
+
+
+
+
+        return () => {
+            socket.off("youGotAdded", handleYouGotAdded)
+
+        }
+    }, [socket])
 
 
     const handleNewDm = () => {
@@ -108,6 +126,7 @@ function Home({ user, socket }) {
 
     const handleServerAccept = (id) => {
         dispatch(acceptInvite(id))
+
     }
     const handleServerReject = (id) => {
         dispatch(rejectInvite(id))

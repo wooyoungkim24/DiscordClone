@@ -1,8 +1,8 @@
-import React, { useState, useEffect ,useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
 import { Modal } from "../../context/modal"
-import { deleteServer, getServers, getTextChannels, leaveServer } from "../../store/server";
+import { deleteServer, getServers, getTextChannels, leaveServer, getMembersAndAdmins } from "../../store/server";
 import Chat from "../Chat";
 import "./index.css"
 import InvitePeopleModal from "../InvitePeopleModal";
@@ -15,6 +15,19 @@ function Server({ socket, servers, user, isFirstLoaded }) {
     // console.log('are you hitting here?', servers)
     const dispatch = useDispatch();
 
+    const history = useHistory();
+    let serverIds = [];
+    servers.forEach(ele => {
+        serverIds.push(ele.id)
+    })
+
+    if (!serverIds.includes(parseInt(id))) {
+        history.push("/")
+    }
+
+    const membersAndAdmin = useSelector(state => {
+        return state.myServers.membersAndAdmins
+    })
 
     const [myServer, setMyServer] = useState({})
     const [myTextChannels, setMyTextChannels] = useState({})
@@ -31,7 +44,6 @@ function Server({ socket, servers, user, isFirstLoaded }) {
 
     const [textIndex, setTextIndex] = useState(0)
 
-    const history = useHistory();
     useEffect(() => {
         if (isFirstLoaded) {
             const username = user.username
@@ -41,8 +53,14 @@ function Server({ socket, servers, user, isFirstLoaded }) {
             console.log('waht about here', servers)
 
             setMyServer(servers.find(ele => (ele.id === parseInt(id))))
+
+
+
             dispatch(getTextChannels(id))
-                .then((channels) => setMyTextChannels(channels))
+                .then((channels) =>
+
+                    setMyTextChannels(channels)
+                )
                 // .then(() => setEditPicture(myServer.serverImage))
                 // .then(() => setEditName(myServer.serverName))
                 .then(() => setIsLoaded(true))
@@ -51,7 +69,11 @@ function Server({ socket, servers, user, isFirstLoaded }) {
     }, [textId, isFirstLoaded])
 
 
-
+    useEffect(() => {
+        if (isLoaded) {
+            dispatch(getMembersAndAdmins(myServer.id))
+        }
+    }, [isLoaded])
 
 
 
@@ -63,7 +85,37 @@ function Server({ socket, servers, user, isFirstLoaded }) {
     //     socket.emit("joinRoom", { username, roomId })
 
     // }
+    const onlineDot = (ele) => {
+        if (ele.online) {
+            return (
+                <div className="online-dot">
+                    <i class="fas fa-circle"></i>
+                </div>
+            )
+        } else {
+            return (
+                <div className="offline-dot">
+                    <i class="fas fa-circle"></i>
+                </div>
+            )
+        }
+    }
 
+    const online = (ele) => {
+        if (ele.online) {
+            return (
+                <div className="online-status">
+                    Online
+                </div>
+            )
+        } else {
+            return (
+                <div className="offline-status">
+                    Offline
+                </div>
+            )
+        }
+    }
     const handleServerDropDown = () => {
         if (showServerDropDown) {
             setShowServerDropDown(false)
@@ -108,7 +160,7 @@ function Server({ socket, servers, user, isFirstLoaded }) {
                     </button>
                     {showEditServer &&
                         <Modal onClose={() => setShowEditServer(false)}>
-                            <EditServerModal setMyServer = {setMyServer} server={myServer} user = {user} setShowEditServer={setShowEditServer}/>
+                            <EditServerModal setMyServer={setMyServer} server={myServer} user={user} setShowEditServer={setShowEditServer} />
                         </Modal>
                     }
                     <button className="admin-abilities-button" type="button" onClick={() => setShowAdminPrivilege(true)}>
@@ -116,7 +168,7 @@ function Server({ socket, servers, user, isFirstLoaded }) {
                     </button>
                     {showAdminPrivilege &&
                         <Modal onClose={() => setShowAdminPrivilege(false)}>
-                            <AdminPrivilegeModal setMyTextChannels = {setMyTextChannels} server={myServer} user = {user} setShowAdminPrivilege={setShowAdminPrivilege}/>
+                            <AdminPrivilegeModal setMyTextChannels={setMyTextChannels} server={myServer} user={user} setShowAdminPrivilege={setShowAdminPrivilege} />
                         </Modal>
                     }
                     <button className="leave-server" onClick={handleDeleteServer} type="button">
@@ -192,7 +244,7 @@ function Server({ socket, servers, user, isFirstLoaded }) {
                         </div>
                         <div className="user-bar">
 
-                            <UserBar socket = {socket} user={user} />
+                            <UserBar socket={socket} user={user} />
                         </div>
                     </div>
 
@@ -200,7 +252,44 @@ function Server({ socket, servers, user, isFirstLoaded }) {
 
 
                     <div className="server-members">
+                        <div className="admin-server">
+                            <div className="admin-server-title">
+                                Administrator
+                            </div>
+                            <div className="admin">
+                                <img src={membersAndAdmin.admin.User.profilePicture}></img>
+                                <div className="admin-online-dot">
+                                    {onlineDot(membersAndAdmin.admin.User)}
+                                </div>
+                                <div className="server-admin-name">
+                                    {membersAndAdmin.admin.User.username}
+                                    {online(membersAndAdmin.admin.User)}
 
+                                </div>
+                            </div>
+                        </div>
+                        <div className="server-members">
+                            <div className="server-members-title">
+                                Members
+                            </div>
+                            <div className="server-members-list">
+                                {membersAndAdmin.members.map(ele => {
+                                    return (
+                                        <div className="member-individual">
+                                            <img src={ele.receivor.profilePicture}></img>
+                                            <div className="member-online-dot">
+                                                {onlineDot(ele.receivor)}
+                                            </div>
+                                            <div className="member-name">
+                                                {ele.receivor.username}
+                                                {online(ele.receivor)}
+
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
                     </div>
                 </div>
             }

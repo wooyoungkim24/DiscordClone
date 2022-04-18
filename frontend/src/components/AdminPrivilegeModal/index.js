@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
 import { Modal } from "../../context/modal"
-import {getAllNotAdminMembers, getTextChannel, kickServer, deleteTextChannel } from "../../store/server";
+import {getAllNotAdminMembers, getTextChannel, kickServer, deleteTextChannel , getMembersAndAdmins} from "../../store/server";
 import EditTextChannelModal from "../EditTextChannelModal";
 import CreateNewTextModal from "../CreateNewTextModal";
 
@@ -35,6 +35,7 @@ function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextCha
             serverId: member.serverId
         }
         dispatch(kickServer(payload))
+        dispatch(getMembersAndAdmins(server.id))
     }
 
     const handleKickPush = () => {

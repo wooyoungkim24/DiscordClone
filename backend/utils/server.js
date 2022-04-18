@@ -7,13 +7,28 @@ function join_User(id, username, room, picture) {
     const p_user = { id, username, room, picture };
     let indexOfOld = c_users.findIndex(ele => ele.username === username)
 
+    let oldUser = c_users.find(ele => ele.username === username)
+    let oldVoice;
+    if(oldUser.voiceRoom){
+        oldVoice= oldUser.voiceRoom
+    }
     if (indexOfOld  !== -1) {
         c_users.splice(indexOfOld, 1);
     }
-    c_users.push(p_user);
+    c_users.push({...p_user, voiceRoom:oldVoice});
     console.log(c_users, "users");
 
     return p_user;
+}
+
+function join_User_Voice(username, voiceRoom){
+    let oldUser = c_users.find(ele => ele.username === username)
+    let oldUserIndex = c_users.findIndex(ele => ele.username === username)
+
+    let newUser = {...oldUser, voiceRoom:voiceRoom}
+
+    c_users.splice(oldUserIndex,1,newUser)
+    return newUser
 }
 
 function user_online(id,username,userId){
@@ -51,5 +66,6 @@ module.exports = {
     join_User,
     get_Current_User,
     user_Disconnect,
-    user_online
+    user_online,
+    join_User_Voice
 };

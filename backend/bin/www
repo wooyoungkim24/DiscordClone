@@ -3,7 +3,7 @@
 const { port } = require('../config');
 const socket = require("socket.io");
 const app = require('../app');
-const { get_Current_User, user_Disconnect, join_User, user_online } = require("../utils/server");
+const { get_Current_User, user_Disconnect, join_User,join_User_Voice, user_online } = require("../utils/server");
 const db = require('../db/models');
 const { TextChannel, DirectMessage, User } = require("../db/models")
 
@@ -26,6 +26,17 @@ db.sequelize
 
     io.on("connection", (socket) => {
       //for a new user joining the room
+
+
+      socket.on("addedFriend", async ({ notify, userId  }) => {
+
+
+        let user = await User.findByPk(userId)
+        let otherUser = await User.findByPk(notify)
+        io.emit("youGotAdded", {
+          user, otherUser
+        })
+      })
 
 
       socket.on("online", async ({ username, userId }) => {
@@ -63,6 +74,16 @@ db.sequelize
         socket.join(p_user.room);
 
       });
+
+      socket.on("joinVoice", ({ username, voiceRoomId}) => {
+        //* create user
+
+        const p_user = join_User_Voice(username, voiceRoomId);
+        console.log(socket.id, "=id");
+        let rooms =[p_user.room, p_user.voiceRoom]
+        socket.join(rooms);
+
+      })
 
       //user sending message
       socket.on("chat", async (payload) => {

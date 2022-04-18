@@ -62,6 +62,34 @@ router.get("/all/members/:id", asyncHandler(async(req,res) =>{
     return res.json(returnArray)
 }))
 
+router.get("/all/members/only/:id", asyncHandler(async(req,res) =>{
+    const serverId = req.params.id
+    const members = await Member.findAll({
+        where:{
+            [Op.and]:[
+                {serverId},
+                {pending:false}
+            ]
+
+        }, include: {model: User, as:"receivor"}
+    })
+    let returnArray = [...members]
+    return res.json(returnArray)
+}))
+router.get("/all/admins/:id", asyncHandler(async(req,res) =>{
+    const serverId = req.params.id
+    const admin = await Admin.findOne({
+        where:{
+            serverId
+        },
+        include:User
+    })
+    let returnArray = admin
+    return res.json(returnArray)
+}))
+
+
+
 router.get("/all/members/notAdmin/:id", asyncHandler(async(req,res) => {
     const serverId = req.params.id
     const members = await Member.findAll({

@@ -7,6 +7,8 @@ const SET_MY_MESSAGES= 'session/setMyMessages'
 const SET_MY_DMS = 'session/setMyDMs'
 const SET_PENDING_FRIENDS = 'session/setPendingFriends'
 const SET_NOT_FRIENDS = 'session/setNotFriends'
+const SET_PENDING_SENT_FRIENDS = 'session/setPendingSentFriends'
+const SET_INITIAL_PENDING_SENT_FRIENDS = 'session/setInitialPendingSentFriends'
 
 const setMyMessages = (messages) =>{
     return {
@@ -20,6 +22,19 @@ const setMyMessages = (messages) =>{
 
 //     }
 // }
+export const setInitialPendingSentFriends = (pending) =>{
+    return{
+        type: SET_INITIAL_PENDING_SENT_FRIENDS,
+        payload:pending
+    }
+}
+
+const setPendingSentFriends = (friend) =>{
+    return {
+        type: SET_PENDING_SENT_FRIENDS,
+        payload: friend
+    }
+}
 
 const setPendingFriends = (friends) =>{
     return {
@@ -105,6 +120,16 @@ export const getPendingFriends = (id) => async dispatch =>{
     return data
 }
 
+export const getInitialPendingSentFriends = (userId) => async dispatch =>{
+    console.log("is it break here", userId)
+    const res = await csrfFetch(`/api/users/all/pending/sent/${userId}`)
+    const data = await res.json()
+
+    dispatch(setInitialPendingSentFriends(data))
+    return data
+}
+
+
 export const getNotFriends = (id) => async dispatch =>{
     const res = await csrfFetch(`/api/users/not/friends/${id}`)
     const data =await res.json()
@@ -120,6 +145,37 @@ export const acceptFriend = (payload) => async dispatch =>{
     })
     const data = await res.json()
     dispatch(setPendingFriends(data))
+
+    return data
+}
+
+export const rejectFriend = (payload) => async dispatch =>{
+    const res = await csrfFetch("/api/users/delete/friend", {
+        method:"DELETE",
+        body:JSON.stringify(payload)
+    })
+    const data = await res.json()
+    dispatch(setPendingFriends(data))
+    return data
+}
+
+export const removeFriend = (payload) => async dispatch =>{
+    const res = await csrfFetch("/api/users/remove/friend",{
+        method:"DELETE",
+        body:JSON.stringify(payload)
+    })
+    const data = await res.json();
+    return data
+}
+
+
+export const sendAddFriend = (payload) => async dispatch =>{
+    const res = await csrfFetch("/api/users/new/friend",{
+        method:"POST",
+        body: JSON.stringify(payload)
+    })
+    const data = await res.json()
+    dispatch(setPendingSentFriends(data))
     return data
 }
 
@@ -165,7 +221,7 @@ export const logout = () => async (dispatch) => {
     dispatch(removeUser());
     return response;
   };
-const initialState = {notFriends:[], pendingFriends:[], user: null, friends:[] , myMessages:[], mySingleDMs:[]};
+const initialState = {pendingSentFriends:[],notFriends:[], pendingFriends:[], user: null, friends:[] , myMessages:[], mySingleDMs:[]};
 
 const sessionReducer = (state = initialState, action) => {
     let newState;
@@ -187,6 +243,21 @@ const sessionReducer = (state = initialState, action) => {
             return {
                 ...state,
                 friends:[...action.payload]
+            }
+
+        case SET_PENDING_SENT_FRIENDS:
+
+            let newSent = [...state.pendingSentFriends, action.payload]
+            return {
+                ...state,
+                pendingSentFriends: newSent
+            }
+
+        case SET_INITIAL_PENDING_SENT_FRIENDS:
+
+            return {
+                ...state,
+                pendingSentFriends:[...action.payload]
             }
         case SET_PENDING_FRIENDS:
 

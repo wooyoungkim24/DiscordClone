@@ -278,72 +278,122 @@ router.put("/accept/friend", asyncHandler(async(req,res) =>{
 }))
 
 
+router.get("/all/pending/sent/:friend1", asyncHandler(async(req,res)=>{
+    const friend1 = req.params.friend1
+    const allPendingSent = await UserFriend.findAll({
+        where:{
+            [Op.and]:[
+                {friend1:friend1},
+                {pending:true}
+            ]
+        }
+    })
+    return res.json(allPendingSent)
+}))
+
 router.post("/new/friend", asyncHandler(async (req, res) => {
-    const { userId, friendId } = req.body
+    const { friend1, friend2 } = req.body
     const allFriends = await UserFriend.findAll();
-    if (userId === friendId) {
+    if (friend1 === friend2) {
         throw new Error("Cannot friend yourself")
     }
     allFriends.forEach(ele => {
-        if (ele.friend1 === userId) {
-            if (ele.friend2 === friendId) {
+        if (ele.friend1 === friend1) {
+            if (ele.friend2 === friend2) {
                 throw new Error("Friendship already exists")
             }
         }
-        if (ele.friend1 === friendId) {
-            if (ele.friend2 === userId) {
+        if (ele.friend1 === friend2) {
+            if (ele.friend2 === friend1) {
                 throw new Error("Friendship already exists")
             }
         }
     })
     let newFriend = await UserFriend.create({
-        friend1: userId,
-        friend2: friendId
+        friend1,
+        friend2,
+        pending:true
     })
     return res.json(newFriend)
 }))
 
 
 router.delete("/delete/friend", asyncHandler(async (req, res) => {
-    const { userId, friendId } = req.body
+    const { id,userId } = req.body
     let destroyedFriend = await UserFriend.findOne({
-        where: {
-            [Op.or]: [
-                {
-                    [Op.and]: [
-                        { friend1: userId },
-                        { friend2: friendId }
-                    ]
-
-                },
-                {
-                    [Op.and]: [
-                        { friend1: friendId },
-                        { friend2: userId }
-                    ]
-                }
-            ]
+        where:{
+            id
         }
     })
     await UserFriend.destroy({
-        where: {
-            [Op.or]: [
-                {
-                    [Op.and]: [
-                        { friend1: userId },
-                        { friend2: friendId }
-                    ]
+        where:{
+            id
+        }
+    })
+    const pendingFriends = await UserFriend.findAll({
+        where:{
+            [Op.and]:[
+                {pending:true},
+                {friend2: userId}
+            ]
+        },
+        include: {model:User, as:'added'}
+    })
+    return res.json(pendingFriends)
 
+}))
+
+router.delete("/remove/friend", asyncHandler(async (req, res) => {
+    const {friend1,friend2 } = req.body
+    console.log("##hitting correctly", friend1, friend2)
+    let destroyedFriend = await UserFriend.findOne({
+        where:{
+            [Op.or]:[
+                {
+                    [Op.and]:[
+                        {friend1},
+                        {friend2},
+                        {pending:false}
+                    ]
                 },
                 {
-                    [Op.and]: [
-                        { friend1: friendId },
-                        { friend2: userId }
+                    [Op.and]:[
+                        {friend1:friend2},
+                        {friend2:friend1},
+                        {pending:false}
                     ]
                 }
             ]
+
         }
     })
+    await UserFriend.destroy({
+        where:{
+            [Op.or]:[
+                {
+                    [Op.and]:[
+                        {friend1},
+                        {friend2},
+                        {pending:false}
+                    ]
+                },
+                {
+                    [Op.and]:[
+                        {friend1:friend2},
+                        {friend2:friend1},
+                        {pending:false}
+                    ]
+                }
+            ]
+
+        }
+    })
+
     return res.json(destroyedFriend)
+
 }))
+
+
+
+
 module.exports = router;
