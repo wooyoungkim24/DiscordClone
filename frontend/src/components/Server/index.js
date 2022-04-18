@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useRef} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
 import { Modal } from "../../context/modal"
@@ -7,6 +7,8 @@ import Chat from "../Chat";
 import "./index.css"
 import InvitePeopleModal from "../InvitePeopleModal";
 import UserBar from "../UserBar";
+import EditServerModal from "../EditServerModal";
+import AdminPrivilegeModal from "../AdminPrivilegeModal";
 
 function Server({ socket, servers, user, isFirstLoaded }) {
     const { id, textId } = useParams();
@@ -22,6 +24,10 @@ function Server({ socket, servers, user, isFirstLoaded }) {
     // const textChannels = useSelector(state => {
     //     return state.myServers.textChannels
     // })
+    const [showEditServer, setShowEditServer] = useState(false)
+    const [showAdminPrivilege, setShowAdminPrivilege] = useState(false)
+
+
 
     const [textIndex, setTextIndex] = useState(0)
 
@@ -37,10 +43,17 @@ function Server({ socket, servers, user, isFirstLoaded }) {
             setMyServer(servers.find(ele => (ele.id === parseInt(id))))
             dispatch(getTextChannels(id))
                 .then((channels) => setMyTextChannels(channels))
+                // .then(() => setEditPicture(myServer.serverImage))
+                // .then(() => setEditName(myServer.serverName))
                 .then(() => setIsLoaded(true))
         }
 
     }, [textId, isFirstLoaded])
+
+
+
+
+
 
     // const sendData = (id) => {
 
@@ -70,12 +83,12 @@ function Server({ socket, servers, user, isFirstLoaded }) {
     }
     // console.log('empty?', myTextChannels)
 
-    const handleDeleteServer = () =>{
+    const handleDeleteServer = () => {
         dispatch(deleteServer(myServer.id))
         history.push("/");
     }
 
-    const handleLeaveServer = () =>{
+    const handleLeaveServer = () => {
         const payload = {
             userId: user.id,
             serverId: myServer.id
@@ -90,6 +103,22 @@ function Server({ socket, servers, user, isFirstLoaded }) {
                     <button className="invite-people" type="button" onClick={handleAddPeople}>
                         Invite People
                     </button>
+                    <button className="edit-server-button" type="button" onClick={() => setShowEditServer(true)}>
+                        Edit Server
+                    </button>
+                    {showEditServer &&
+                        <Modal onClose={() => setShowEditServer(false)}>
+                            <EditServerModal setMyServer = {setMyServer} server={myServer} user = {user} setShowEditServer={setShowEditServer}/>
+                        </Modal>
+                    }
+                    <button className="admin-abilities-button" type="button" onClick={() => setShowAdminPrivilege(true)}>
+                        Admin Privileges
+                    </button>
+                    {showAdminPrivilege &&
+                        <Modal onClose={() => setShowAdminPrivilege(false)}>
+                            <AdminPrivilegeModal setMyTextChannels = {setMyTextChannels} server={myServer} user = {user} setShowAdminPrivilege={setShowAdminPrivilege}/>
+                        </Modal>
+                    }
                     <button className="leave-server" onClick={handleDeleteServer} type="button">
                         Delete Server
                     </button>
@@ -101,7 +130,7 @@ function Server({ socket, servers, user, isFirstLoaded }) {
                     <button className="invite-people" type="button" onClick={handleAddPeople}>
                         Invite People
                     </button>
-                    <button className="leave-server" onClick = {handleLeaveServer} type="button">
+                    <button className="leave-server" onClick={handleLeaveServer} type="button">
                         Leave Server
                     </button>
                 </div>

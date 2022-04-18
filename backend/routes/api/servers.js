@@ -62,6 +62,20 @@ router.get("/all/members/:id", asyncHandler(async(req,res) =>{
     return res.json(returnArray)
 }))
 
+router.get("/all/members/notAdmin/:id", asyncHandler(async(req,res) => {
+    const serverId = req.params.id
+    const members = await Member.findAll({
+        where:{
+            [Op.and]:[
+                {serverId},
+                {pending:false}
+            ]
+        },
+        include: {model:User, as:'receivor'}
+    })
+    return res.json(members)
+}))
+
 
 router.get("/all/pending/members/:id", asyncHandler(async(req,res) =>{
     const serverId = req.params.id
@@ -120,9 +134,12 @@ router.post("/", asyncHandler(async (req, res) => {
 }))
 
 router.put("/", asyncHandler(async (req, res) => {
-    const { id } = req.body;
-    const updateServer = await Server.findByPk(id)
-    const updatedServer = await updateServer.update(req.body)
+    const { serverId, serverName, serverImage } = req.body;
+    const updateServer = await Server.findByPk(serverId)
+    const updatedServer = await updateServer.update({
+        serverName,
+        serverImage
+    })
     return res.json(updatedServer)
 }))
 
@@ -250,27 +267,45 @@ router.get("/all/text/:id", asyncHandler(async (req, res) => {
 router.get("/single/text/:id", asyncHandler(async(req,res)=>{
     const channelId = req.params.id
     const textChannel = await TextChannel.findByPk(channelId)
+
     return res.json(textChannel)
 }))
 router.post("/text", asyncHandler(async (req, res) => {
-    const newTextChannel = await TextChannel.create(req.body)
-    return res.json(newTextChannel)
+    const {serverId, channelName} = req.body
+    await TextChannel.create({serverId, channelName})
+    const allTextAfter = await TextChannel.findAll({
+        where:{
+            serverId
+        }
+    })
+    return res.json(allTextAfter)
 }))
 router.put("/text", asyncHandler(async (req, res) => {
-    const { id } = req.body
+    const { id , channelName, serverId} = req.body
     const updateText = await TextChannel.findByPk(id);
-    const updatedText = await updateText.update(req.body)
-    return res.json(updatedText)
+    const updatedText = await updateText.update({channelName})
+
+    const allTextAfter = await TextChannel.findAll({
+        where:{
+            serverId
+        }
+    })
+    return res.json(allTextAfter)
 }))
 router.delete("/text", asyncHandler(async (req, res) => {
-    const { id } = req.body
+    const { id , serverId} = req.body
     let deletedChannel = await TextChannel.findByPk(id)
     await TextChannel.destroy({
         where: {
             id: id
         }
     })
-    return res.json(deletedChannel)
+    const allTextAfter = await TextChannel.findAll({
+        where:{
+            serverId
+        }
+    })
+    return res.json(allTextAfter)
 }))
 
 

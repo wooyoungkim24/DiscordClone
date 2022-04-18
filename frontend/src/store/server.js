@@ -12,7 +12,9 @@ const SET_ALL_SERVER_MEMBERS= 'session/setAllServerMembers'
 const CLEAR_PENDING_ADD_SERVER = 'session/clearPendingAddServer'
 const SET_ALL_SERVER_MEMBERS_PENDING= 'session/setAllServerMembersPending'
 const REMOVE_SERVER = 'session/removeServer'
-
+const SET_ALL_NOT_ADMIN_MEMBERS = 'session/setAllNotAdminMembers'
+const REMOVE_NOT_ADMIN_MEMBER = 'session/kickMember'
+const SET_MY_TEXT = 'session/setMyText'
 
 const setServers = (servers) => {
     return {
@@ -46,6 +48,12 @@ const removeServer = (server) => {
         payload: server
     }
 }
+const removeNotAdminMember = (server) =>{
+    return {
+        type: REMOVE_NOT_ADMIN_MEMBER,
+        payload: server
+    }
+}
 const setNewServer =(server) =>{
     return{
         type: SET_NEW_SERVER,
@@ -65,6 +73,14 @@ const setTextChannels = (channels) => {
         payload: channels
     }
 }
+
+const setMyTextChannels = (channels)=>{
+    return {
+        type: SET_MY_TEXT,
+        payload: channels
+    }
+}
+
 const setAllServerMembers = (members) =>{
     return {
         type:SET_ALL_SERVER_MEMBERS,
@@ -75,6 +91,12 @@ const setAllServerMembersPending= (members) =>{
     return {
         type:SET_ALL_SERVER_MEMBERS_PENDING,
         payload:members
+    }
+}
+const setAllNotAdminMembers = (members) =>{
+    return {
+        type: SET_ALL_NOT_ADMIN_MEMBERS,
+        payload: members
     }
 }
 
@@ -90,6 +112,15 @@ export const getAllServerMembersPending = (serverId) => async dispatch => {
     const data= await res.json();
     dispatch(setAllServerMembersPending(data))
     return data
+}
+
+export const getAllNotAdminMembers = (serverId) => async dispatch =>{
+    const res = await csrfFetch(`/api/servers/all/members/notAdmin/${serverId}`)
+    const data= await res.json()
+
+    dispatch(setAllNotAdminMembers(data))
+    return data
+
 }
 export const newServerInvite = (payload) => async dispatch =>{
     const res = await csrfFetch("/api/servers/new/member",{
@@ -131,6 +162,15 @@ export const createNewServer = (payload) => async dispatch =>{
     return data
 }
 
+export const editServer = (payload) => async dispatch =>{
+    const res = await csrfFetch("/api/servers", {
+        method:"PUT",
+        body:JSON.stringify(payload)
+    })
+    const data = await res.json();
+    return data
+}
+
 export const leaveServer = (payload) => async dispatch =>{
 
     const res = await csrfFetch("/api/servers/delete/member/leave", {
@@ -140,7 +180,15 @@ export const leaveServer = (payload) => async dispatch =>{
     const data = await res.json()
     dispatch(removeServer(data.Server))
 }
+export const kickServer = (payload) => async dispatch =>{
 
+    const res = await csrfFetch("/api/servers/delete/member/leave", {
+        method: "DELETE",
+        body: JSON.stringify(payload)
+    })
+    const data = await res.json()
+    dispatch(removeNotAdminMember(data))
+}
 export const setInitialMessages = (id) => async dispatch =>{
     const res = await csrfFetch(`/api/servers/single/text/${id}`)
     const textChannelHistory = await res.json();
@@ -165,6 +213,44 @@ export const getTextChannels = (id) => async dispatch => {
     return textChannelsData;
 }
 
+export const getTextChannel = (id) => async dispatch => {
+    const res = await csrfFetch(`/api/servers/all/text/${id}`)
+    const textChannelsData = await res.json();
+
+    dispatch(setMyTextChannels(textChannelsData))
+    return textChannelsData;
+}
+
+export const editTextChannel = (payload)=> async dispatch =>{
+    console.log('whats my payload', payload)
+    const res = await csrfFetch(`/api/servers/text`, {
+        method: "PUT",
+        body: JSON.stringify(payload)
+    })
+    const data = await res.json();
+    dispatch(setMyTextChannels(data))
+    return data
+}
+
+export const createNewText = (payload) => async dispatch =>{
+    const res = await csrfFetch("/api/servers/text", {
+        method: "POST",
+        body: JSON.stringify(payload)
+    })
+    const data = await res.json()
+    dispatch(setMyTextChannels(data))
+    return data
+}
+
+export const deleteTextChannel = (payload) => async dispatch =>{
+    const res = await csrfFetch("/api/servers/text", {
+        method: "DELETE",
+        body:JSON.stringify(payload)
+    })
+    const data= await res.json();
+    dispatch(setMyTextChannels(data))
+    return data
+}
 export const getServers = (id) => async dispatch => {
     const response = await csrfFetch(`/api/servers/all/${id}`);
     const data = await response.json();
@@ -206,7 +292,7 @@ export const deleteServer = (id) => async dispatch =>{
 
 
 
-const initialState = {serverMembers:[],pendingServerMembers:[], myServers: [], textChannels: {}, messageHistory: [], pendingServers:[] };
+const initialState = {myTextChannels:[],nonAdminServerMembers:[],serverMembers:[],pendingServerMembers:[], myServers: [], textChannels: {}, messageHistory: [], pendingServers:[] };
 const serverReducer = (state = initialState, action) => {
 
     switch (action.type) {
@@ -230,6 +316,14 @@ const serverReducer = (state = initialState, action) => {
                 textChannels: placeholder
 
             }
+        case SET_MY_TEXT:
+            console.log('what is the action', action.payload)
+            return {
+                ...state,
+                myTextChannels:[...action.payload]
+            }
+
+
         case SET_MESSAGES:
             const messageHistory  = action.payload
             // console.log('what does history look like', messageHistory, Array.isArray(messageHistory))
@@ -275,6 +369,11 @@ const serverReducer = (state = initialState, action) => {
                 ...state,
                 pendingServerMembers:a
             }
+        case SET_ALL_NOT_ADMIN_MEMBERS:
+            return{
+                ...state,
+                nonAdminServerMembers:[...action.payload]
+            }
         case SET_NEW_SERVER:
             let x = [...state.myServers, action.payload];
 
@@ -317,11 +416,20 @@ const serverReducer = (state = initialState, action) => {
             }
         case REMOVE_SERVER:
             let currentServers = [...state.myServers]
+
             let serverIndex = currentServers.findIndex(ele => parseInt(ele.id) === parseInt(action.payload.id))
             currentServers.splice(serverIndex, 1)
             return {
                 ...state,
                 myServers: currentServers
+            }
+        case REMOVE_NOT_ADMIN_MEMBER:
+            let currentNotAdmin = [...state.nonAdminServerMembers]
+            let nonAdminIndex = currentNotAdmin.findIndex(ele => parseInt(ele.id) === parseInt(action.payload.id))
+            currentNotAdmin.splice(nonAdminIndex, 1)
+            return {
+                ...state,
+                nonAdminServerMembers:currentNotAdmin
             }
         default:
             return state;
