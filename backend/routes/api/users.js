@@ -122,25 +122,123 @@ router.post("/create/dm", asyncHandler(async (req, res) => {
 }))
 
 
+router.get("/pending/friends/:id", asyncHandler(async(req,res)=>{
+    const id = req.params.id
+    const pendingFriends = await UserFriend.findAll({
+        where:{
+            [Op.and]:[
+                {pending:true},
+                {friend2: id}
+            ]
+        },
+        include: {model:User, as:'added'}
+    })
+    return res.json(pendingFriends)
+}))
+
+router.get("/not/friends/:id", asyncHandler(async(req,res)=>{
+    const id = req.params.id
+    const friend1 = await UserFriend.findAll({
+        where: {
+            [Op.and]:[
+                {friend1:id},
+                {pending:false}
+            ]
+        },
+        include: {model:User, as:'addee'}
+    })
+    const friend2 = await UserFriend.findAll({
+        where: {
+            [Op.and]:[
+                {friend2:id},
+                {pending:false}
+            ]
+        },
+        include: {model:User, as:'added'}
+    })
+    // console.log("###what is happening", friend1, friend2[0].added)
+
+
+    const allUsers = await User.findAll()
+
+    let friendObjs = []
+
+    friend1.forEach(ele=>{
+        if(ele){
+            friendObjs.push(ele.addee)
+        }
+    })
+    friend2.forEach(ele=>{
+        if(ele){
+            friendObjs.push(ele.added)
+        }
+    })
+    let friendIds = []
+    friendObjs.forEach(ele =>{
+        friendIds.push(ele.id)
+    })
+    let postUsers = []
+    allUsers.forEach((ele,i) =>{
+        if(!friendIds.includes(ele.id) && parseInt(ele.id) !== parseInt(id)){
+            postUsers.push(ele)
+        }
+    })
+
+    return res.json(postUsers)
+}))
 
 
 router.get("/friends/:id", asyncHandler(async (req, res) => {
     const id = req.params.id
 
-    const friendsOneWay = await User.findOne({
+    const friend1 = await UserFriend.findAll({
         where: {
-            id: id
+            [Op.and]:[
+                {friend1:id},
+                {pending:false}
+            ]
         },
-        include: ["User_Friends", "Friends"]
+        include: {model:User, as:'addee'}
     })
+    const friend2 = await UserFriend.findAll({
+        where: {
+            [Op.and]:[
+                {friend2:id},
+                {pending:false}
+            ]
+        },
+        include: {model:User, as:'added'}
+    })
+    // console.log("###what is happening", friend1, friend2[0].added)
+
+
+    let friendObjs = []
+
+    friend1.forEach(ele=>{
+        if(ele){
+            friendObjs.push(ele.addee)
+        }
+    })
+    friend2.forEach(ele=>{
+        if(ele){
+            friendObjs.push(ele.added)
+        }
+    })
+    // const friendsOneWay = await User.findOne({
+    //     where: {
+    //         id: id
+    //     },
+    //     include: ["User_Friends", "Friends"]
+    // })
     // const friendsOtherWay = await User.findOne({
     //     where: {
     //         id: id
     //     },
     //     include:"Friends"
     // })
+    // console.log("###these are my friends", friendsOneWay.User_Friends)
 
-    let friendObjs = [...friendsOneWay.User_Friends, ...friendsOneWay.Friends]
+    // let friendObjs = [...friendsOneWay.User_Friends, ...friendsOneWay.Friends]
     // friendsOneWay.User_Friends.forEach(ele =>{
     //     console.log('myfriendids', ele.id)
     // })
@@ -156,6 +254,27 @@ router.get("/friends/:id", asyncHandler(async (req, res) => {
     //     }
     // })
     return res.json(friendObjs)
+}))
+
+
+router.put("/accept/friend", asyncHandler(async(req,res) =>{
+    const {id, userId} = req.body
+    const update = await UserFriend.findOne({
+        where:{
+            id
+        }
+    })
+    let updated = await update.update({pending:false})
+    const pendingFriends = await UserFriend.findAll({
+        where:{
+            [Op.and]:[
+                {pending:true},
+                {friend2: userId}
+            ]
+        },
+        include: {model:User, as:'added'}
+    })
+    return res.json(pendingFriends)
 }))
 
 

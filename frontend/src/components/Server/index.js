@@ -12,7 +12,7 @@ import AdminPrivilegeModal from "../AdminPrivilegeModal";
 
 function Server({ socket, servers, user, isFirstLoaded }) {
     const { id, textId } = useParams();
-    console.log('are you hitting here?', servers)
+    // console.log('are you hitting here?', servers)
     const dispatch = useDispatch();
 
 
@@ -137,6 +137,7 @@ function Server({ socket, servers, user, isFirstLoaded }) {
             )
         }
     }
+
     return (
 
         <>
@@ -190,7 +191,8 @@ function Server({ socket, servers, user, isFirstLoaded }) {
 
                         </div>
                         <div className="user-bar">
-                            <UserBar user={user} />
+
+                            <UserBar socket = {socket} user={user} />
                         </div>
                     </div>
 

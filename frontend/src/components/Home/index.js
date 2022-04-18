@@ -214,7 +214,7 @@ function Home({ user, socket }) {
                     })}
                 </div>
                 <div>
-                    <UserBar user={user} />
+                    <UserBar socket={socket} user={user} />
                 </div>
             </div>
 

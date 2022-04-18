@@ -4,7 +4,7 @@ import { Route, Switch, useParams, useHistory } from "react-router-dom";
 import { Modal } from "../../context/modal"
 import UserSettings from "../UserSettings";
 
-function UserBar({user}) {
+function UserBar({user, socket}) {
 
 
     const [showUserSettings, setShowUserSettings] = useState(false)
@@ -44,7 +44,7 @@ function UserBar({user}) {
             </div>
             {showUserSettings &&
                 <Modal onClose = {() => setShowUserSettings(false)}>
-                    <UserSettings />
+                    <UserSettings socket={socket} />
                 </Modal>
             }
         </div>

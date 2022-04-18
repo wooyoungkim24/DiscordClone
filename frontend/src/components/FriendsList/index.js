@@ -2,15 +2,25 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router-dom";
-import {getMyFriends} from "../../store/session";
+import { getPendingServers } from "../../store/server";
+import { getMyFriends, getPendingFriends, acceptFriend, getNotFriends } from "../../store/session";
 
 
 
-function FriendsList({ user,friends, socket }) {
+function FriendsList({ user, friends, socket }) {
 
     const [showAll, setShowAll] = useState(true)
     const [showOnline, setShowOnline] = useState(false)
     const [showPending, setShowPending] = useState(false)
+    const [showAddFriend, setShowAddFriend] = useState(false)
+
+    const pendingFriends = useSelector(state => {
+        return state.session.pendingFriends
+    })
+
+    const notFriends= useSelector(state =>{
+        return state.session.notFriends
+    })
 
     const dispatch = useDispatch();
     const onlineDot = (ele) => {
@@ -45,17 +55,22 @@ function FriendsList({ user,friends, socket }) {
         }
     }
 
-    const reloadFriends = (data) =>{
+    const reloadFriends = (data) => {
         let userId = data.userId
-        if(userId !== user.id){
-            console.log('are you even running #####')
+        if (userId !== user.id) {
+            // console.log('are you even running #####')
             dispatch(getMyFriends(user.id))
         }
 
     }
 
+    useEffect(() => {
+        dispatch(getPendingFriends(user.id))
+        dispatch(getNotFriends(user.id))
+    }, [dispatch])
 
-    useEffect(() =>{
+
+    useEffect(() => {
         socket.on("loggedOn", reloadFriends)
         socket.on("loggedOff", reloadFriends)
 
@@ -69,18 +84,42 @@ function FriendsList({ user,friends, socket }) {
         setShowOnline(false)
         setShowAll(true)
         setShowPending(false)
+        setShowAddFriend(false)
     }
     const handleOnline = () => {
         setShowOnline(true)
         setShowAll(false)
         setShowPending(false)
+        setShowAddFriend(false)
     }
     const handlePending = () => {
         setShowOnline(false)
         setShowAll(false)
         setShowPending(true)
+        setShowAddFriend(false)
     }
 
+    const handleAddFriend = () =>{
+        setShowOnline(false)
+        setShowAll(false)
+        setShowPending(false)
+        setShowAddFriend(true)
+    }
+
+    const handleFriendAccept = (id) => {
+        const payload = {
+            id,
+            userId: user.id
+        }
+        dispatch(acceptFriend(payload))
+        dispatch(getMyFriends(user.id))
+    }
+
+
+    const handleFriendReject = () => {
+
+
+    }
     return (
         <div className="friends-list-container">
 
@@ -94,6 +133,9 @@ function FriendsList({ user,friends, socket }) {
                     </button>
                     <button onClick={handlePending}>
                         Pending
+                    </button>
+                    <button onClick={handleAddFriend}>
+                        Add Friend
                     </button>
                 </div>
                 {showAll &&
@@ -141,10 +183,41 @@ function FriendsList({ user,friends, socket }) {
                         })}
                     </div>
                 }
+                {showPending &&
 
-                <div className="pending-friends">
+                    <div className="pending-friends">
+                        {pendingFriends.map(ele => {
+                            return (
+                                <div className="pending-friends-individual">
+                                    {/* <img src={ele.added.profilePicture}></img> */}
+                                    <div className="pending-friend-text">
+                                        {ele.added.username} wants to be friends
+                                    </div>
+                                    <div className="pending-friend-buttons">
+                                        <button type="button" onClick={() => handleFriendAccept(ele.id)} >
+                                            Accept
+                                        </button>
+                                        <button type="button" onClick={handleFriendReject} >
+                                            Reject
+                                        </button>
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                }
+                {showAddFriend &&
+                    <div className="add-friends-container">
+                        {notFriends.map(ele =>{
+                            return (
+                                <div>
+                                    {ele.username}
+                                </div>
+                            )
+                        })}
+                    </div>
+                }
 
-                </div>
             </div>
         </div>
     )

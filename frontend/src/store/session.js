@@ -5,6 +5,8 @@ const REMOVE_USER = 'session/removeUser';
 const SET_FRIENDS = 'session/setFriends'
 const SET_MY_MESSAGES= 'session/setMyMessages'
 const SET_MY_DMS = 'session/setMyDMs'
+const SET_PENDING_FRIENDS = 'session/setPendingFriends'
+const SET_NOT_FRIENDS = 'session/setNotFriends'
 
 const setMyMessages = (messages) =>{
     return {
@@ -19,6 +21,12 @@ const setMyMessages = (messages) =>{
 //     }
 // }
 
+const setPendingFriends = (friends) =>{
+    return {
+        type: SET_PENDING_FRIENDS,
+        payload:friends
+    }
+}
 
 export const setDMs = (messages) =>{
     return {
@@ -36,6 +44,13 @@ const setFriends = (friends) =>{
     return {
         type: SET_FRIENDS,
         payload: friends
+    }
+}
+
+const setNotFriends= (notFriends) =>{
+    return {
+        type:SET_NOT_FRIENDS,
+        payload:notFriends
     }
 }
 const removeUser = () => {
@@ -83,6 +98,32 @@ export const getMyFriends = (id) => async dispatch =>{
     return data
 }
 
+export const getPendingFriends = (id) => async dispatch =>{
+    const res = await csrfFetch(`/api/users/pending/friends/${id}`)
+    const data = await res.json()
+    dispatch(setPendingFriends(data))
+    return data
+}
+
+export const getNotFriends = (id) => async dispatch =>{
+    const res = await csrfFetch(`/api/users/not/friends/${id}`)
+    const data =await res.json()
+    dispatch(setNotFriends(data))
+    return data
+}
+
+export const acceptFriend = (payload) => async dispatch =>{
+
+    const res = await csrfFetch("/api/users/accept/friend", {
+        method: "PUT",
+        body:JSON.stringify(payload)
+    })
+    const data = await res.json()
+    dispatch(setPendingFriends(data))
+    return data
+}
+
+
 export const login = (user) => async (dispatch) => {
     const { credential, password } = user;
     const response = await csrfFetch('/api/session', {
@@ -124,7 +165,7 @@ export const logout = () => async (dispatch) => {
     dispatch(removeUser());
     return response;
   };
-const initialState = { user: null, friends:[] , myMessages:[], mySingleDMs:[]};
+const initialState = {notFriends:[], pendingFriends:[], user: null, friends:[] , myMessages:[], mySingleDMs:[]};
 
 const sessionReducer = (state = initialState, action) => {
     let newState;
@@ -139,9 +180,24 @@ const sessionReducer = (state = initialState, action) => {
             newState.user = null;
             return newState;
         case SET_FRIENDS:
+            // let b = [];
+            // action.payload.forEach(ele =>{
+
+            // })
             return {
                 ...state,
                 friends:[...action.payload]
+            }
+        case SET_PENDING_FRIENDS:
+
+            return{
+                ...state,
+                pendingFriends:[...action.payload]
+            }
+        case SET_NOT_FRIENDS:
+            return{
+                ...state,
+                notFriends:[...action.payload]
             }
         case SET_MY_MESSAGES:
             console.log('what are my messages', action.payload)

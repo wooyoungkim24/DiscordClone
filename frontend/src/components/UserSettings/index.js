@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
 import * as sessionActions from '../../store/session';
 
-function UserSettings() {
+function UserSettings({socket}) {
     const dispatch = useDispatch();
 
     const logout = (e) => {
         e.preventDefault();
-        dispatch(sessionActions.logout());
+        socket.disconnect()
+        dispatch(sessionActions.logout())
       };
 
 

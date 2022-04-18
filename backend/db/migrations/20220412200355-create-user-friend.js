@@ -9,12 +9,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       pending:{
+        allowNull:false,
         type:Sequelize.BOOLEAN,
         defaultValue: false
       },
       friend1: {
         type: Sequelize.INTEGER,
-
         references:{
           model:{
             tableName: "Users"
