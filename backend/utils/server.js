@@ -39,7 +39,7 @@ function join_User_Voice(username, voiceRoom) {
     return newUser
 }
 
-function leave_User_Voice(username){
+function leave_User_Voice(username) {
     let oldUser = c_users.find(ele => ele.username === username)
     let oldUserIndex = c_users.findIndex(ele => ele.username === username)
     let newUser = { ...oldUser, voiceRoom: undefined }
@@ -59,27 +59,27 @@ function user_online(id, username, userId) {
 
 }
 
-function get_all_voice(name){
+function get_all_voice(room) {
     let inVoice = [];
-    c_users.forEach(ele =>{
+    c_users.forEach(ele => {
         // console.log("$$$", ele, ele.voiceRoom)
-        if(ele.username == name){
-            if(ele.voiceRoom!==undefined){
+        if (ele.voiceRoom == room) {
+            if (ele.voiceRoom !== undefined) {
                 inVoice.push(ele)
             }
         }
     })
     return inVoice
 }
-function get_my_voice_after(name){
+function get_my_voice_after(room) {
     let inVoice = [];
-    c_users.forEach(ele =>{
-        // console.log("$$$", ele, ele.voiceRoom)
-        if(ele.username == name){
-            if(ele.voiceRoom===undefined){
-                inVoice.push(ele)
-            }
+    c_users.forEach(ele => {
+        console.log("$$$otherlog", ele, ele.voiceRoom)
+
+        if (ele.voiceRoom === undefined) {
+            inVoice.push(ele)
         }
+
     })
     return inVoice
 }

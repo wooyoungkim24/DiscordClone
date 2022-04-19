@@ -4,7 +4,7 @@ import { Route, Switch, useParams, useHistory } from "react-router-dom";
 import { Modal } from "../../context/modal"
 import UserSettings from "../UserSettings";
 
-function UserBar({ voiceMembers, setVoiceMembers, user, socket, inVoice, setInVoice }) {
+function UserBar({ voiceId, voiceMembers, setVoiceMembers, user, socket, inVoice, setInVoice }) {
 
 
     const [showUserSettings, setShowUserSettings] = useState(false)
@@ -47,12 +47,13 @@ function UserBar({ voiceMembers, setVoiceMembers, user, socket, inVoice, setInVo
 
         return () => socket.off("inVoiceAfter", settingVoiceMembers)
     }, [socket])
+
     const handleHangUp = () => {
 
         socket.emit("leaveVoice", { username: user.username })
 
 
-        socket.emit("allInVoiceAfter", { name: user.username })
+        // socket.emit("allInVoiceAfter", { voiceRoomId: `voice${voiceId}` })
 
         setInVoice(false)
 

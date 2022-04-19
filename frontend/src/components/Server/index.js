@@ -41,6 +41,8 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
     const [showServerModal, setShowServerModal] = useState(false)
 
     const [voiceMembers, setVoiceMembers] = useState([])
+
+    const [voiceId, setVoiceId] = useState()
     // const textChannels = useSelector(state => {
     //     return state.myServers.textChannels
     // })
@@ -173,45 +175,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
 
 
 
-    // function mainFunction(time) {
 
-    //     madiaRecorder.start();
-
-    //     var audioChunks = [];
-
-    //     madiaRecorder.addEventListener("dataavailable", function (event) {
-    //         audioChunks.push(event.data);
-    //     });
-
-    //     madiaRecorder.addEventListener("stop", function () {
-    //         var audioBlob = new Blob(audioChunks);
-
-    //         audioChunks = [];
-
-    //         var fileReader = new FileReader();
-    //         fileReader.readAsDataURL(audioBlob);
-    //         fileReader.onloadend = function () {
-
-
-    //             var base64String = fileReader.result;
-    //             socket.emit("voice", base64String);
-
-    //         };
-
-    //         madiaRecorder.start();
-
-
-    //         setTimeout(function () {
-    //             madiaRecorder.stop();
-    //         }, time);
-    //     });
-
-    //     setTimeout(function () {
-    //         madiaRecorder.stop();
-    //     }, time);
-
-
-    // }
 
 
 
@@ -246,7 +210,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
 
     useEffect(() => {
         // console.log("###is it here", isLoaded)
-        socket.emit("allInVoice", { name: user.username })
+        socket.emit("allInVoice", { voiceRoom: `voice${voiceId}` })
         if (isLoaded) {
 
             dispatch(getMembersAndAdmins(myServer.id))
@@ -260,8 +224,12 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
 
     const settingVoiceMembers = (data) => {
         let voices = data.inVoice
-        console.log("is it here xd", voices)
-        setVoiceMembers([...voices])
+        console.log("%%%", voices[0], voices[0].voiceRoom, voiceId)
+        if (voices[0].voiceRoom == `voice${voiceId}`) {
+            console.log("is it here xd", voices)
+            setVoiceMembers([...voices])
+        }
+
     }
 
     useEffect(() => {
@@ -353,114 +321,18 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
 
 
 
-    // useEffect(() => {
-
-    //     let time = 1000;
-    //     console.log('how many times are you running', inVoice)
-
-
-    //     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-    //         var madiaRecorder = new MediaRecorder(stream);
-
-    //         madiaRecorder.start();
-
-    //         var audioChunks = [];
-
-    //         madiaRecorder.addEventListener("dataavailable", function (event) {
-    //             audioChunks.push(event.data);
-    //         });
-
-    //         madiaRecorder.addEventListener("stop", function () {
-    //             var audioBlob = new Blob(audioChunks);
-
-    //             audioChunks = [];
-
-    //             var fileReader = new FileReader();
-    //             fileReader.readAsDataURL(audioBlob);
-    //             fileReader.onloadend = function () {
-
-
-    //                 var base64String = fileReader.result;
-    //                 if (inVoice) {
-    //                     socket.emit("voice", base64String);
-    //                 }
-
-
-    //             };
-
-    //             madiaRecorder.start();
-
-
-    //             setTimeout(function () {
-    //                 madiaRecorder.stop();
-    //             }, time);
-    //         });
-
-    //         setTimeout(function () {
-    //             madiaRecorder.stop();
-    //         }, time);
-
-
-    //     });
-
-
-
-
-    //     // return (() =>{
-
-    //     // })
-    // }, [inVoice])
-
 
     const handleEnterVoice = (ele) => {
-        socket.emit("joinVoice", { username: user.username, voiceRoomId: `voice${ele.id}` })
+        console.log("%%%voicdid", ele.id)
 
-
-        socket.emit("allInVoice", { name: user.username })
         if (!inVoice) {
+            // setVoiceId(ele.id)
+            socket.emit("joinVoice", { username: user.username, voiceRoomId: `voice${ele.id}` })
+
+
+            // socket.emit("allInVoice", { voiceRoomId: `voice${ele.id}` })
             setInVoice(true)
         }
-
-        // setPromiseStream(navigator.mediaDevices.getUserMedia({ audio: true }))
-        // let time = 700;
-        // promiseStream.then((stream) => {
-
-        //     var madiaRecorder = new MediaRecorder(stream);
-        //     madiaRecorder.start();
-
-        //     var audioChunks = [];
-
-        //     madiaRecorder.addEventListener("dataavailable", function (event) {
-        //         audioChunks.push(event.data);
-        //     });
-
-        //     madiaRecorder.addEventListener("stop", function () {
-        //         var audioBlob = new Blob(audioChunks);
-
-        //         audioChunks = [];
-
-        //         var fileReader = new FileReader();
-        //         fileReader.readAsDataURL(audioBlob);
-        //         fileReader.onloadend = function () {
-
-
-        //             var base64String = fileReader.result;
-        //             socket.emit("voice", base64String);
-
-        //         };
-
-        //         madiaRecorder.start();
-
-
-        //         setTimeout(function () {
-        //             madiaRecorder.stop();
-        //         }, time);
-        //     });
-
-        //     setTimeout(function () {
-        //         madiaRecorder.stop();
-        //     }, time);
-        // });
 
     }
 
@@ -561,7 +433,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
                                 return (
                                     <div className="voice-channel-individual">
                                         <i className="fas fa-bullhorn"></i>
-                                        <button className="voice-channel-button" onClick={() => handleEnterVoice(ele)}>
+                                        <button className="voice-channel-button" disabled={inVoice} onClick={() => handleEnterVoice(ele)}>
                                             {ele.channelName}
                                         </button>
                                         <div className="voice-chat-inside">
@@ -588,7 +460,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
                         </div>
                         <div className="user-bar">
 
-                            <UserBar voiceMembers={voiceMembers} setVoiceMembers={setVoiceMembers} setInVoice={setInVoice} inVoice={inVoice} socket={socket} user={user} />
+                            <UserBar voiceId={voiceId} voiceMembers={voiceMembers} setVoiceMembers={setVoiceMembers} setInVoice={setInVoice} inVoice={inVoice} socket={socket} user={user} />
                         </div>
                     </div>
 

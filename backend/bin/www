@@ -96,25 +96,26 @@ db.sequelize
 
       })
 
-      socket.on("allInVoice", ({name}) => {
-        //* create user
-        const p_user = get_Current_User(socket.id);
-        const inVoice = get_all_voice(name)
+      // socket.on("allInVoice", ({voiceRoomId}) => {
+      //   //* create user
+      //   const p_user = get_Current_User(socket.id);
+      //   const inVoice = get_all_voice(voiceRoomId)
 
-        io.to(p_user.voiceRoom).emit("inVoice", {
-          inVoice:inVoice
-        })
-      })
+      //   io.emit("inVoice", {
+      //     inVoice:inVoice
+      //   })
+      // })
 
-      socket.on("allInVoiceAfter", ({name}) => {
-        //* create user
-        const p_user = get_Current_User(socket.id);
-        const inVoice = get_my_voice_after(name)
+      // socket.on("allInVoiceAfter", ({voiceRoomId}) => {
+      //   //* create user
+      //   const p_user = get_Current_User(socket.id);
+      //   console.log("###before", voiceRoomId)
+      //   const inVoice = get_my_voice_after(voiceRoomId)
 
-        io.emit("inVoiceAfter", {
-          inVoice:inVoice
-        })
-      })
+      //   io.emit("inVoiceAfter", {
+      //     inVoice:inVoice
+      //   })
+      // })
 
       socket.on("voice", function (data) {
         const p_user = get_Current_User(socket.id);
