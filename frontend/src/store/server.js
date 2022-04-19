@@ -16,6 +16,8 @@ const SET_ALL_NOT_ADMIN_MEMBERS = 'session/setAllNotAdminMembers'
 const REMOVE_NOT_ADMIN_MEMBER = 'session/kickMember'
 const SET_MY_TEXT = 'session/setMyText'
 const SET_MEMBERS_AND_ADMINS = 'session/setMembersAndAdmins'
+const SET_VOICE_CHANNELS = 'session/setVoiceChannels'
+
 
 const setServers = (servers) => {
     return {
@@ -107,8 +109,16 @@ const setMembersAndAdmins = (people) =>{
     }
 }
 
+const setVoiceChannels = (channels) =>{
+    return {
+        type: SET_VOICE_CHANNELS,
+        payload: channels
+    }
+}
+
 
 export const getMembersAndAdmins = (serverId) => async dispatch =>{
+
     const res = await csrfFetch(`/api/servers/all/members/only/${serverId}`)
     const members = await res.json();
     const res2 = await csrfFetch(`/api/servers/all/admins/${serverId}`)
@@ -271,6 +281,16 @@ export const deleteTextChannel = (payload) => async dispatch =>{
     dispatch(setMyTextChannels(data))
     return data
 }
+
+export const getAllVoiceChannels = (serverId) => async dispatch =>{
+    const res = await csrfFetch(`/api/servers/all/voice/${serverId}`)
+    const data = await res.json()
+    dispatch(setVoiceChannels(data))
+    return data
+}
+
+
+
 export const getServers = (id) => async dispatch => {
     const response = await csrfFetch(`/api/servers/all/${id}`);
     const data = await response.json();
@@ -312,7 +332,7 @@ export const deleteServer = (id) => async dispatch =>{
 
 
 
-const initialState = {membersAndAdmins: {}, myTextChannels:[],nonAdminServerMembers:[],serverMembers:[],pendingServerMembers:[], myServers: [], textChannels: {}, messageHistory: [], pendingServers:[] };
+const initialState = {voiceChannels: [],membersAndAdmins: {}, myTextChannels:[],nonAdminServerMembers:[],serverMembers:[],pendingServerMembers:[], myServers: [], textChannels: {}, messageHistory: [], pendingServers:[] };
 const serverReducer = (state = initialState, action) => {
 
     switch (action.type) {
@@ -352,6 +372,11 @@ const serverReducer = (state = initialState, action) => {
             }
 
 
+        case SET_VOICE_CHANNELS:
+            return {
+                ...state,
+                voiceChannels:[...action.payload]
+            }
         case SET_MESSAGES:
             const messageHistory  = action.payload
             // console.log('what does history look like', messageHistory, Array.isArray(messageHistory))

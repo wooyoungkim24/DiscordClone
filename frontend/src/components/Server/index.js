@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
 import { Modal } from "../../context/modal"
-import { deleteServer, getServers, getTextChannels, leaveServer, getMembersAndAdmins } from "../../store/server";
+import { getAllVoiceChannels,deleteServer, getServers, getTextChannels, leaveServer, getMembersAndAdmins } from "../../store/server";
 import Chat from "../Chat";
 import "./index.css"
 import InvitePeopleModal from "../InvitePeopleModal";
@@ -63,15 +63,21 @@ function Server({ socket, servers, user, isFirstLoaded }) {
                 )
                 // .then(() => setEditPicture(myServer.serverImage))
                 // .then(() => setEditName(myServer.serverName))
-                .then(() => setIsLoaded(true))
+                .then(() => {
+                    console.log("how many times")
+                    setIsLoaded(true)
+                })
         }
 
     }, [textId, isFirstLoaded])
 
 
     useEffect(() => {
+        console.log("###is it here", isLoaded)
         if (isLoaded) {
+
             dispatch(getMembersAndAdmins(myServer.id))
+            // dispatch(getAllVoiceChannels(myServer.id))
         }
     }, [isLoaded])
 

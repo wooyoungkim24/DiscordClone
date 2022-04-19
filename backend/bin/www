@@ -71,7 +71,12 @@ db.sequelize
 
         const p_user = join_User(socket.id, username, roomId, picture);
         console.log(socket.id, "=id");
-        socket.join(p_user.room);
+        // let rooms = [p_user.room]
+        // if(p_user.voiceRoom){
+        //   rooms.push(p_user.voiceRoom)
+        // }
+        // socket.join(rooms);
+        socket.join(p_user.room)
 
       });
 
