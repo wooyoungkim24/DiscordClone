@@ -3,7 +3,7 @@
 const { port } = require('../config');
 const socket = require("socket.io");
 const app = require('../app');
-const { get_Current_User, user_Disconnect, join_User,join_User_Voice, user_online } = require("../utils/server");
+const { get_my_voice_after, leave_User_Voice, get_all_voice, get_Current_User, user_Disconnect, join_User, join_User_Voice, user_online } = require("../utils/server");
 const db = require('../db/models');
 const { TextChannel, DirectMessage, User } = require("../db/models")
 
@@ -19,7 +19,7 @@ db.sequelize
 
     // Start listening for connections
     let server = app.listen(port, () => console.log(`Listening on port ${port}...`));
-    io = socket(server,{
+    io = socket(server, {
       pingTimeout: 3000,
       pingInterval: 3000
     });
@@ -28,7 +28,7 @@ db.sequelize
       //for a new user joining the room
 
 
-      socket.on("addedFriend", async ({ notify, userId  }) => {
+      socket.on("addedFriend", async ({ notify, userId }) => {
 
 
         let user = await User.findByPk(userId)
@@ -58,7 +58,7 @@ db.sequelize
         })
       })
 
-      socket.on("DMCreation", ({userId, friendId}) =>{
+      socket.on("DMCreation", ({ userId, friendId }) => {
         io.emit("updateDM", {
           userId,
           friendId
@@ -72,7 +72,7 @@ db.sequelize
         const p_user = join_User(socket.id, username, roomId, picture);
         console.log(socket.id, "=id");
         let rooms = [p_user.room]
-        if(p_user.voiceRoom){
+        if (p_user.voiceRoom) {
           rooms.push(p_user.voiceRoom)
         }
         socket.join(rooms);
@@ -80,15 +80,50 @@ db.sequelize
 
       });
 
-      socket.on("joinVoice", ({ username, voiceRoomId}) => {
+      socket.on("joinVoice", ({ username, voiceRoomId }) => {
         //* create user
 
         const p_user = join_User_Voice(username, voiceRoomId);
         console.log(socket.id, "=id");
-        let rooms =[p_user.room, p_user.voiceRoom]
+        let rooms = [p_user.room, p_user.voiceRoom]
         socket.join(rooms);
+      })
+
+      socket.on("leaveVoice",({username})=>{
+        const old_user = leave_User_Voice(username);
+        console.log(socket.id, "=id");
+        socket.leave(old_user.voiceRoom)
 
       })
+
+      socket.on("allInVoice", ({name}) => {
+        //* create user
+        const p_user = get_Current_User(socket.id);
+        const inVoice = get_all_voice(name)
+
+        io.to(p_user.voiceRoom).emit("inVoice", {
+          inVoice:inVoice
+        })
+      })
+
+      socket.on("allInVoiceAfter", ({name}) => {
+        //* create user
+        const p_user = get_Current_User(socket.id);
+        const inVoice = get_my_voice_after(name)
+
+        io.emit("inVoiceAfter", {
+          inVoice:inVoice
+        })
+      })
+
+      socket.on("voice", function (data) {
+        const p_user = get_Current_User(socket.id);
+
+        var newData = data.split(";");
+        newData[0] = "data:audio/ogg;";
+        newData = newData[0] + newData[1];
+        socket.broadcast.to(p_user.voiceRoom).emit("send", newData);
+      });
 
       //user sending message
       socket.on("chat", async (payload) => {

@@ -23,6 +23,7 @@ function App() {
   const user = useSelector(state => {
     return state.session.user
   })
+  const [madiaRecorder, setMadiaRecorder] = useState()
   // const [yourServers, setYourServers] = useState([])
 
   const current_location = useLocation().pathname.split("/")[2]
@@ -33,33 +34,39 @@ function App() {
 
   useEffect(() => {
 
+  }, [])
 
 
+
+  useEffect(() => {
     dispatch(sessionActions.restoreUser())
       .then((user) => {
         if (user) {
           dispatch(getServers(user.id))
           // .then(servers => setYourServers(servers))
         }
-      })
-      .then(() => setIsLoaded(true));
+        navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+          let tempRecorder = new MediaRecorder(stream);
+          setMadiaRecorder(tempRecorder)
+        })
+          .then(() => setIsLoaded(true));
 
-  }, [dispatch]);
+      }, [dispatch]);
 
-  useEffect(() => {
+    useEffect(() => {
 
-    if (isLoaded && user) {
-      socket.emit("online", { username: user.username, userId: user.id })
-    }
-  }, [isLoaded])
-
-
+      if (isLoaded && user) {
+        socket.emit("online", { username: user.username, userId: user.id })
+      }
+    }, [isLoaded])
 
 
-  // console.log('why is there no user', user)
-  return (
-    <>
-      {/* <Navigation isLoaded={isLoaded} />
+
+
+    // console.log('why is there no user', user)
+    return (
+      <>
+        {/* <Navigation isLoaded={isLoaded} />
       <Switch>
         <Route path="/login">
           <LoginFormPage />
@@ -68,56 +75,56 @@ function App() {
           <SignupFormPage />
         </Route>
       </Switch> */}
-      {isLoaded && !user &&
-        <>
-          <Redirect to="/login" />
-          <Switch>
-            <Route path="/login">
-              <LoginFormPage />
-            </Route>
-            <Route path="/signup">
-              <SignupFormPage />
-            </Route>
-          </Switch>
+        {isLoaded && !user &&
+          <>
+            <Redirect to="/login" />
+            <Switch>
+              <Route path="/login">
+                <LoginFormPage />
+              </Route>
+              <Route path="/signup">
+                <SignupFormPage />
+              </Route>
+            </Switch>
 
-        </>
+          </>
 
-      }
+        }
 
-      {isLoaded && user && yourServers.length &&
+        {isLoaded && user && yourServers.length &&
 
-        <div className="app-holder">
-          <ServerBar isLoaded={isLoaded} user={user} socket={socket} servers={yourServers} />
+          <div className="app-holder">
+            <ServerBar isLoaded={isLoaded} user={user} socket={socket} servers={yourServers} />
 
-          <Switch>
-            <Route exact path="/">
-              <Redirect to="/home" />
-            </Route>
+            <Switch>
+              <Route exact path="/">
+                <Redirect to="/home" />
+              </Route>
 
-            <Route exact path="/servers/:id/:textId">
-              <Server isFirstLoaded={isLoaded} socket={socket} servers={yourServers} user={user} />
-            </Route>
-
-
-            <Route path="/home">
-              <Home user={user} socket={socket} />
-            </Route>
-
-            <Route path="/login">
-              <LoginFormPage />
-            </Route>
-            <Route path="/signup">
-              <SignupFormPage />
-            </Route>
-          </Switch>
-        </div>
-      }
+              <Route exact path="/servers/:id/:textId">
+                <Server madiaRecorder = {madiaRecorder} isFirstLoaded={isLoaded} socket={socket} servers={yourServers} user={user} />
+              </Route>
 
 
+              <Route path="/home">
+                <Home user={user} socket={socket} />
+              </Route>
+
+              <Route path="/login">
+                <LoginFormPage />
+              </Route>
+              <Route path="/signup">
+                <SignupFormPage />
+              </Route>
+            </Switch>
+          </div>
+        }
 
 
-    </>
-  );
-}
+
+
+      </>
+    );
+  }
 
 export default App;

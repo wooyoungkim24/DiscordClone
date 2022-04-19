@@ -34,6 +34,8 @@ function Chat({ socket, user, roomName, textId }) {
 
         socket.on("message", messageDispatch);
 
+        // socket.on("send", (data)=> console.log('is you coming here',data))
+
         return () => socket.off("message", messageDispatch)
     }, [socket]);
 

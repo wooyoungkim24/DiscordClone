@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
 import { Modal } from "../../context/modal"
-import { getAllVoiceChannels,deleteServer, getServers, getTextChannels, leaveServer, getMembersAndAdmins } from "../../store/server";
+import { getAllVoiceChannels, deleteServer, getServers, getTextChannels, leaveServer, getMembersAndAdmins } from "../../store/server";
 import Chat from "../Chat";
 import "./index.css"
 import InvitePeopleModal from "../InvitePeopleModal";
@@ -29,21 +29,85 @@ function Server({ socket, servers, user, isFirstLoaded }) {
         return state.myServers.membersAndAdmins
     })
 
+    const voiceChannels = useSelector(state => {
+        return state.myServers.voiceChannels
+    })
+
     const [myServer, setMyServer] = useState({})
     const [myTextChannels, setMyTextChannels] = useState({})
     const [isLoaded, setIsLoaded] = useState(false)
     const [isSecondLoaded, setIsSecondLoaded] = useState(false)
     const [showServerDropDown, setShowServerDropDown] = useState(false)
     const [showServerModal, setShowServerModal] = useState(false)
+
+    const [voiceMembers, setVoiceMembers] = useState([])
     // const textChannels = useSelector(state => {
     //     return state.myServers.textChannels
     // })
     const [showEditServer, setShowEditServer] = useState(false)
     const [showAdminPrivilege, setShowAdminPrivilege] = useState(false)
 
+    const [inVoice, setInVoice] = useState(false)
 
 
     const [textIndex, setTextIndex] = useState(0)
+
+
+
+    useEffect(() =>{
+        if(inVoice){
+            mainFunction(700);
+        }
+
+    },[inVoice])
+
+
+
+    function mainFunction(time) {
+
+        console.log("what how many times")
+        navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+            var madiaRecorder = new MediaRecorder(stream);
+            madiaRecorder.start();
+
+            var audioChunks = [];
+
+            madiaRecorder.addEventListener("dataavailable", function (event) {
+                audioChunks.push(event.data);
+            });
+
+            madiaRecorder.addEventListener("stop", function () {
+                var audioBlob = new Blob(audioChunks);
+
+                audioChunks = [];
+
+                var fileReader = new FileReader();
+                fileReader.readAsDataURL(audioBlob);
+                fileReader.onloadend = function () {
+
+
+                    var base64String = fileReader.result;
+                    socket.emit("voice", base64String);
+
+                };
+
+                madiaRecorder.start();
+
+
+                setTimeout(function () {
+                    madiaRecorder.stop();
+                }, time);
+            });
+
+            setTimeout(function () {
+                madiaRecorder.stop();
+            }, time);
+        });
+
+    }
+
+
+
 
     useEffect(() => {
         if (isFirstLoaded) {
@@ -74,26 +138,46 @@ function Server({ socket, servers, user, isFirstLoaded }) {
 
 
     useEffect(() => {
-        console.log("###is it here", isLoaded)
+        // console.log("###is it here", isLoaded)
+        socket.emit("allInVoice", { name: user.username })
         if (isLoaded) {
 
             dispatch(getMembersAndAdmins(myServer.id))
-            .then(() =>dispatch(getAllVoiceChannels(myServer.id)) )
-            .then(() => setIsSecondLoaded(true))
+                .then(() => dispatch(getAllVoiceChannels(myServer.id)))
+                .then(() => setIsSecondLoaded(true))
+
 
         }
-    }, [isLoaded])
+    }, [isLoaded, id])
 
 
+    const settingVoiceMembers = (data) => {
+        let voices = data.inVoice
+        console.log("is it here xd", voices)
+        setVoiceMembers([...voices])
+    }
 
-    // const sendData = (id) => {
+    useEffect(() => {
+        socket.on("inVoice", settingVoiceMembers);
+        socket.on("send", function (data) {
+            // console.log("are you gettin ghits", data)
+            var audio = new Audio(data);
+            audio.play();
+        });
 
-    //     const username = user.username
-    //     console.log('text channel id', id)
-    //     const roomId = id
-    //     socket.emit("joinRoom", { username, roomId })
+        // socket.on("send", (data)=> console.log('is you coming here',data))
 
-    // }
+        return () => {
+            socket.off("inVoice", settingVoiceMembers)
+            socket.off("send", function (data) {
+                // console.log("are you gettin ghits", data)
+                var audio = new Audio(data);
+                audio.play();
+            });
+        }
+    }, [socket])
+
+
     const onlineDot = (ele) => {
         if (ele.online) {
             return (
@@ -157,6 +241,123 @@ function Server({ socket, servers, user, isFirstLoaded }) {
         dispatch(leaveServer(payload))
         history.push("/");
     }
+
+
+
+
+
+    // useEffect(() => {
+
+    //     let time = 1000;
+    //     console.log('how many times are you running', inVoice)
+
+
+    //     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+    //         var madiaRecorder = new MediaRecorder(stream);
+
+    //         madiaRecorder.start();
+
+    //         var audioChunks = [];
+
+    //         madiaRecorder.addEventListener("dataavailable", function (event) {
+    //             audioChunks.push(event.data);
+    //         });
+
+    //         madiaRecorder.addEventListener("stop", function () {
+    //             var audioBlob = new Blob(audioChunks);
+
+    //             audioChunks = [];
+
+    //             var fileReader = new FileReader();
+    //             fileReader.readAsDataURL(audioBlob);
+    //             fileReader.onloadend = function () {
+
+
+    //                 var base64String = fileReader.result;
+    //                 if (inVoice) {
+    //                     socket.emit("voice", base64String);
+    //                 }
+
+
+    //             };
+
+    //             madiaRecorder.start();
+
+
+    //             setTimeout(function () {
+    //                 madiaRecorder.stop();
+    //             }, time);
+    //         });
+
+    //         setTimeout(function () {
+    //             madiaRecorder.stop();
+    //         }, time);
+
+
+    //     });
+
+
+
+
+    //     // return (() =>{
+
+    //     // })
+    // }, [inVoice])
+
+
+    const handleEnterVoice = (ele) => {
+        socket.emit("joinVoice", { username: user.username, voiceRoomId: `voice${ele.id}` })
+
+
+        socket.emit("allInVoice", { name: user.username })
+        if (!inVoice) {
+            setInVoice(true)
+        }
+
+        // setPromiseStream(navigator.mediaDevices.getUserMedia({ audio: true }))
+        // let time = 700;
+        // promiseStream.then((stream) => {
+
+        //     var madiaRecorder = new MediaRecorder(stream);
+        //     madiaRecorder.start();
+
+        //     var audioChunks = [];
+
+        //     madiaRecorder.addEventListener("dataavailable", function (event) {
+        //         audioChunks.push(event.data);
+        //     });
+
+        //     madiaRecorder.addEventListener("stop", function () {
+        //         var audioBlob = new Blob(audioChunks);
+
+        //         audioChunks = [];
+
+        //         var fileReader = new FileReader();
+        //         fileReader.readAsDataURL(audioBlob);
+        //         fileReader.onloadend = function () {
+
+
+        //             var base64String = fileReader.result;
+        //             socket.emit("voice", base64String);
+
+        //         };
+
+        //         madiaRecorder.start();
+
+
+        //         setTimeout(function () {
+        //             madiaRecorder.stop();
+        //         }, time);
+        //     });
+
+        //     setTimeout(function () {
+        //         madiaRecorder.stop();
+        //     }, time);
+        // });
+
+    }
+
+
     const serverDropdown = () => {
         if (parseInt(myServer.userId) === parseInt(user.id)) {
             return (
@@ -249,11 +450,38 @@ function Server({ socket, servers, user, isFirstLoaded }) {
                             })}
                         </div>
                         <div className="server-voice-channels">
+                            {voiceChannels.map((ele, i) => {
+                                return (
+                                    <div className="voice-channel-individual">
+                                        <i className="fas fa-bullhorn"></i>
+                                        <button className="voice-channel-button" onClick={() => handleEnterVoice(ele)}>
+                                            {ele.channelName}
+                                        </button>
+                                        <div className="voice-chat-inside">
 
+                                            {voiceMembers.map(ele => {
+                                                console.log("$$$", ele)
+                                                return (
+                                                    <div className="voice-member">
+                                                        <img src={ele.picture}></img>
+                                                        {ele.username}
+                                                    </div>
+                                                )
+
+                                            })}
+
+
+                                        </div>
+
+
+                                    </div>
+                                )
+
+                            })}
                         </div>
                         <div className="user-bar">
 
-                            <UserBar socket={socket} user={user} />
+                            <UserBar voiceMembers={voiceMembers} setVoiceMembers={setVoiceMembers} setInVoice={setInVoice} inVoice={inVoice} socket={socket} user={user} />
                         </div>
                     </div>
 

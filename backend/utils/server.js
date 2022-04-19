@@ -20,7 +20,9 @@ function join_User(id, username, room, picture) {
     }
     // c_users.push(p_user)
     c_users.push({ ...p_user, voiceRoom: oldVoice });
+    console.log("###1")
     console.log(c_users, "users");
+
 
     return p_user;
 }
@@ -32,7 +34,19 @@ function join_User_Voice(username, voiceRoom) {
     let newUser = { ...oldUser, voiceRoom: voiceRoom }
 
     c_users.splice(oldUserIndex, 1, newUser)
+    console.log("###2")
+    console.log(c_users, "users");
     return newUser
+}
+
+function leave_User_Voice(username){
+    let oldUser = c_users.find(ele => ele.username === username)
+    let oldUserIndex = c_users.findIndex(ele => ele.username === username)
+    let newUser = { ...oldUser, voiceRoom: undefined }
+    c_users.splice(oldUserIndex, 1, newUser)
+    console.log("###3")
+    console.log(c_users, "users");
+    return oldUser
 }
 
 function user_online(id, username, userId) {
@@ -43,6 +57,31 @@ function user_online(id, username, userId) {
     })
     return online
 
+}
+
+function get_all_voice(name){
+    let inVoice = [];
+    c_users.forEach(ele =>{
+        // console.log("$$$", ele, ele.voiceRoom)
+        if(ele.username == name){
+            if(ele.voiceRoom!==undefined){
+                inVoice.push(ele)
+            }
+        }
+    })
+    return inVoice
+}
+function get_my_voice_after(name){
+    let inVoice = [];
+    c_users.forEach(ele =>{
+        // console.log("$$$", ele, ele.voiceRoom)
+        if(ele.username == name){
+            if(ele.voiceRoom===undefined){
+                inVoice.push(ele)
+            }
+        }
+    })
+    return inVoice
 }
 
 
@@ -58,7 +97,7 @@ function get_Current_User(id) {
 function user_Disconnect(id) {
     const index = c_users.findIndex((p_user) => p_user.id === id);
     const onlineIndex = online.findIndex((p_user) => p_user.id === id);
-    console.log("what are myu oline", online, onlineIndex, id)
+    // console.log("what are myu oline", online, onlineIndex, id)
     if (onlineIndex !== -1) {
 
         // return c_users.splice(index, 1)[0];
@@ -71,5 +110,8 @@ module.exports = {
     get_Current_User,
     user_Disconnect,
     user_online,
-    join_User_Voice
+    join_User_Voice,
+    get_all_voice,
+    leave_User_Voice,
+    get_my_voice_after
 };
