@@ -10,7 +10,7 @@ import UserBar from "../UserBar";
 import EditServerModal from "../EditServerModal";
 import AdminPrivilegeModal from "../AdminPrivilegeModal";
 
-function Server({ socket, servers, user, isFirstLoaded }) {
+function Server({ madiaRecorder, socket, servers, user, isFirstLoaded }) {
     const { id, textId } = useParams();
     // console.log('are you hitting here?', servers)
     const dispatch = useDispatch();
@@ -52,22 +52,14 @@ function Server({ socket, servers, user, isFirstLoaded }) {
 
     const [textIndex, setTextIndex] = useState(0)
 
+    const stop = () => {
+
+    }
 
 
-    useEffect(() =>{
-        if(inVoice){
-            mainFunction(700);
-        }
-
-    },[inVoice])
-
-
-
-    function mainFunction(time) {
-
-        console.log("what how many times")
-        navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-            var madiaRecorder = new MediaRecorder(stream);
+    useEffect(() => {
+        if (inVoice) {
+            let time = 700;
             madiaRecorder.start();
 
             var audioChunks = [];
@@ -102,9 +94,111 @@ function Server({ socket, servers, user, isFirstLoaded }) {
             setTimeout(function () {
                 madiaRecorder.stop();
             }, time);
-        });
+        }
 
-    }
+        if (!inVoice && madiaRecorder.state !== "inactive") {
+            madiaRecorder.stop();
+            // let time = 700
+            // madiaRecorder.removeEventListener("dataavailable", function (event) {
+            //     audioChunks.push(event.data);
+            // });
+            // madiaRecorder.removeEventListener("stop", function () {
+            //     var audioBlob = new Blob(audioChunks);
+
+            //     audioChunks = [];
+
+            //     var fileReader = new FileReader();
+            //     fileReader.readAsDataURL(audioBlob);
+            //     fileReader.onloadend = function () {
+
+
+            //         var base64String = fileReader.result;
+            //         socket.emit("voice", base64String);
+
+            //     };
+
+            //     madiaRecorder.start();
+
+
+            //     setTimeout(function () {
+            //         madiaRecorder.stop();
+            //     }, time);
+            // });
+        }
+        // return (() => {
+        //     let time = 700
+        //     madiaRecorder.removeEventListener("dataavailable", function (event) {
+        //         audioChunks.push(event.data);
+        //     });
+        //     madiaRecorder.removeEventListener("stop", function () {
+        //         var audioBlob = new Blob(audioChunks);
+
+        //         audioChunks = [];
+
+        //         var fileReader = new FileReader();
+        //         fileReader.readAsDataURL(audioBlob);
+        //         fileReader.onloadend = function () {
+
+
+        //             var base64String = fileReader.result;
+        //             socket.emit("voice", base64String);
+
+        //         };
+
+        //         madiaRecorder.start();
+
+
+        //         setTimeout(function () {
+        //             madiaRecorder.stop();
+        //         }, time);
+        //     });
+        // })
+
+
+
+    }, [inVoice])
+
+
+
+    // function mainFunction(time) {
+
+    //     madiaRecorder.start();
+
+    //     var audioChunks = [];
+
+    //     madiaRecorder.addEventListener("dataavailable", function (event) {
+    //         audioChunks.push(event.data);
+    //     });
+
+    //     madiaRecorder.addEventListener("stop", function () {
+    //         var audioBlob = new Blob(audioChunks);
+
+    //         audioChunks = [];
+
+    //         var fileReader = new FileReader();
+    //         fileReader.readAsDataURL(audioBlob);
+    //         fileReader.onloadend = function () {
+
+
+    //             var base64String = fileReader.result;
+    //             socket.emit("voice", base64String);
+
+    //         };
+
+    //         madiaRecorder.start();
+
+
+    //         setTimeout(function () {
+    //             madiaRecorder.stop();
+    //         }, time);
+    //     });
+
+    //     setTimeout(function () {
+    //         madiaRecorder.stop();
+    //     }, time);
+
+
+    // }
 
 
 
