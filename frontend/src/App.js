@@ -27,7 +27,7 @@ function App() {
   const [stream, setStream] = useState()
   // const [yourServers, setYourServers] = useState([])
 
-  const current_location = useLocation().pathname.split("/")[2]
+  const current_location = useLocation().pathname.split("/")[1]
 
   const yourServers = useSelector(state => {
     return state.myServers.myServers
@@ -43,7 +43,9 @@ function App() {
           dispatch(getServers(user.id))
           // .then(servers => setYourServers(servers))
         }
+
         navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+          console.log("should only run once")
           setStream(stream)
           setMadiaRecorder(new MediaRecorder(stream))
         })
@@ -101,7 +103,7 @@ function App() {
             </Route>
 
             <Route exact path="/servers/:id/:textId">
-              <Server setStream={setStream} setMadiaRecorder = {setMadiaRecorder} stream ={stream} madiaRecorder={madiaRecorder} isFirstLoaded={isLoaded} socket={socket} servers={yourServers} user={user} />
+              <Server key={current_location} setStream={setStream} setMadiaRecorder = {setMadiaRecorder} stream ={stream} madiaRecorder={madiaRecorder} isFirstLoaded={isLoaded} socket={socket} servers={yourServers} user={user} />
             </Route>
 
 

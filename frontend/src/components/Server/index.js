@@ -62,6 +62,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
 
     useEffect(() => {
         if (inVoice) {
+            console.log("this is 0###")
             let time = 700;
             madiaRecorder.start();
 
@@ -99,72 +100,74 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
             }, time);
         }
 
-        if (!inVoice && madiaRecorder.state !== "inactive") {
+        // if ((!inVoice && madiaRecorder.state !== "inactive")) {
+        //     console.log("this is 1###")
+        //     stream.getTracks().forEach(track => track.stop());
 
-            stream.getTracks().forEach(track => track.stop());
+        //     madiaRecorder.stop();
+        //     // let time = 700
+        //     // madiaRecorder.removeEventListener("dataavailable", function (event) {
+        //     //     audioChunks.push(event.data);
+        //     // });
+        //     // madiaRecorder.removeEventListener("stop", function () {
+        //     //     var audioBlob = new Blob(audioChunks);
 
-            madiaRecorder.stop();
-            let time = 700
-            madiaRecorder.removeEventListener("dataavailable", function (event) {
-                audioChunks.push(event.data);
-            });
-            madiaRecorder.removeEventListener("stop", function () {
-                var audioBlob = new Blob(audioChunks);
+        //     //     audioChunks = [];
 
-                audioChunks = [];
-
-                var fileReader = new FileReader();
-                fileReader.readAsDataURL(audioBlob);
-                fileReader.onloadend = function () {
-
-
-                    var base64String = fileReader.result;
-                    socket.emit("voice", base64String);
-
-                };
-
-                madiaRecorder.start();
+        //     //     var fileReader = new FileReader();
+        //     //     fileReader.readAsDataURL(audioBlob);
+        //     //     fileReader.onloadend = function () {
 
 
-                setTimeout(function () {
-                    madiaRecorder.stop();
-                }, time);
-            });
-            navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-                setStream(stream)
-                setMadiaRecorder(new MediaRecorder(stream))
-            })
-        }
+        //     //         var base64String = fileReader.result;
+        //     //         socket.emit("voice", base64String);
+
+        //     //     };
+
+        //     //     madiaRecorder.start();
+
+
+        //     //     setTimeout(function () {
+        //     //         madiaRecorder.stop();
+        //     //     }, time);
+        //     // });
+        //     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+        //         setStream(stream)
+        //         setMadiaRecorder(new MediaRecorder(stream))
+        //     })
+        // }
         return (() => {
             let time = 700
-            if (madiaRecorder.state !== "inactive") {
+
+            if (madiaRecorder.state !== "inactive" && inVoice) {
+                console.log("this is 2###")
                 stream.getTracks().forEach(track => track.stop());
                 madiaRecorder.stop()
-                madiaRecorder.removeEventListener("dataavailable", function (event) {
-                    audioChunks.push(event.data);
-                });
-                madiaRecorder.removeEventListener("stop", function () {
-                    var audioBlob = new Blob(audioChunks);
+                // madiaRecorder.removeEventListener("dataavailable", function (event) {
+                //     audioChunks.push(event.data);
+                // });
+                // madiaRecorder.removeEventListener("stop", function () {
+                //     var audioBlob = new Blob(audioChunks);
 
-                    audioChunks = [];
+                //     audioChunks = [];
 
-                    var fileReader = new FileReader();
-                    fileReader.readAsDataURL(audioBlob);
-                    fileReader.onloadend = function () {
-
-
-                        var base64String = fileReader.result;
-                        socket.emit("voice", base64String);
-
-                    };
-
-                    madiaRecorder.start();
+                //     var fileReader = new FileReader();
+                //     fileReader.readAsDataURL(audioBlob);
+                //     fileReader.onloadend = function () {
 
 
-                    setTimeout(function () {
-                        madiaRecorder.stop();
-                    }, time);
-                });
+                //         var base64String = fileReader.result;
+                //         socket.emit("voice", base64String);
+
+                //     };
+
+                //     madiaRecorder.start();
+
+
+                //     setTimeout(function () {
+                //         madiaRecorder.stop();
+                //     }, time);
+                // });
                 navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
                     setStream(stream)
                     setMadiaRecorder(new MediaRecorder(stream))
@@ -190,10 +193,13 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
             const picture = user.profilePicture
 
             socket.emit("joinRoom", { username, roomId: `text${textId}`, picture })
-            console.log('waht about here', servers)
+            // console.log('waht about here', servers)
 
             setMyServer(servers.find(ele => (ele.id === parseInt(id))))
 
+            // servers.forEach(ele =>{
+            //     dispatch(getAllVoiceChannels(ele.id))
+            // })
 
 
             dispatch(getTextChannels(id))
@@ -204,12 +210,12 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
                 // .then(() => setEditPicture(myServer.serverImage))
                 // .then(() => setEditName(myServer.serverName))
                 .then(() => {
-                    console.log("how many times")
+                    // console.log("how many times")
                     setIsLoaded(true)
                 })
         }
 
-    }, [textId, isFirstLoaded])
+    }, [textId, id,isFirstLoaded])
 
 
     useEffect(() => {
@@ -218,7 +224,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
         if (isLoaded) {
 
             dispatch(getMembersAndAdmins(myServer.id))
-                .then(() => dispatch(getAllVoiceChannels(myServer.id)))
+                .then(() => dispatch(getAllVoiceChannels(id)))
                 .then((channels) => {
                     channels.forEach(ele => {
 
@@ -238,7 +244,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
 
     const settingVoiceMembers = (data) => {
         // console.log("%%%", voices[0], voices[0].voiceRoom, voiceId)
-        console.log("$$what am i working with", data.serverIds, servers)
+        // console.log("$$what am i working with", data.serverIds, servers)
         servers.forEach(ele =>{
             if(data.serverIds.includes(ele.id)){
                 dispatch(setVoices(data.voices.voiceMembers))
@@ -344,10 +350,11 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
 
 
     const handleEnterVoice = (ele) => {
-        console.log("%%%voicdid", ele.id)
+        // console.log("%%%voicdid", ele.id)
 
         if (!inVoice) {
             setVoiceId(ele.id)
+            // console.log("sugma",ele.id)
             socket.emit("joinVoice", { username: user.username, voiceRoomId: `voice${ele.id}` })
             let ids = [];
             servers.forEach(ele =>{
@@ -463,7 +470,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
                                         <div className="voice-chat-inside">
 
                                             {voiceMembers.map(ele => {
-                                                console.log("$$$", ele)
+                                                // console.log("$$$", ele)
                                                 return (
                                                     <div className="voice-member">
                                                         <img src={ele.profilePicture}></img>

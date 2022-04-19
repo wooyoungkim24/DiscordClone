@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch , useHistory} from "react-router-dom";
-import { getServers, getTextChannels } from "../../store/server";
+import { getServers, getTextChannels, getAllVoiceChannels } from "../../store/server";
 
 import "./index.css"
 
@@ -24,6 +24,8 @@ function IndividualServerButton({ server,user , socket}) {
     // }
     const handleServerClick = (e) =>{
         // sendData()
+
+        dispatch(getAllVoiceChannels(server.id))
         history.push(`/servers/${server.id}/${textChannels[server.id][0].id}`)
 
     }
