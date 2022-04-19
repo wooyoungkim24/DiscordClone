@@ -32,6 +32,7 @@ function Server({ socket, servers, user, isFirstLoaded }) {
     const [myServer, setMyServer] = useState({})
     const [myTextChannels, setMyTextChannels] = useState({})
     const [isLoaded, setIsLoaded] = useState(false)
+    const [isSecondLoaded, setIsSecondLoaded] = useState(false)
     const [showServerDropDown, setShowServerDropDown] = useState(false)
     const [showServerModal, setShowServerModal] = useState(false)
     // const textChannels = useSelector(state => {
@@ -77,7 +78,9 @@ function Server({ socket, servers, user, isFirstLoaded }) {
         if (isLoaded) {
 
             dispatch(getMembersAndAdmins(myServer.id))
-            // dispatch(getAllVoiceChannels(myServer.id))
+            .then(() =>dispatch(getAllVoiceChannels(myServer.id)) )
+            .then(() => setIsSecondLoaded(true))
+
         }
     }, [isLoaded])
 
@@ -199,7 +202,7 @@ function Server({ socket, servers, user, isFirstLoaded }) {
     return (
 
         <>
-            {isLoaded &&
+            {isLoaded && isSecondLoaded &&
 
                 <div className="server-page">
 
