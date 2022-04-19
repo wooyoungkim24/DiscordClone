@@ -10,7 +10,7 @@ import UserBar from "../UserBar";
 import EditServerModal from "../EditServerModal";
 import AdminPrivilegeModal from "../AdminPrivilegeModal";
 
-function Server({ madiaRecorder, socket, servers, user, isFirstLoaded }) {
+function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, servers, user, isFirstLoaded }) {
     const { id, textId } = useParams();
     // console.log('are you hitting here?', servers)
     const dispatch = useDispatch();
@@ -52,9 +52,6 @@ function Server({ madiaRecorder, socket, servers, user, isFirstLoaded }) {
 
     const [textIndex, setTextIndex] = useState(0)
 
-    const stop = () => {
-
-    }
 
 
     useEffect(() => {
@@ -97,62 +94,78 @@ function Server({ madiaRecorder, socket, servers, user, isFirstLoaded }) {
         }
 
         if (!inVoice && madiaRecorder.state !== "inactive") {
+
+            stream.getTracks().forEach(track => track.stop());
+
             madiaRecorder.stop();
-            // let time = 700
-            // madiaRecorder.removeEventListener("dataavailable", function (event) {
-            //     audioChunks.push(event.data);
-            // });
-            // madiaRecorder.removeEventListener("stop", function () {
-            //     var audioBlob = new Blob(audioChunks);
+            let time = 700
+            madiaRecorder.removeEventListener("dataavailable", function (event) {
+                audioChunks.push(event.data);
+            });
+            madiaRecorder.removeEventListener("stop", function () {
+                var audioBlob = new Blob(audioChunks);
 
-            //     audioChunks = [];
+                audioChunks = [];
 
-            //     var fileReader = new FileReader();
-            //     fileReader.readAsDataURL(audioBlob);
-            //     fileReader.onloadend = function () {
-
-
-            //         var base64String = fileReader.result;
-            //         socket.emit("voice", base64String);
-
-            //     };
-
-            //     madiaRecorder.start();
+                var fileReader = new FileReader();
+                fileReader.readAsDataURL(audioBlob);
+                fileReader.onloadend = function () {
 
 
-            //     setTimeout(function () {
-            //         madiaRecorder.stop();
-            //     }, time);
-            // });
+                    var base64String = fileReader.result;
+                    socket.emit("voice", base64String);
+
+                };
+
+                madiaRecorder.start();
+
+
+                setTimeout(function () {
+                    madiaRecorder.stop();
+                }, time);
+            });
+            navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+                setStream(stream)
+                setMadiaRecorder(new MediaRecorder(stream))
+            })
         }
-        // return (() => {
-        //     let time = 700
-        //     madiaRecorder.removeEventListener("dataavailable", function (event) {
-        //         audioChunks.push(event.data);
-        //     });
-        //     madiaRecorder.removeEventListener("stop", function () {
-        //         var audioBlob = new Blob(audioChunks);
+        return (() => {
+            let time = 700
+            if (madiaRecorder.state !== "inactive") {
+                stream.getTracks().forEach(track => track.stop());
+                madiaRecorder.stop()
+                madiaRecorder.removeEventListener("dataavailable", function (event) {
+                    audioChunks.push(event.data);
+                });
+                madiaRecorder.removeEventListener("stop", function () {
+                    var audioBlob = new Blob(audioChunks);
 
-        //         audioChunks = [];
+                    audioChunks = [];
 
-        //         var fileReader = new FileReader();
-        //         fileReader.readAsDataURL(audioBlob);
-        //         fileReader.onloadend = function () {
-
-
-        //             var base64String = fileReader.result;
-        //             socket.emit("voice", base64String);
-
-        //         };
-
-        //         madiaRecorder.start();
+                    var fileReader = new FileReader();
+                    fileReader.readAsDataURL(audioBlob);
+                    fileReader.onloadend = function () {
 
 
-        //         setTimeout(function () {
-        //             madiaRecorder.stop();
-        //         }, time);
-        //     });
-        // })
+                        var base64String = fileReader.result;
+                        socket.emit("voice", base64String);
+
+                    };
+
+                    madiaRecorder.start();
+
+
+                    setTimeout(function () {
+                        madiaRecorder.stop();
+                    }, time);
+                });
+                navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+                    setStream(stream)
+                    setMadiaRecorder(new MediaRecorder(stream))
+                })
+            }
+
+        })
 
 
 

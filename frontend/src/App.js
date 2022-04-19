@@ -24,6 +24,7 @@ function App() {
     return state.session.user
   })
   const [madiaRecorder, setMadiaRecorder] = useState()
+  const [stream, setStream] = useState()
   // const [yourServers, setYourServers] = useState([])
 
   const current_location = useLocation().pathname.split("/")[2]
@@ -43,8 +44,8 @@ function App() {
           // .then(servers => setYourServers(servers))
         }
         navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-          let tempRecorder = new MediaRecorder(stream);
-          setMadiaRecorder(tempRecorder)
+          setStream(stream)
+          setMadiaRecorder(new MediaRecorder(stream))
         })
       })
       .then(() => setIsLoaded(true));
@@ -100,7 +101,7 @@ function App() {
             </Route>
 
             <Route exact path="/servers/:id/:textId">
-              <Server madiaRecorder={madiaRecorder} isFirstLoaded={isLoaded} socket={socket} servers={yourServers} user={user} />
+              <Server setStream={setStream} setMadiaRecorder = {setMadiaRecorder} stream ={stream} madiaRecorder={madiaRecorder} isFirstLoaded={isLoaded} socket={socket} servers={yourServers} user={user} />
             </Route>
 
 
