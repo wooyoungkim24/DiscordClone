@@ -22,12 +22,12 @@ router.get("/all/:id", asyncHandler(async (req, res) => {
         },
         include: Server
     })
-    const moderators = await Moderator.findAll({
-        where: {
-            userId
-        },
-        include: Server
-    })
+    // const moderators = await Moderator.findAll({
+    //     where: {
+    //         userId
+    //     },
+    //     include: Server
+    // })
     const admins = await Admin.findAll({
         where: {
             userId
@@ -37,7 +37,6 @@ router.get("/all/:id", asyncHandler(async (req, res) => {
 
     return res.json({
         members,
-        moderators,
         admins
     })
 }))
@@ -346,6 +345,18 @@ router.get("/all/voice/:id", asyncHandler(async (req, res) => {
         }
     })
     return res.json(voiceChannels)
+}))
+
+router.get("/all/voice/members/:username/:id", asyncHandler(async(req,res)=>{
+    const {id, username} = req.params
+    const voiceChannel = await VoiceChannel.findByPk(id)
+    let oldMembers = voiceChannel.voiceMembers
+    let oldIndex = oldMembers.findIndex(ele => ele.username === username)
+    oldMembers.splice(oldIndex,1)
+    await voiceChannel.update({
+        voiceMembers:oldMembers
+    })
+    return res.json(voiceChannel.voiceMembers)
 }))
 router.post("/voice", asyncHandler(async (req, res) => {
     const newVoiceChannel = await VoiceChannel.create(req.body)

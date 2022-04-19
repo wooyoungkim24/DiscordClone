@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
 import { Modal } from "../../context/modal"
 import UserSettings from "../UserSettings";
+import { setVoices } from "../../store/server";
 
-function UserBar({ voiceId, voiceMembers, setVoiceMembers, user, socket, inVoice, setInVoice }) {
+function UserBar({ servers, voiceId, voiceMembers, setVoiceMembers, user, socket, inVoice, setInVoice }) {
 
 
     const [showUserSettings, setShowUserSettings] = useState(false)
+    const dispatch = useDispatch();
 
     const onlineDot = (ele) => {
         if (ele.online) {
@@ -26,34 +28,38 @@ function UserBar({ voiceId, voiceMembers, setVoiceMembers, user, socket, inVoice
     }
 
 
-    const settingVoiceMembers = (data) => {
-        console.log("$$$why", data, user.username)
-        if (data.inVoice[0].username === user.username) {
-            let voice = data.inVoice[0]
+    const settingVoiceMembersAfter = (data) => {
+        // console.log("%%%", voices[0], voices[0].voiceRoom, voiceId)
+        console.log("$$now what", data.serversIds, servers)
+        servers.forEach(ele =>{
+            if(data.serverIds.includes(ele.id)){
+                dispatch(setVoices(data.voices.voiceMembers))
+                return
+            }
+        })
 
-            let working = [...voiceMembers]
-            let workingIndex = working.findIndex(ele => ele.username === voice.username)
-            working.splice(workingIndex, 1)
-            // console.log("are you not hitting here", voices)
-            setVoiceMembers([...working])
-        }
 
     }
 
     useEffect(() => {
-        socket.on("inVoiceAfter", settingVoiceMembers);
+        socket.on("updateVoicesAfter", settingVoiceMembersAfter);
 
         // socket.on("send", (data)=> console.log('is you coming here',data))
 
-        return () => socket.off("inVoiceAfter", settingVoiceMembers)
+        return () => socket.off("updateVoicesAfter", settingVoiceMembersAfter);
     }, [socket])
 
     const handleHangUp = () => {
 
         socket.emit("leaveVoice", { username: user.username })
+        let ids = [];
+        servers.forEach(ele=>{
+            ids.push(ele.id)
+        })
 
-
+        socket.emit("getVoicesHangUp", { voiceId, username: user.username, serverIds:ids})
         // socket.emit("allInVoiceAfter", { voiceRoomId: `voice${voiceId}` })
+        // voiceId = undefined
 
         setInVoice(false)
 

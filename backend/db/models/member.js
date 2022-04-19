@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const Member = sequelize.define('Member', {
     userId: DataTypes.INTEGER,
     serverId: DataTypes.INTEGER,
+    inviterId: DataTypes.INTEGER,
     pending: DataTypes.BOOLEAN
   }, {});
   Member.associate = function(models) {

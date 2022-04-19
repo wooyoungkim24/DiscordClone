@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
 import { Modal } from "../../context/modal"
-import { getAllVoiceChannels, deleteServer, getServers, getTextChannels, leaveServer, getMembersAndAdmins } from "../../store/server";
+import { setVoices, getAllVoiceChannels, deleteServer, getServers, getTextChannels, leaveServer, getMembersAndAdmins, setInitialVoices } from "../../store/server";
 import Chat from "../Chat";
 import "./index.css"
 import InvitePeopleModal from "../InvitePeopleModal";
@@ -40,8 +40,9 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
     const [showServerDropDown, setShowServerDropDown] = useState(false)
     const [showServerModal, setShowServerModal] = useState(false)
 
-    const [voiceMembers, setVoiceMembers] = useState([])
+    // const [voiceMembers, setVoiceMembers] = useState([])
 
+    // let voiceId;
     const [voiceId, setVoiceId] = useState()
     // const textChannels = useSelector(state => {
     //     return state.myServers.textChannels
@@ -54,6 +55,9 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
 
     const [textIndex, setTextIndex] = useState(0)
 
+    const voiceMembers = useSelector(state => {
+        return state.myServers.voices
+    })
 
 
     useEffect(() => {
@@ -210,30 +214,47 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
 
     useEffect(() => {
         // console.log("###is it here", isLoaded)
-        socket.emit("allInVoice", { voiceRoom: `voice${voiceId}` })
+        // socket.emit("allInVoice", { voiceRoom: `voice${voiceId}` })
         if (isLoaded) {
 
             dispatch(getMembersAndAdmins(myServer.id))
                 .then(() => dispatch(getAllVoiceChannels(myServer.id)))
+                .then((channels) => {
+                    channels.forEach(ele => {
+
+                        const payload = {
+                            username: user.username,
+                            id: ele.id
+                        }
+                        dispatch(setInitialVoices(payload))
+                    })
+                })
                 .then(() => setIsSecondLoaded(true))
 
 
         }
-    }, [isLoaded, id])
+    }, [isLoaded, id, textId])
 
 
     const settingVoiceMembers = (data) => {
-        let voices = data.inVoice
-        console.log("%%%", voices[0], voices[0].voiceRoom, voiceId)
-        if (voices[0].voiceRoom == `voice${voiceId}`) {
-            console.log("is it here xd", voices)
-            setVoiceMembers([...voices])
-        }
+        // console.log("%%%", voices[0], voices[0].voiceRoom, voiceId)
+        console.log("$$what am i working with", data.serverIds, servers)
+        servers.forEach(ele =>{
+            if(data.serverIds.includes(ele.id)){
+                dispatch(setVoices(data.voices.voiceMembers))
+                return
+            }
+        })
+
+            // console.log("is it here xd", voices)
+            // setVoiceMembers([...data.voices])
+
+
 
     }
 
     useEffect(() => {
-        socket.on("inVoice", settingVoiceMembers);
+        socket.on("updateVoices", settingVoiceMembers);
         socket.on("send", function (data) {
             // console.log("are you gettin ghits", data)
             var audio = new Audio(data);
@@ -243,7 +264,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
         // socket.on("send", (data)=> console.log('is you coming here',data))
 
         return () => {
-            socket.off("inVoice", settingVoiceMembers)
+            socket.off("updateVoices", settingVoiceMembers)
             socket.off("send", function (data) {
                 // console.log("are you gettin ghits", data)
                 var audio = new Audio(data);
@@ -326,10 +347,13 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
         console.log("%%%voicdid", ele.id)
 
         if (!inVoice) {
-            // setVoiceId(ele.id)
+            setVoiceId(ele.id)
             socket.emit("joinVoice", { username: user.username, voiceRoomId: `voice${ele.id}` })
-
-
+            let ids = [];
+            servers.forEach(ele =>{
+                ids.push(ele.id)
+            })
+            socket.emit("getVoicesPre", { serverIds: ids, voiceId: ele.id, username: user.username, picture: user.profilePicture })
             // socket.emit("allInVoice", { voiceRoomId: `voice${ele.id}` })
             setInVoice(true)
         }
@@ -442,7 +466,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
                                                 console.log("$$$", ele)
                                                 return (
                                                     <div className="voice-member">
-                                                        <img src={ele.picture}></img>
+                                                        <img src={ele.profilePicture}></img>
                                                         {ele.username}
                                                     </div>
                                                 )
@@ -460,7 +484,9 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
                         </div>
                         <div className="user-bar">
 
-                            <UserBar voiceId={voiceId} voiceMembers={voiceMembers} setVoiceMembers={setVoiceMembers} setInVoice={setInVoice} inVoice={inVoice} socket={socket} user={user} />
+                            <UserBar servers={servers} voiceId={voiceId} voiceMembers={voiceMembers} setInVoice={setInVoice} inVoice={inVoice} socket={socket} user={user} />
+
+
                         </div>
                     </div>
 

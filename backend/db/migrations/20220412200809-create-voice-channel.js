@@ -12,6 +12,10 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: 'New Voicer Channel'
       },
+      voiceMembers:{
+        type: Sequelize.JSONB,
+        defaultValue:[],
+      },
       serverId: {
         allowNull: false,
         type: Sequelize.INTEGER,

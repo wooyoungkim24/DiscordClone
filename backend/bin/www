@@ -5,7 +5,7 @@ const socket = require("socket.io");
 const app = require('../app');
 const { get_my_voice_after, leave_User_Voice, get_all_voice, get_Current_User, user_Disconnect, join_User, join_User_Voice, user_online } = require("../utils/server");
 const db = require('../db/models');
-const { TextChannel, DirectMessage, User } = require("../db/models")
+const { VoiceChannel, TextChannel, DirectMessage, User } = require("../db/models")
 
 const { Op } = require('sequelize');
 
@@ -89,10 +89,65 @@ db.sequelize
         socket.join(rooms);
       })
 
-      socket.on("leaveVoice",({username})=>{
+      socket.on("leaveVoice", ({ username }) => {
         const old_user = leave_User_Voice(username);
         console.log(socket.id, "=id");
         socket.leave(old_user.voiceRoom)
+
+      })
+
+      socket.on("getVoicesHangUp", async ({voiceId, username, serverIds}) =>{
+        const hangUpChannel = await VoiceChannel.findByPk(voiceId)
+        let oldHangUp = hangUpChannel.voiceMembers
+        let oldHangUpIndex = oldHangUp.findIndex(ele => ele.username === username)
+        oldHangUp.splice(oldHangUpIndex,1)
+        await hangUpChannel.update({voiceMembers:oldHangUp})
+        let newHangUpChannel = await VoiceChannel.findByPk(voiceId)
+
+        io.emit("updateVoicesAfter", {
+          serverIds,
+          user: username,
+          voices: newHangUpChannel
+        })
+      })
+
+
+      socket.on("getVoicesPre", async ({ voiceId, username, picture,serverIds}) => {
+
+        const allChannels = await VoiceChannel.findAll()
+        let oldChannelId;
+        allChannels.forEach(ele => {
+          let curr = ele.voiceMembers
+          curr.forEach(other => {
+            if (other.username === username) {
+              oldChannelId = ele.id
+
+            }
+          })
+        })
+
+        if (oldChannelId) {
+          let oldVoice = await VoiceChannel.findByPk(oldChannelId)
+          let oldVoiceMembers= oldVoice.voiceMembers
+          let oldVoiceMembersIndex = oldVoiceMembers.findIndex(ele => ele.username === username)
+          oldVoiceMembers.splice(oldVoiceMembersIndex,1)
+          await oldVoice.update({
+            voiceMembers:oldVoiceMembers
+          })
+        }
+
+        const voiceChannel = await VoiceChannel.findByPk(voiceId)
+        let oldMembers = voiceChannel.voiceMembers
+        let newMembers = [...oldMembers, { username: username, profilePicture: picture }]
+        await voiceChannel.update({
+          voiceMembers: newMembers
+        })
+        const newVoiceChannel = await VoiceChannel.findByPk(voiceId)
+        io.emit("updateVoices", {
+          serverIds,
+          user: username,
+          voices: newVoiceChannel
+        })
 
       })
 

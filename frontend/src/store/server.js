@@ -17,6 +17,8 @@ const REMOVE_NOT_ADMIN_MEMBER = 'session/kickMember'
 const SET_MY_TEXT = 'session/setMyText'
 const SET_MEMBERS_AND_ADMINS = 'session/setMembersAndAdmins'
 const SET_VOICE_CHANNELS = 'session/setVoiceChannels'
+const SET_VOICES = 'session/setVoices'
+
 
 
 const setServers = (servers) => {
@@ -115,14 +117,36 @@ const setVoiceChannels = (channels) =>{
         payload: channels
     }
 }
+export const setVoices = (members) =>{
+    return {
+        type: SET_VOICES,
+        payload: members
+    }
+}
+
+export const setInitialVoices = (payload) => async dispatch =>{
+    const {id, username} = payload
+    const res = await csrfFetch(`/api/servers/all/voice/members/${username}/${id}`)
+    const data = await res.json();
+    // let yourIndex = data.findIndex(ele => ele.username === username)
+    // console.log("$$before", data)
+    // data.splice(yourIndex, 1)
+    // console.log("$$after", data)
+    dispatch(setVoices(data))
+    return data
+}
 
 
 export const getMembersAndAdmins = (serverId) => async dispatch =>{
 
     const res = await csrfFetch(`/api/servers/all/members/only/${serverId}`)
     const members = await res.json();
+
     const res2 = await csrfFetch(`/api/servers/all/admins/${serverId}`)
     const admin = await res2.json()
+
+    console.log("what are the members", members)
+    console.log("what is my admin", admin)
     const payload = {
         members:members,
         admin:admin
@@ -295,14 +319,14 @@ export const getServers = (id) => async dispatch => {
     const response = await csrfFetch(`/api/servers/all/${id}`);
     const data = await response.json();
     // console.log('thesea re my servers',data)
-    const { members, moderators, admins } = data;
+    const { members, admins } = data;
     const myServers = [];
     members.forEach(ele => {
         myServers.push(ele.Server)
     })
-    moderators.forEach(ele => {
-        myServers.push(ele.Server)
-    })
+    // moderators.forEach(ele => {
+    //     myServers.push(ele.Server)
+    // })
     admins.forEach(ele => {
         myServers.push(ele.Server)
     })
@@ -332,7 +356,7 @@ export const deleteServer = (id) => async dispatch =>{
 
 
 
-const initialState = {voiceChannels: [],membersAndAdmins: {}, myTextChannels:[],nonAdminServerMembers:[],serverMembers:[],pendingServerMembers:[], myServers: [], textChannels: {}, messageHistory: [], pendingServers:[] };
+const initialState = {voices: [], voiceChannels: [],membersAndAdmins: {}, myTextChannels:[],nonAdminServerMembers:[],serverMembers:[],pendingServerMembers:[], myServers: [], textChannels: {}, messageHistory: [], pendingServers:[] };
 const serverReducer = (state = initialState, action) => {
 
     switch (action.type) {
@@ -376,6 +400,12 @@ const serverReducer = (state = initialState, action) => {
             return {
                 ...state,
                 voiceChannels:[...action.payload]
+            }
+        case SET_VOICES:
+            console.log('$$$down here', action.payload)
+            return {
+                ...state,
+                voices:[...action.payload]
             }
         case SET_MESSAGES:
             const messageHistory  = action.payload
