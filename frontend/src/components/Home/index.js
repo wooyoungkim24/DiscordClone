@@ -240,12 +240,13 @@ function Home({ user, socket }) {
 
             <Switch>
                 <Route exact path="/home">
-                    {showFriends &&
+
                         <FriendsList user={user} friends={friends} socket={socket} />
-                    }
+
 
                 </Route>
-                <Route exact path={`/home/:id`}>
+                <Route exact path='/home/:id'>
+
                     <DirectMessage user={user} socket={socket} key={useLocation().pathname.split("/")[1]} />
                 </Route>
             </Switch>

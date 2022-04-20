@@ -9,6 +9,7 @@ import moment from 'moment'
 
 
 function DirectMessage({ user, socket }) {
+
     const { id } = useParams()
     const userId = user.id
     const dispatch = useDispatch()
@@ -33,6 +34,7 @@ function DirectMessage({ user, socket }) {
         }else{
             roomNumber = `${intId}_${intUser}`
         }
+
         socket.emit("joinRoom", { username, roomId: `dm${roomNumber}`, picture })
         const payload = {
             userId,
@@ -81,6 +83,7 @@ function DirectMessage({ user, socket }) {
     };
     return (
         <div className="direct-message-chat-container">
+
             <div className="direct-message-title">
                 {id}
             </div>

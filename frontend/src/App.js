@@ -107,7 +107,7 @@ function App() {
             </Route>
 
 
-            <Route exact path="/home">
+            <Route path="/home">
               <Home user={user} socket={socket} />
             </Route>
 
