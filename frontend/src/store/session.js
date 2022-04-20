@@ -9,6 +9,13 @@ const SET_PENDING_FRIENDS = 'session/setPendingFriends'
 const SET_NOT_FRIENDS = 'session/setNotFriends'
 const SET_PENDING_SENT_FRIENDS = 'session/setPendingSentFriends'
 const SET_INITIAL_PENDING_SENT_FRIENDS = 'session/setInitialPendingSentFriends'
+const USER_ONLINE = 'session/userOnline'
+
+export const userOnline = ()=>{
+    return {
+        type: USER_ONLINE
+    }
+}
 
 const setMyMessages = (messages) =>{
     return {
@@ -75,7 +82,11 @@ const removeUser = () => {
 };
 
 
-
+export const getDMsTemp =(id) => async dispatch =>{
+    const res = await csrfFetch(`/api/users/get/dms/temp/${id}`)
+    const data = await res.json()
+    return data
+}
 
 export const getDMs = (id) => async dispatch =>{
     const res = await csrfFetch(`/api/users/active/messages/${id}`)
@@ -93,6 +104,16 @@ export const setInitialDMs = (payload) => async dispatch =>{
     return data
 }
 
+export const deleteDM = (payload) => async dispatch =>{
+
+    const res = await csrfFetch("/api/users/delete/dm",{
+        method:"DELETE",
+        body:JSON.stringify(payload)
+    })
+    const data = await res.json();
+    dispatch(setMyMessages(data))
+    return data
+}
 
 export const createDM = (payload) => async dispatch =>{
 
@@ -226,6 +247,7 @@ const initialState = {pendingSentFriends:[],notFriends:[], pendingFriends:[], us
 const sessionReducer = (state = initialState, action) => {
     let newState;
     switch (action.type) {
+
         case SET_USER:
             newState = Object.assign({}, state);
             newState.user = action.payload;
@@ -235,6 +257,12 @@ const sessionReducer = (state = initialState, action) => {
             newState = Object.assign({}, state);
             newState.user = null;
             return newState;
+
+        case USER_ONLINE:
+            return {
+                ...state,
+                user:{...state.user, online:true}
+            }
         case SET_FRIENDS:
             // let b = [];
             // action.payload.forEach(ele =>{
@@ -244,6 +272,7 @@ const sessionReducer = (state = initialState, action) => {
                 ...state,
                 friends:[...action.payload]
             }
+
 
         case SET_PENDING_SENT_FRIENDS:
 

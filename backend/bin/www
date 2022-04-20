@@ -53,6 +53,7 @@ db.sequelize
           online: true
         }
         let userUpdated = await userUpdate.update(newBody)
+        
         io.emit("loggedOn", {
           userId
         })

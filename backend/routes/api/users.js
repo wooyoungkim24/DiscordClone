@@ -81,6 +81,49 @@ router.get("/single/dm/:userId/:id",asyncHandler(async(req,res) =>{
       return res.json(singleDM)
 }))
 
+router.delete("/delete/dm", asyncHandler(async(req,res)=>{
+    const {userId, otherId} = req.body
+    await DirectMessage.destroy({
+        where:{
+            [Op.or]:[
+                {
+                    [Op.and]:[
+                        {user1:userId},
+                        {user2:otherId}
+                    ]
+                },
+                {
+                    [Op.and]:[
+                        {user1:otherId},
+                        {user2:userId}
+                    ]
+                }
+            ]
+        }
+    })
+    const activeDirectMessages = await User.findOne({
+        where: {
+            id: userId
+        },
+        include: ["messager", "messagee"]
+    })
+
+    let dms = [...activeDirectMessages.messager, ...activeDirectMessages.messagee]
+    return res.json(dms)
+
+}))
+router.get("/get/dms/temp/:id", asyncHandler(async(req,res)=>{
+    const id = req.params.id
+    const activeDirectMessages = await User.findOne({
+        where: {
+            id
+        },
+        include: ["messager", "messagee"]
+    })
+
+    let dms = [...activeDirectMessages.messager, ...activeDirectMessages.messagee]
+    return res.json(dms)
+}))
 
 router.post("/create/dm", asyncHandler(async (req, res) => {
     const { userId, friendId } = req.body

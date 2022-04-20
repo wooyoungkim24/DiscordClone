@@ -1,0 +1,348 @@
+.home-container-left{
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+    max-height:100vh;
+
+}
+
+/* home nav css */
+.home-nav{
+
+    height: 90px;
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    padding:5px;
+    background-color: rgb(47,49,54);
+}
+
+.home-nav button{
+    height: 45px;
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content:flex-start;
+    font-family: GintoBold;
+    color:white;
+    padding-left:15px;
+    background-color: rgb(47,49,54);
+    border:none;
+    outline:none;
+    border-radius:5px;
+    cursor: pointer;
+}
+.home-nav button >div{
+    width: 40px;
+}
+#friends-home-button.select{
+    background-color: rgb(66,70,77);
+}
+#invites-home-button.select{
+    background-color: rgb(66,70,77);
+}
+.home-nav i{
+    margin-right: 20px;
+
+}
+#friends-home-button{
+    margin-bottom:5px;
+}
+/* home nav css */
+
+
+
+/* home friends css */
+.home-friends{
+
+    height: calc(100vh - 60px);
+    background-color: rgb(47,49,54);;
+    width: 250px;
+}
+.new-dm-button{
+    /* border:1px solid purple; */
+    font-family: GintoBold;
+    font-size: 12px;
+    color:rgb(185,187,190);
+    padding-left: 15px;
+    display: flex;
+    height: 20px;
+    align-items: center;
+    flex-direction: row;
+}
+#new-dm-button{
+    margin-left:80px;
+    background-color: transparent;
+    border:none;
+    outline:none;
+    cursor: pointer;
+}
+#new-dm-button i{
+    color:rgb(185,187,190);
+}
+.new-dm-popout{
+    position: absolute;
+    left: 285px;
+    top: 120px;
+
+    background-color: rgb(54,57,63);
+    width: 300px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    border-radius:10px;
+}
+.new-dm-popout-title{
+    display: flex;
+    font-family:GintoBold;
+    color:white;
+    font-size:20px;
+    padding: 10px;
+    border-bottom: 2px solid rgb(32,34,37);
+}
+.new-dm-popout-friends{
+    padding-left:10px;
+    padding-right:10px;
+    height: 180px;
+    overflow-y:scroll;
+}
+.new-dm-popout-friends::-webkit-scrollbar {
+    width: 8px;
+  }
+.new-dm-popout-friends::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+  }
+
+.new-dm-popout-friends::-webkit-scrollbar-thumb {
+    background: rgb(32,34,37);
+    border-radius: 10px;
+  }
+.dm-popout-friend-individual{
+    padding:5px;
+    /* border:1px solid white; */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color:white;
+}
+.dm-popout-friend-individual-left{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.new-dm-popout-friends-name{
+    margin-left:20px;
+}
+.dm-popout-friend-individual img{
+    width: 35px;
+    height: 35px;
+    border-radius:30px;
+    object-fit: cover;
+}
+.create-dm-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 70px;
+}
+.create-dm-button button{
+    background-color: rgb(88,101,242);
+    border-radius:5px;
+    width: 270px;
+    height: 45px;
+    outline:none;
+    border:none;
+    font-family: GintoBold;
+    color:white;
+    font-size: 13px;
+    cursor: pointer;
+}
+.create-dm-button button:disabled{
+    cursor: not-allowed;
+}
+
+
+/* home friends css */
+
+
+/* active dms css */
+.active-dms{
+
+    width: 240px;
+    height: calc(100vh - 180px);
+    padding-right:5px;
+    padding-lefT:5px;
+}
+.list-element-active-dm{
+    /* border:1px solid blue; */
+    margin-top:5px;
+    margin-bottom:5px;
+    width: 230px;
+    height: 40px;
+    padding:5px;
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    cursor:pointer;
+    border-radius:5px;
+}
+.list-element-active-dm:hover{
+    background-color: rgba(66,70,77,.4);
+}
+
+.list-element-active-dm.select{
+    background-color: rgb(66,70,77);
+}
+
+.active-dm-image-container{
+    height: 60px;
+    width: 60px;
+    padding-left: 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.active-dm-image-container img{
+    height: 35px;
+    width: 35px;
+    object-fit: cover;
+    border-radius:30px;
+}
+.online-dot-dm i{
+    color:green;
+    font-size: 12px;
+}
+.offline-dot-dm i{
+    color:red;
+    font-size: 12px;
+}
+.active-dm-online-dot{
+    width: 0px;
+}
+.online-dot-dm, .offline-dot-dm{
+    position: relative;
+    top: 14px;
+    right:15px;
+    width: 18px;
+    height:18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(41,43,47);
+    border-radius:20px;
+}
+.active-dm-name{
+    font-family: Ginto;
+    color:white;
+    font-size: 16px;
+    width: 100px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.leave-dm-button{
+    font-family:Ginto;
+    background-color: transparent;
+    color:white;
+    cursor: pointer;
+    border:none;
+}
+.leave-dm-button:hover{
+    color:red;
+}
+.leave-button-div{
+    display: flex;
+    align-items: center;
+}
+/* active dms css */
+
+
+/* user bar css */
+.user-bar-include-voice{
+
+    display: flex;
+    flex-direction: column;
+    height:auto;
+    background-color: rgb(41,43,47);
+    padding-left:10px;
+}
+.user-bar-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 60px;
+}
+.user-bar-image{
+    height: 60px;
+    width: 60px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.user-bar-image img{
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
+    border-radius:30px;
+}
+.online-dot-user i{
+    color:green;
+    font-size: 12px;
+}
+.offline-dot-user i{
+    color:red;
+    font-size: 12px;
+}
+.online-dot-user, .offline-dot-user{
+    position: relative;
+    top: 14px;
+    right:15px;
+
+    width: 18px;
+    height:18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(41,43,47);
+    border-radius:20px;
+}
+.user-bar-name{
+    font-family: Ginto;
+    color:white;
+    font-size: 16px;
+}
+.user-bar-settings{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 50px;
+}
+.user-bar-settings button{
+    background-color: transparent;
+    border:none;
+    outline:none;
+    cursor: pointer;
+}
+.user-bar-settings i{
+    font-size: 16px;
+    color:rgb(185,187,190);
+}
+
+.in-voice-user{
+    position: absolute;
+}
+/* user bar css */
+
+.home-whole-container{
+    display: flex;
+    flex-direction: row;
+    min-height:100vh;
+    max-height:100vh;
+}

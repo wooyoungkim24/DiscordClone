@@ -3,14 +3,15 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router-dom";
-import { setDMs, setInitialDMs, getDMs} from "../../store/session"
+import { setDMs, setInitialDMs, getDMs, getDMsTemp } from "../../store/session"
 import moment from 'moment'
 
 
 
 function DirectMessage({ user, socket }) {
-
+    const history = useHistory();
     const { id } = useParams()
+
     const userId = user.id
     const dispatch = useDispatch()
     const [text, setText] = useState("")
@@ -18,6 +19,10 @@ function DirectMessage({ user, socket }) {
     const updateText = (e) => {
         setText(e.target.value)
     }
+
+    const dms = useSelector(state => {
+        return state.session.myMessages
+    })
 
     const dmHistory = useSelector(state => {
         return state.session.mySingleDMs
@@ -29,9 +34,9 @@ function DirectMessage({ user, socket }) {
         let intUser = parseInt(userId)
         let intId = parseInt(id)
         let roomNumber;
-        if(intUser < intId){
+        if (intUser < intId) {
             roomNumber = `${intUser}_${intId}`
-        }else{
+        } else {
             roomNumber = `${intId}_${intUser}`
         }
 
@@ -40,6 +45,21 @@ function DirectMessage({ user, socket }) {
             userId,
             id
         }
+
+        dispatch(getDMsTemp(user.id))
+            .then((data) => {
+                let dmIds = []
+
+                data.forEach(x => {
+                    dmIds.push(x.id)
+                })
+                console.log("what have we got", dmIds, id)
+                if (!dmIds.includes(parseInt(id))) {
+                    history.push("/home")
+                    return
+                }
+            })
+
         dispatch(setInitialDMs(payload))
     }, [id])
 
@@ -50,7 +70,7 @@ function DirectMessage({ user, socket }) {
         let sender = data.userId
         // future audio notif work around?
         console.log('differences', sender, user.id)
-        if(parseInt(sender) !== parseInt(user.id)){
+        if (parseInt(sender) !== parseInt(user.id)) {
             const audio = new Audio("https://citybrbphotos.s3.amazonaws.com/Discord_notification_-_sound_effect.mp3");
             audio.play();
         }

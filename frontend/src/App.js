@@ -11,6 +11,7 @@ import io from "socket.io-client";
 import "./index.css"
 import { getServers } from "../../frontend/src/store/server";
 import Home from "./components/Home";
+import { userOnline } from "./store/session";
 
 
 
@@ -19,7 +20,7 @@ function App() {
 
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [myUser, setMyUser] = useState({})
+  // const [myUser, setMyUser] = useState({})
   const user = useSelector(state => {
     return state.session.user
   })
@@ -54,9 +55,33 @@ function App() {
 
   }, [dispatch]);
 
+
+  useEffect(() => {
+    if (isLoaded) {
+      socket.on("loggedOn", (data) => {
+        // console.log('what data am i getting back', data, data.userId === user.id)
+        if (data.userId == user.id) {
+          dispatch(userOnline())
+        }
+      })
+      // socket.on("loggedOff", dispatch(sessionActions.restoreUser()))
+    }
+    return () => {
+      socket.off("loggedOn", (data) => {
+        if (data.userId == user.id) {
+          dispatch(userOnline())
+        }
+      })
+      // socket.off("loggedOff",dispatch(sessionActions.restoreUser()))
+    }
+
+
+  }, [socket, isLoaded])
+
   useEffect(() => {
 
     if (isLoaded && user) {
+      console.log("are you running")
       socket.emit("online", { username: user.username, userId: user.id })
     }
   }, [isLoaded])
@@ -95,7 +120,7 @@ function App() {
       {isLoaded && user && yourServers.length &&
 
         <div className="app-holder">
-          <ServerBar inVoice = {inVoice} isLoaded={isLoaded} user={user} socket={socket} servers={yourServers} />
+          <ServerBar inVoice={inVoice} isLoaded={isLoaded} user={user} socket={socket} servers={yourServers} />
 
           <Switch>
             <Route exact path="/">
@@ -103,12 +128,12 @@ function App() {
             </Route>
 
             <Route exact path="/servers/:id/:textId">
-              <Server inVoice = {inVoice} setInVoice={setInVoice} key={current_location} setStream={setStream} setMadiaRecorder = {setMadiaRecorder} stream ={stream} madiaRecorder={madiaRecorder} isFirstLoaded={isLoaded} socket={socket} servers={yourServers} user={user} />
+              <Server inVoice={inVoice} setInVoice={setInVoice} key={current_location} setStream={setStream} setMadiaRecorder={setMadiaRecorder} stream={stream} madiaRecorder={madiaRecorder} isFirstLoaded={isLoaded} socket={socket} servers={yourServers} user={user} />
             </Route>
 
 
             <Route path="/home">
-              <Home inVoice = {inVoice} user={user} socket={socket} />
+              <Home inVoice={inVoice} user={user} socket={socket} />
             </Route>
 
             <Route path="/login">

@@ -12,16 +12,17 @@ function UserBar({ serverId, voiceId, voiceMembers, setVoiceMembers, user, socke
     const dispatch = useDispatch();
 
     const onlineDot = (ele) => {
+        console.log("am i online", ele, ele.online)
         if (ele.online) {
             return (
-                <div className="online-dot">
-                    <i class="fas fa-circle"></i>
+                <div className="online-dot-user">
+                    <i className="fas fa-circle"></i>
                 </div>
             )
         } else {
             return (
-                <div className="offline-dot">
-                    <i class="fas fa-circle"></i>
+                <div className="offline-dot-user">
+                    <i className="fas fa-circle"></i>
                 </div>
             )
         }
@@ -74,7 +75,7 @@ function UserBar({ serverId, voiceId, voiceMembers, setVoiceMembers, user, socke
     return (
         <div className="user-bar-include-voice">
             {inVoice &&
-                <div>
+                <div className="in-voice-user">
                     <button onClick={handleHangUp}>
                         Hang Up
                     </button>
@@ -82,16 +83,16 @@ function UserBar({ serverId, voiceId, voiceMembers, setVoiceMembers, user, socke
             }
 
             <div className="user-bar-container">
-                <div>
+                <div className="user-bar-image">
                     <img src={user.profilePicture}></img>
                     <div>
                         {onlineDot(user)}
                     </div>
                 </div>
-                <div>
+                <div className="user-bar-name">
                     {user.username}
                 </div>
-                <div>
+                <div className="user-bar-settings">
                     <button type="button" onClick={() => setShowUserSettings(true)}>
                         <i class="fas fa-bars"></i>
                     </button>

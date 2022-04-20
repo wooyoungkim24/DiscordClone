@@ -71,8 +71,8 @@ function IndividualServerButton({ inVoice, server,user , socket}) {
     }, [dispatch])
 
     return (
-        <div className="single-server-container" onClick={handleServerClick}>
-            <button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}  disabled = {inVoice} className='single-your-server' >
+        <div className="single-server-container">
+            <button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}  onClick={handleServerClick}  disabled = {inVoice} className='single-your-server' >
                 <img className='single-server-image' src={server.serverImage}></img>
             </button>
             {showHover &&
