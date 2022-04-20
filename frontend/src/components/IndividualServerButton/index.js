@@ -7,7 +7,7 @@ import "./index.css"
 
 
 
-function IndividualServerButton({ server,user , socket}) {
+function IndividualServerButton({ inVoice, server,user , socket}) {
     const dispatch = useDispatch();
     const [isLoaded, setIsLoaded] = useState(false);
     const [showHover, setShowHover] = useState(false)
@@ -46,7 +46,7 @@ function IndividualServerButton({ server,user , socket}) {
     }, [dispatch])
 
     return (
-        <div className="single-server-container" onClick={handleServerClick}>
+        <button className="single-server-container" disabled = {inVoice} onClick={handleServerClick}>
             <div className='single-your-server' >
                 <img onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className='single-server-image' src={server.serverImage}></img>
             </div>
@@ -63,7 +63,7 @@ function IndividualServerButton({ server,user , socket}) {
                 </div>
 
             }
-        </div>
+        </button>
 
     )
 }

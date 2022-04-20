@@ -9,7 +9,7 @@ import NewServerModal from "../NewServerModal";
 
 
 
-function ServerBar({ user, socket, servers , isLoaded}) {
+function ServerBar({inVoice, user, socket, servers , isLoaded}) {
     const dispatch = useDispatch();
     const current_location = useLocation()
     const [newServer, setNewServer] = useState(false)
@@ -33,7 +33,7 @@ function ServerBar({ user, socket, servers , isLoaded}) {
             {isLoaded &&
                 <div className="your-servers">
                     {servers.map((ele, i) => (
-                        <IndividualServerButton key={i} server={ele} user={user} socket={socket} />
+                        <IndividualServerButton inVoice = {inVoice} key={i} server={ele} user={user} socket={socket} />
                     ))}
                 </div>
             }

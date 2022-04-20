@@ -15,9 +15,9 @@ router.get("/all/:id", asyncHandler(async (req, res) => {
 
     const members = await Member.findAll({
         where: {
-            [Op.and]:[
-                {userId:userId},
-                {pending:false}
+            [Op.and]: [
+                { userId: userId },
+                { pending: false }
             ]
         },
         include: Server
@@ -41,19 +41,19 @@ router.get("/all/:id", asyncHandler(async (req, res) => {
     })
 }))
 
-router.get("/all/members/:id", asyncHandler(async(req,res) =>{
+router.get("/all/members/:id", asyncHandler(async (req, res) => {
     const serverId = req.params.id
     const members = await Member.findAll({
-        where:{
-            [Op.and]:[
-                {serverId},
-                {pending:false}
+        where: {
+            [Op.and]: [
+                { serverId },
+                { pending: false }
             ]
 
         }
     })
     const admin = await Admin.findOne({
-        where:{
+        where: {
             serverId
         }
     })
@@ -61,27 +61,27 @@ router.get("/all/members/:id", asyncHandler(async(req,res) =>{
     return res.json(returnArray)
 }))
 
-router.get("/all/members/only/:id", asyncHandler(async(req,res) =>{
+router.get("/all/members/only/:id", asyncHandler(async (req, res) => {
     const serverId = req.params.id
     const members = await Member.findAll({
-        where:{
-            [Op.and]:[
-                {serverId},
-                {pending:false}
+        where: {
+            [Op.and]: [
+                { serverId },
+                { pending: false }
             ]
 
-        }, include: {model: User, as:"receivor"}
+        }, include: { model: User, as: "receivor" }
     })
     let returnArray = [...members]
     return res.json(returnArray)
 }))
-router.get("/all/admins/:id", asyncHandler(async(req,res) =>{
+router.get("/all/admins/:id", asyncHandler(async (req, res) => {
     const serverId = req.params.id
     const admin = await Admin.findOne({
-        where:{
+        where: {
             serverId
         },
-        include:User
+        include: User
     })
     let returnArray = admin
     return res.json(returnArray)
@@ -89,28 +89,28 @@ router.get("/all/admins/:id", asyncHandler(async(req,res) =>{
 
 
 
-router.get("/all/members/notAdmin/:id", asyncHandler(async(req,res) => {
+router.get("/all/members/notAdmin/:id", asyncHandler(async (req, res) => {
     const serverId = req.params.id
     const members = await Member.findAll({
-        where:{
-            [Op.and]:[
-                {serverId},
-                {pending:false}
+        where: {
+            [Op.and]: [
+                { serverId },
+                { pending: false }
             ]
         },
-        include: {model:User, as:'receivor'}
+        include: { model: User, as: 'receivor' }
     })
     return res.json(members)
 }))
 
 
-router.get("/all/pending/members/:id", asyncHandler(async(req,res) =>{
+router.get("/all/pending/members/:id", asyncHandler(async (req, res) => {
     const serverId = req.params.id
     const members = await Member.findAll({
-        where:{
-            [Op.and]:[
-                {serverId},
-                {pending:true}
+        where: {
+            [Op.and]: [
+                { serverId },
+                { pending: true }
             ]
 
         }
@@ -119,16 +119,16 @@ router.get("/all/pending/members/:id", asyncHandler(async(req,res) =>{
 }))
 
 
-router.get("/all/pending/:id", asyncHandler(async(req,res) =>{
+router.get("/all/pending/:id", asyncHandler(async (req, res) => {
     const userId = req.params.id
     const pendingMembers = await Member.findAll({
-        where:{
-            [Op.and]:[
-                {userId:userId},
-                {pending:true}
+        where: {
+            [Op.and]: [
+                { userId: userId },
+                { pending: true }
             ]
         },
-        include:[Server,{model:User, as:'receivor'},{model:User, as:'sender'}]
+        include: [Server, { model: User, as: 'receivor' }, { model: User, as: 'sender' }]
     })
 
     return res.json(pendingMembers)
@@ -143,10 +143,10 @@ router.post("/", asyncHandler(async (req, res) => {
         serverId: newServerId
     })
     const findNewAdmin = await Admin.findOne({
-        where:{
-            [Op.and]:[
-                {userId:userId},
-                {serverId: newServerId}
+        where: {
+            [Op.and]: [
+                { userId: userId },
+                { serverId: newServerId }
             ]
         },
         include: Server
@@ -171,7 +171,7 @@ router.put("/", asyncHandler(async (req, res) => {
 }))
 
 router.delete("/", asyncHandler(async (req, res) => {
-    const { id} = req.body
+    const { id } = req.body
     const deletedServer = await Server.findByPk(id)
     await Server.destroy({
         where: {
@@ -198,29 +198,29 @@ router.post("/new/member", asyncHandler(async (req, res) => {
 }))
 
 
-router.put("/edit/member", asyncHandler(async(req,res) =>{
-    const{id} = req.body
-    const updateMember = await Member.findByPk(id, {include:Server})
-    const updatedMember = await updateMember.update({pending:false})
+router.put("/edit/member", asyncHandler(async (req, res) => {
+    const { id } = req.body
+    const updateMember = await Member.findByPk(id, { include: Server })
+    const updatedMember = await updateMember.update({ pending: false })
     return res.json(updatedMember)
 }))
 
-router.delete("/delete/member/leave", asyncHandler(async(req,res) =>{
-    const {userId, serverId} = req.body
+router.delete("/delete/member/leave", asyncHandler(async (req, res) => {
+    const { userId, serverId } = req.body
     const deletedMember = await Member.findOne({
-        where:{
-            [Op.and]:[
-                {userId},
-                {serverId}
+        where: {
+            [Op.and]: [
+                { userId },
+                { serverId }
             ]
         },
         include: Server
     })
     await Member.destroy({
-        where:{
-            [Op.and]:[
-                {userId},
-                {serverId}
+        where: {
+            [Op.and]: [
+                { userId },
+                { serverId }
             ]
         }
     })
@@ -268,12 +268,12 @@ router.post("/new/moderator", asyncHandler(async (req, res) => {
     return res.json(newModerator)
 }))
 
-router.post("/delete/moderator", asyncHandler(async(req,res)=>{
-    const {id} = req.body
+router.post("/delete/moderator", asyncHandler(async (req, res) => {
+    const { id } = req.body
     const oldModerator = await Moderator.findByPk(id)
     await Moderator.destroy({
-        where:{
-            id:id
+        where: {
+            id: id
         }
     })
     return res.json(oldModerator)
@@ -291,36 +291,36 @@ router.get("/all/text/:id", asyncHandler(async (req, res) => {
     return res.json(textChannels)
 }))
 
-router.get("/single/text/:id", asyncHandler(async(req,res)=>{
+router.get("/single/text/:id", asyncHandler(async (req, res) => {
     const channelId = req.params.id
     const textChannel = await TextChannel.findByPk(channelId)
 
     return res.json(textChannel)
 }))
 router.post("/text", asyncHandler(async (req, res) => {
-    const {serverId, channelName} = req.body
-    await TextChannel.create({serverId, channelName})
+    const { serverId, channelName } = req.body
+    await TextChannel.create({ serverId, channelName })
     const allTextAfter = await TextChannel.findAll({
-        where:{
+        where: {
             serverId
         }
     })
     return res.json(allTextAfter)
 }))
 router.put("/text", asyncHandler(async (req, res) => {
-    const { id , channelName, serverId} = req.body
+    const { id, channelName, serverId } = req.body
     const updateText = await TextChannel.findByPk(id);
-    const updatedText = await updateText.update({channelName})
+    const updatedText = await updateText.update({ channelName })
 
     const allTextAfter = await TextChannel.findAll({
-        where:{
+        where: {
             serverId
         }
     })
     return res.json(allTextAfter)
 }))
 router.delete("/text", asyncHandler(async (req, res) => {
-    const { id , serverId} = req.body
+    const { id, serverId } = req.body
     let deletedChannel = await TextChannel.findByPk(id)
     await TextChannel.destroy({
         where: {
@@ -328,7 +328,7 @@ router.delete("/text", asyncHandler(async (req, res) => {
         }
     })
     const allTextAfter = await TextChannel.findAll({
-        where:{
+        where: {
             serverId
         }
     })
@@ -347,14 +347,20 @@ router.get("/all/voice/:id", asyncHandler(async (req, res) => {
     return res.json(voiceChannels)
 }))
 
-router.get("/all/voice/members/:username/:id", asyncHandler(async(req,res)=>{
-    const {id, username} = req.params
+router.get("/all/voice/members/:username/:id", asyncHandler(async (req, res) => {
+    const { id, username } = req.params
     const voiceChannel = await VoiceChannel.findByPk(id)
     let oldMembers = voiceChannel.voiceMembers
+
     let oldIndex = oldMembers.findIndex(ele => ele.username === username)
-    oldMembers.splice(oldIndex,1)
+    console.log("###oldies before", oldMembers, oldIndex)
+    if (oldIndex !== -1) {
+        oldMembers.splice(oldIndex, 1)
+    }
+
+    console.log("###oldies", oldMembers)
     await voiceChannel.update({
-        voiceMembers:oldMembers
+        voiceMembers: oldMembers
     })
     return res.json(voiceChannel.voiceMembers)
 }))

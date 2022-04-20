@@ -96,7 +96,7 @@ db.sequelize
 
       })
 
-      socket.on("getVoicesHangUp", async ({voiceId, username, serverIds}) =>{
+      socket.on("getVoicesHangUp", async ({voiceId, username, serverId}) =>{
         const hangUpChannel = await VoiceChannel.findByPk(voiceId)
         let oldHangUp = hangUpChannel.voiceMembers
         let oldHangUpIndex = oldHangUp.findIndex(ele => ele.username === username)
@@ -105,14 +105,14 @@ db.sequelize
         let newHangUpChannel = await VoiceChannel.findByPk(voiceId)
 
         io.emit("updateVoicesAfter", {
-          serverIds,
+          serverId,
           user: username,
           voices: newHangUpChannel
         })
       })
 
 
-      socket.on("getVoicesPre", async ({ voiceId, username, picture,serverIds}) => {
+      socket.on("getVoicesPre", async ({ voiceId, username, picture,serverId}) => {
 
         const allChannels = await VoiceChannel.findAll()
         let oldChannelId;
@@ -144,7 +144,7 @@ db.sequelize
         })
         const newVoiceChannel = await VoiceChannel.findByPk(voiceId)
         io.emit("updateVoices", {
-          serverIds,
+          serverId,
           user: username,
           voices: newVoiceChannel
         })

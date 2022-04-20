@@ -5,7 +5,7 @@ import { Modal } from "../../context/modal"
 import UserSettings from "../UserSettings";
 import { setVoices } from "../../store/server";
 
-function UserBar({ servers, voiceId, voiceMembers, setVoiceMembers, user, socket, inVoice, setInVoice }) {
+function UserBar({ serverId, voiceId, voiceMembers, setVoiceMembers, user, socket, inVoice, setInVoice }) {
 
 
     const [showUserSettings, setShowUserSettings] = useState(false)
@@ -30,13 +30,12 @@ function UserBar({ servers, voiceId, voiceMembers, setVoiceMembers, user, socket
 
     const settingVoiceMembersAfter = (data) => {
         // console.log("%%%", voices[0], voices[0].voiceRoom, voiceId)
-        console.log("$$now what", data.serversIds, servers)
-        servers.forEach(ele =>{
-            if(data.serverIds.includes(ele.id)){
-                dispatch(setVoices(data.voices.voiceMembers))
-                return
-            }
-        })
+        // console.log("$$now what", data.serversIds, servers)
+        console.log("what is my server id hang", data.serverId, serverId)
+        if (data.serverId == serverId) {
+            dispatch(setVoices(data.voices.voiceMembers))
+
+        }
 
 
     }
@@ -47,17 +46,17 @@ function UserBar({ servers, voiceId, voiceMembers, setVoiceMembers, user, socket
         // socket.on("send", (data)=> console.log('is you coming here',data))
 
         return () => socket.off("updateVoicesAfter", settingVoiceMembersAfter);
-    }, [socket])
+    }, [socket, serverId])
 
     const handleHangUp = () => {
 
         socket.emit("leaveVoice", { username: user.username })
-        let ids = [];
-        servers.forEach(ele=>{
-            ids.push(ele.id)
-        })
+        // let ids = [];
+        // servers.forEach(ele => {
+        //     ids.push(ele.id)
+        // })
 
-        socket.emit("getVoicesHangUp", { voiceId, username: user.username, serverIds:ids})
+        socket.emit("getVoicesHangUp", { voiceId, username: user.username, serverId: serverId })
         // socket.emit("allInVoiceAfter", { voiceRoomId: `voice${voiceId}` })
         // voiceId = undefined
 

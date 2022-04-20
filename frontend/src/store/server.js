@@ -125,6 +125,7 @@ export const setVoices = (members) =>{
 }
 
 export const setInitialVoices = (payload) => async dispatch =>{
+    console.log("when are you running???", payload)
     const {id, username} = payload
     const res = await csrfFetch(`/api/servers/all/voice/members/${username}/${id}`)
     const data = await res.json();
@@ -132,6 +133,7 @@ export const setInitialVoices = (payload) => async dispatch =>{
     // console.log("$$before", data)
     // data.splice(yourIndex, 1)
     // console.log("$$after", data)
+    console.log("missing data",data)
     dispatch(setVoices(data))
     return data
 }

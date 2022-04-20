@@ -10,7 +10,7 @@ import UserBar from "../UserBar";
 import EditServerModal from "../EditServerModal";
 import AdminPrivilegeModal from "../AdminPrivilegeModal";
 
-function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, servers, user, isFirstLoaded }) {
+function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madiaRecorder, socket, servers, user, isFirstLoaded }) {
     const { id, textId } = useParams();
     // console.log('are you hitting here?', servers)
     const dispatch = useDispatch();
@@ -50,7 +50,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
     const [showEditServer, setShowEditServer] = useState(false)
     const [showAdminPrivilege, setShowAdminPrivilege] = useState(false)
 
-    const [inVoice, setInVoice] = useState(false)
+
 
 
     const [textIndex, setTextIndex] = useState(0)
@@ -215,7 +215,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
                 })
         }
 
-    }, [textId, id,isFirstLoaded])
+    }, [textId, id, isFirstLoaded])
 
 
     useEffect(() => {
@@ -223,7 +223,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
         // socket.emit("allInVoice", { voiceRoom: `voice${voiceId}` })
         if (isLoaded) {
 
-            dispatch(getMembersAndAdmins(myServer.id))
+            dispatch(getMembersAndAdmins(id))
                 .then(() => dispatch(getAllVoiceChannels(id)))
                 .then((channels) => {
                     channels.forEach(ele => {
@@ -232,6 +232,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
                             username: user.username,
                             id: ele.id
                         }
+
                         dispatch(setInitialVoices(payload))
                     })
                 })
@@ -239,21 +240,21 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
 
 
         }
-    }, [isLoaded, id, textId])
+    }, [isLoaded, id])
 
 
     const settingVoiceMembers = (data) => {
         // console.log("%%%", voices[0], voices[0].voiceRoom, voiceId)
         // console.log("$$what am i working with", data.serverIds, servers)
-        servers.forEach(ele =>{
-            if(data.serverIds.includes(ele.id)){
-                dispatch(setVoices(data.voices.voiceMembers))
-                return
-            }
-        })
+        console.log("what is my server id", data.serverId, id)
+        if (data.serverId == id) {
+            dispatch(setVoices(data.voices.voiceMembers))
 
-            // console.log("is it here xd", voices)
-            // setVoiceMembers([...data.voices])
+        }
+
+
+        // console.log("is it here xd", voices)
+        // setVoiceMembers([...data.voices])
 
 
 
@@ -277,7 +278,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
                 audio.play();
             });
         }
-    }, [socket])
+    }, [socket, id])
 
 
     const onlineDot = (ele) => {
@@ -356,11 +357,11 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
             setVoiceId(ele.id)
             // console.log("sugma",ele.id)
             socket.emit("joinVoice", { username: user.username, voiceRoomId: `voice${ele.id}` })
-            let ids = [];
-            servers.forEach(ele =>{
-                ids.push(ele.id)
-            })
-            socket.emit("getVoicesPre", { serverIds: ids, voiceId: ele.id, username: user.username, picture: user.profilePicture })
+            // let ids = [];
+            // servers.forEach(ele => {
+            //     ids.push(ele.id)
+            // })
+            socket.emit("getVoicesPre", { serverId: id, voiceId: ele.id, username: user.username, picture: user.profilePicture })
             // socket.emit("allInVoice", { voiceRoomId: `voice${ele.id}` })
             setInVoice(true)
         }
@@ -491,7 +492,7 @@ function Server({ setStream, setMadiaRecorder, stream, madiaRecorder, socket, se
                         </div>
                         <div className="user-bar">
 
-                            <UserBar servers={servers} voiceId={voiceId} voiceMembers={voiceMembers} setInVoice={setInVoice} inVoice={inVoice} socket={socket} user={user} />
+                            <UserBar serverId={id} voiceId={voiceId} voiceMembers={voiceMembers} setInVoice={setInVoice} inVoice={inVoice} socket={socket} user={user} />
 
 
                         </div>

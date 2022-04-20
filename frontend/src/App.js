@@ -28,7 +28,7 @@ function App() {
   // const [yourServers, setYourServers] = useState([])
 
   const current_location = useLocation().pathname.split("/")[1]
-
+  const [inVoice, setInVoice] = useState(false)
   const yourServers = useSelector(state => {
     return state.myServers.myServers
   })
@@ -95,7 +95,7 @@ function App() {
       {isLoaded && user && yourServers.length &&
 
         <div className="app-holder">
-          <ServerBar isLoaded={isLoaded} user={user} socket={socket} servers={yourServers} />
+          <ServerBar inVoice = {inVoice} isLoaded={isLoaded} user={user} socket={socket} servers={yourServers} />
 
           <Switch>
             <Route exact path="/">
@@ -103,11 +103,11 @@ function App() {
             </Route>
 
             <Route exact path="/servers/:id/:textId">
-              <Server key={current_location} setStream={setStream} setMadiaRecorder = {setMadiaRecorder} stream ={stream} madiaRecorder={madiaRecorder} isFirstLoaded={isLoaded} socket={socket} servers={yourServers} user={user} />
+              <Server inVoice = {inVoice} setInVoice={setInVoice} key={current_location} setStream={setStream} setMadiaRecorder = {setMadiaRecorder} stream ={stream} madiaRecorder={madiaRecorder} isFirstLoaded={isLoaded} socket={socket} servers={yourServers} user={user} />
             </Route>
 
 
-            <Route path="/home">
+            <Route exact path="/home">
               <Home user={user} socket={socket} />
             </Route>
 
