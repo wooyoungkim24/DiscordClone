@@ -1,0 +1,118 @@
+.new-server-modal-container{
+    width: 450px;
+    height:350px;
+    background-color: white;
+    border-radius:10px;
+    display: flex;
+    flex-direction: column;
+
+}
+.new-server-modal-title{
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+}
+.new-server-modal-title-top{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: GintoBold;
+    font-size: 24px;
+
+    height: 60px;
+    width: 450px;
+}
+.new-server-modal-title-bottom{
+    display: flex;
+    align-items: center;
+    width: 300px;
+
+    font-family: Ginto;
+    font-size: 16px;
+    color: rgb(132,137,144);
+    height:60px;
+}
+.new-server-photo-upload{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    padding-left:15px;
+    padding-right:10px;
+    font-family: GintoBold;
+    font-size: 11px;
+}
+.new-server-photo-upload-input{
+    margin-top: 5px;
+}
+.new-server-photo-upload input{
+    width: 400px;
+    background-color: rgb(227,229,232);
+    border:none;
+    outline:none;
+    border-radius:5px;
+    height: 40px;
+    font-family: Ginto;
+    font-size: 14px;
+    padding-left:10px;
+    padding-right:10px;
+}
+.new-server-name{
+    display: flex;
+    flex-direction: column;
+    margin-top : 10px;
+    padding-left:15px;
+    padding-right:10px;
+    font-family: GintoBold;
+    font-size: 11px;
+}
+.new-server-name-input{
+    margin-top: 5px;
+}
+.new-server-name input{
+    width: 400px;
+    background-color: rgb(227,229,232);
+    border:none;
+    outline:none;
+    border-radius:5px;
+    height: 40px;
+    font-family: Ginto;
+    font-size: 14px;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+.new-server-buttons{
+
+    margin-top : 20px;
+    height: 70px;
+    display: flex;
+    flex-direction: row;
+    padding-left: 15px;
+    padding-right:15px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(246,246,247);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+}
+#new-server-back-button{
+    height: 40px;
+    font-family: Ginto;
+    font-size:12px;
+    border:none;
+    outline:none;
+    background-color: transparent;
+    cursor: pointer;
+}
+#new-server-create-button{
+    background-color: rgb(88,101,242);
+    font-family: Ginto;
+    color:white;
+    font-size: 13px;
+    width: 90px;
+    height: 40px;
+    border-radius: 5px;
+    border:none;
+    outline:none;
+}

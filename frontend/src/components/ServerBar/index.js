@@ -39,7 +39,10 @@ function ServerBar({inVoice, user, socket, servers , isLoaded}) {
             }
 
             <div className="new-server">
-                <i onClick = {() => setNewServer(true)} className="fas fa-plus"></i>
+                <button className="new-server-button" onClick = {() => setNewServer(true)} >
+                    <i className="fas fa-plus"></i>
+                </button>
+
             </div>
 
             {newServer &&

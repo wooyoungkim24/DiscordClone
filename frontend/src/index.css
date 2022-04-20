@@ -1,4 +1,15 @@
 /* TODO Add site wide styles */
+
+@font-face{
+    font-family:GintoBold;
+    src: url("../public/ABCGintoNormal-Bold-Trial.woff2")
+}
+@font-face{
+    font-family:Ginto;
+    src: url("../public/ABCGintoNormal-Regular-Trial.woff2")
+}
+
+
 body{
     margin:0px;
     padding:0px;

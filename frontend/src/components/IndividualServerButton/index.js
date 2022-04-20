@@ -34,11 +34,36 @@ function IndividualServerButton({ inVoice, server,user , socket}) {
         return state.myServers.textChannels
     })
 
+    // useEffect (() =>{
+    //     let button = document.querySelector('.single-your-server')
+    //     console.log('what is button', button)
+    //     button.addEventListener("mouseenter",() =>{
+    //         console.log(button.classList)
+    //         button.classList.add("hover")
+    //         console.log("after", button.classList)
+    //     })
+    //     button.addEventListener("mouseleave",() =>{
+    //         button.classList.remove("hover")
+    //     })
+    //     return (() => {
+    //         button.removeEventListener("mouseenter",() =>{
+    //             button.classList.add("hover")
+    //         })
+    //         button.removeEventListener("mouseleave",() =>{
+    //             button.classList.remove("hover")
+    //         })
+    //     })
+    // }, [])
 
     const handleMouseEnter = (e) => {
+
+        // e.target.classList.add("hover")
+        // console.log(e.target)
         setShowHover(true)
     }
     const handleMouseLeave = (e) => {
+        // e.target.classList.remove("hover")
+        // console.log(e.target)
         setShowHover(false)
     }
     useEffect(() =>{
@@ -47,8 +72,8 @@ function IndividualServerButton({ inVoice, server,user , socket}) {
 
     return (
         <div className="single-server-container" onClick={handleServerClick}>
-            <button  disabled = {inVoice} className='single-your-server' >
-                <img onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className='single-server-image' src={server.serverImage}></img>
+            <button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}  disabled = {inVoice} className='single-your-server' >
+                <img className='single-server-image' src={server.serverImage}></img>
             </button>
             {showHover &&
                 <div className="hover-bubble">

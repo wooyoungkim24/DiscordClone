@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { createNewServer } from "../../store/server";
-
+import "./index.css"
 
 function NewServerModal({ user, setNewServer }) {
     const dispatch = useDispatch()
@@ -17,7 +17,7 @@ function NewServerModal({ user, setNewServer }) {
     }
 
 
-    const handleNewServerSubmit = () =>{
+    const handleNewServerSubmit = () => {
         const payload = {
             serverImage: photoURL,
             serverName,
@@ -39,32 +39,38 @@ function NewServerModal({ user, setNewServer }) {
                 </div>
             </div>
             <div className="new-server-photo-upload">
-                <input
+                SERVER PHOTO URL
+                <div className="new-server-photo-upload-input">
+                    <input
+                        type="text"
+                        placeholder="Photo URL"
+                        required
+                        value={photoURL}
+                        onChange={updatePhotoURL}
+                    >
+                    </input>
+                </div>
 
-                    type="text"
-                    placeholder="Photo URL"
-                    required
-                    value={photoURL}
-                    onChange={updatePhotoURL}
-                >
-                </input>
             </div>
             <div className="new-server-name">
-                <input
+                SERVER NAME
+                <div className="new-server-name-input">
+                    <input
+                        type="text"
+                        placeholder="Server Name"
+                        required
+                        value={serverName}
+                        onChange={updateServerName}
+                    >
+                    </input>
+                </div>
 
-                    type="text"
-                    placeholder="Server Name"
-                    required
-                    value={serverName}
-                    onChange={updateServerName}
-                >
-                </input>
             </div>
             <div className="new-server-buttons">
-                <button type="button"  onClick ={() => setNewServer(false)}id="new-server-back-button">
+                <button type="button"  onClick={() => setNewServer(false)} id="new-server-back-button">
                     Back
                 </button>
-                <button type = "button" onClick = {handleNewServerSubmit} id= "new-server-create-button">
+                <button type="button" onClick={handleNewServerSubmit} id="new-server-create-button">
                     Create
                 </button>
             </div>

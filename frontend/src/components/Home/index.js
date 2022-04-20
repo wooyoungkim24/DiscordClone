@@ -8,6 +8,8 @@ import { getMyFriends, getDMs, createDM } from "../../store/session";
 import DirectMessage from "../DirectMessage";
 import FriendsList from "../FriendsList";
 import UserBar from "../UserBar";
+import "./index.css"
+
 
 function Home({ inVoice, user, socket }) {
 
@@ -59,7 +61,8 @@ function Home({ inVoice, user, socket }) {
 
 
     const handleNewDm = () => {
-        setShowNewDm(true)
+
+        setShowNewDm(!showNewDm)
     }
 
     const selectFriend = (e) => {
@@ -145,38 +148,6 @@ function Home({ inVoice, user, socket }) {
                 </button>
             </div>
 
-            {showInvites &&
-                <div className="home-invites">
-                    {serverInvites.map(ele => {
-                        return (
-                            <div className="invite-container-individual">
-                                <div className="inviter">
-                                    <img src={ele.inviter.profilePicture}></img>
-                                    {ele.inviter.username}
-                                </div>
-                                <div className="invites-you-to">
-                                    Invites you to
-                                </div>
-                                <div className="server-invite">
-                                    <img src={ele.server.serverImage}></img>
-                                    {ele.server.serverName}
-                                </div>
-                                <div className="server-invite-buttons">
-                                    <button type="button" onClick={() => handleServerAccept(ele.id)}>
-                                        Accept
-                                    </button>
-                                    <button type="button" onClick={() => handleServerReject(ele.id)}>
-                                        Reject
-                                    </button>
-                                </div>
-                            </div>
-                        )
-                    })}
-                </div>
-
-            }
-
-
 
 
             <div className="home-friends">
@@ -232,6 +203,7 @@ function Home({ inVoice, user, socket }) {
                         )
                     })}
                 </div>
+
                 <div>
                     <UserBar socket={socket} user={user} />
                 </div>
@@ -240,11 +212,40 @@ function Home({ inVoice, user, socket }) {
 
             <Switch>
                 <Route exact path="/home">
-
+                    {showFriends &&
                         <FriendsList user={user} friends={friends} socket={socket} />
-
-
+                    }
+                    {showInvites &&
+                        <div className="home-invites">
+                            {serverInvites.map(ele => {
+                                return (
+                                    <div className="invite-container-individual">
+                                        <div className="inviter">
+                                            <img src={ele.inviter.profilePicture}></img>
+                                            {ele.inviter.username}
+                                        </div>
+                                        <div className="invites-you-to">
+                                            Invites you to
+                                        </div>
+                                        <div className="server-invite">
+                                            <img src={ele.server.serverImage}></img>
+                                            {ele.server.serverName}
+                                        </div>
+                                        <div className="server-invite-buttons">
+                                            <button type="button" onClick={() => handleServerAccept(ele.id)}>
+                                                Accept
+                                            </button>
+                                            <button type="button" onClick={() => handleServerReject(ele.id)}>
+                                                Reject
+                                            </button>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    }
                 </Route>
+
                 <Route exact path='/home/:id'>
 
                     <DirectMessage user={user} socket={socket} key={useLocation().pathname.split("/")[1]} />

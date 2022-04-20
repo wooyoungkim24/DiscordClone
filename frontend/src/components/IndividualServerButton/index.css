@@ -3,11 +3,7 @@
     src: url("../../../public/ABCGintoNormal-Bold-Trial.woff2")
 }
 
-.single-your-server img{
-    width: 50px;
-    height:50px;
-    border-radius: 30px;
-}
+
 .single-server-container{
 
     width: 60px;
@@ -17,17 +13,7 @@
     align-items: center;
 
 }
-.single-your-server{
-    width: 60px;
-    height: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    border:none;
-    border-radius: 30px;
-    background-color: transparent;
-}
+
 
 .hover-bubble{
     position: absolute;
@@ -35,18 +21,30 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    /* animation-duration: 2s;
+    animation-name: hoverBubble; */
 }
+
+/* @keyframes hoverBubble {
+    from{
+        left:0px
+    }
+    to{
+        left:90px
+    }
+} */
 .little-arrow{
     transform:rotate(45deg);
     width: 30px;
     height:30px;
-    z-index:-1;
+    z-index:0;
     background-color: black;
     position: absolute;
-    left: 0px;
+
 }
 .single-server-hover{
     background-color: black;
+    z-index:1;
     width: auto;
     padding-left: 10px;
     padding-right: 10px;
@@ -59,15 +57,24 @@
     font-family: GintoBold;
     font-size: 16px;
 }
-.single-your-server img:hover{
-    animation-duration: .5s;
-    animation-name: onServerHover;
+.single-your-server{
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border:none;
+    border-radius: 30px;
+    background-color: transparent;
+
 }
-@keyframes onServerHover {
-    from{
-        border-radius:30px;
-    }
-    to{
-        border-radius: 10px;
-    }
+.single-your-server img{
+    width: 50px;
+    height:50px;
+    border-radius: 30px;
+    transition: border-radius .5s;
+}
+.single-your-server img:hover{
+    border-radius:10px
 }
