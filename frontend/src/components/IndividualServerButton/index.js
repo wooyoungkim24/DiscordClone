@@ -46,10 +46,10 @@ function IndividualServerButton({ inVoice, server,user , socket}) {
     }, [dispatch])
 
     return (
-        <button className="single-server-container" disabled = {inVoice} onClick={handleServerClick}>
-            <div className='single-your-server' >
+        <div className="single-server-container" onClick={handleServerClick}>
+            <button  disabled = {inVoice} className='single-your-server' >
                 <img onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className='single-server-image' src={server.serverImage}></img>
-            </div>
+            </button>
             {showHover &&
                 <div className="hover-bubble">
                     <div className="little-arrow">
@@ -63,7 +63,7 @@ function IndividualServerButton({ inVoice, server,user , socket}) {
                 </div>
 
             }
-        </button>
+        </div>
 
     )
 }

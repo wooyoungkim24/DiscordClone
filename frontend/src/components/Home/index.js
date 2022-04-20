@@ -9,7 +9,7 @@ import DirectMessage from "../DirectMessage";
 import FriendsList from "../FriendsList";
 import UserBar from "../UserBar";
 
-function Home({ user, socket }) {
+function Home({ inVoice, user, socket }) {
 
     let { path, url } = useRouteMatch()
     const [showFriends, setShowFriends] = useState(true)

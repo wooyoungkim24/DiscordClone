@@ -24,9 +24,9 @@ function ServerBar({inVoice, user, socket, servers , isLoaded}) {
     return (
         // onClick ={history.push("/servers/me")}
         <div  className="serverBar">
-            <div onClick ={handleHomePush}  className="home-button">
+            <button onClick ={handleHomePush} disabled ={inVoice} className="home-button">
                 <i  className="fab fa-discord"></i>
-            </div>
+            </button>
             <div className="server-divider">
 
             </div>

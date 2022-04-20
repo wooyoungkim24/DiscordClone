@@ -108,7 +108,7 @@ function App() {
 
 
             <Route path="/home">
-              <Home user={user} socket={socket} />
+              <Home inVoice = {inVoice} user={user} socket={socket} />
             </Route>
 
             <Route path="/login">

@@ -24,8 +24,11 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
-
+    border:none;
+    border-radius: 30px;
+    background-color: transparent;
 }
+
 .hover-bubble{
     position: absolute;
     left: 90px;
