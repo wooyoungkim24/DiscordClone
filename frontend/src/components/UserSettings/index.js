@@ -5,23 +5,26 @@ import * as sessionActions from '../../store/session';
 import "./index.css"
 
 
-function UserSettings({socket}) {
+function UserSettings({ socket }) {
     const dispatch = useDispatch();
 
     const logout = (e) => {
         e.preventDefault();
         socket.disconnect()
         dispatch(sessionActions.logout())
-      };
+    };
 
 
 
     return (
-        <div>
-            Other Stuff
-            <button type= "button" onClick={logout}>
-                Logout
-            </button>
+        <div className="user-settings-modal">
+            Other stuff in the future :)
+            <div className="logout-button">
+                <button type="button"  onClick={logout}>
+                    Logout
+                </button>
+            </div>
+
         </div>
     )
 }
