@@ -372,40 +372,58 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
     const serverDropdown = () => {
         if (parseInt(myServer.userId) === parseInt(user.id)) {
             return (
-                <div className="server-drop-down">
-                    <button className="invite-people" type="button" onClick={handleAddPeople}>
-                        Invite People
-                    </button>
-                    <button className="edit-server-button" type="button" onClick={() => setShowEditServer(true)}>
-                        Edit Server
-                    </button>
+                <div className="server-drop-down-admin">
+                    <div className="invite-people-admin">
+                        <button type="button" onClick={handleAddPeople}>
+                            Invite People
+                        </button>
+                    </div>
+
+                    <div className="edit-server-button-admin">
+                        <button type="button" onClick={() => setShowEditServer(true)}>
+                            Edit Server
+                        </button>
+                    </div>
+
                     {showEditServer &&
                         <Modal onClose={() => setShowEditServer(false)}>
                             <EditServerModal setMyServer={setMyServer} server={myServer} user={user} setShowEditServer={setShowEditServer} />
                         </Modal>
                     }
-                    <button className="admin-abilities-button" type="button" onClick={() => setShowAdminPrivilege(true)}>
-                        Admin Privileges
-                    </button>
+                    <div className="admin-abilities-button-admin">
+                        <button type="button" onClick={() => setShowAdminPrivilege(true)}>
+                            Admin Privileges
+                        </button>
+                    </div>
+
                     {showAdminPrivilege &&
                         <Modal onClose={() => setShowAdminPrivilege(false)}>
                             <AdminPrivilegeModal setMyTextChannels={setMyTextChannels} server={myServer} user={user} setShowAdminPrivilege={setShowAdminPrivilege} />
                         </Modal>
                     }
-                    <button className="leave-server" onClick={handleDeleteServer} type="button">
-                        Delete Server
-                    </button>
+                    <div className="leave-server-admin">
+                        <button onClick={handleDeleteServer} type="button">
+                            Delete Server
+                        </button>
+                    </div>
+
                 </div>
             )
         } else {
             return (
-                <div className="server-drop-down">
-                    <button className="invite-people" type="button" onClick={handleAddPeople}>
-                        Invite People
-                    </button>
-                    <button className="leave-server" onClick={handleLeaveServer} type="button">
-                        Leave Server
-                    </button>
+                <div className="server-drop-down-member">
+                    <div className="invite-people-member">
+                        <button type="button" onClick={handleAddPeople}>
+                            Invite People
+                        </button>
+                    </div>
+                    <div className="leave-server-member">
+                        <button onClick={handleLeaveServer} type="button">
+                            Leave Server
+                        </button>
+                    </div>
+
+
                 </div>
             )
         }
@@ -420,9 +438,12 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
 
                     <div className="server-nav">
                         <div className="server-title">
-                            <button type="button" onClick={handleServerDropDown}>
-                                {myServer.serverName}
-                            </button>
+                            <div className="server-dropdown-button">
+                                <button type="button" onClick={handleServerDropDown}>
+                                    {myServer.serverName}
+                                </button>
+                            </div>
+
                             {showServerDropDown &&
                                 serverDropdown()
                             }

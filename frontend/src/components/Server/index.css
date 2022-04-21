@@ -9,13 +9,133 @@
 }
 
 .server-nav{
-    border:2px solid black;
+    /* border:2px solid black; */
     display: flex;
     flex-direction: column;
     height: 100vh;
     width: 240px;
     background-color: rgb(47,49,54);
 }
-.server-title{
-    
+.server-dropdown-button{
+
+    height:50px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom:1px solid rgb(33,35,40);
 }
+.server-dropdown-button button{
+    width: 240px;
+    height: 50px;
+    background-color:transparent;
+    font-family: GintoBold;
+    color:white;
+    font-size: 16px;
+    cursor: pointer;
+    border:none;
+
+}
+.server-dropdown-button button:hover{
+    background-color: rgba(66, 70, 77, .4);
+}
+.server-drop-down-member{
+    position: absolute;
+    left: 85px;
+    top: 60px;
+    width: 180px;
+    height: 100px;
+    border-radius: 10px;
+    background-color: rgb(24,25,28);
+    display: flex;
+    flex-direction: column;
+    padding-left:10px;
+    padding-right:10px;
+    /* padding:10px; */
+}
+.server-drop-down-member > div{
+    height: 40px;
+    width: 180px;
+    cursor: pointer;
+    /* border: 1px solid yellow; */
+    padding-top:5px;
+    padding-bottom:5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+.invite-people-member{
+    border-bottom: 1px solid rgb(50,53,59);
+    /* margin-bottom: 10px;; */
+}
+.server-drop-down-member button{
+    width: 180px;
+    height: 30px;
+    font-family: Ginto;
+    background-color: rgb(24,25,28);
+    border:none;
+    color:white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.server-drop-down-member button:hover{
+    background-color: rgb(86,98,232);
+}
+.server-drop-down-admin{
+    position: absolute;
+    left: 85px;
+    top: 60px;
+    width: 180px;
+    height: 200px;
+    border-radius: 10px;
+    background-color: rgb(24,25,28);
+    display: flex;
+    flex-direction: column;
+    padding-left:10px;
+    padding-right:10px;
+    z-index: 1;
+    /* padding:10px; */
+}
+.server-drop-down-admin > div{
+    height: 40px;
+    width: 180px;
+    cursor: pointer;
+    /* border: 1px solid yellow; */
+    padding-top:5px;
+    padding-bottom:5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+.invite-people-admin{
+    border-bottom: 1px solid rgb(50,53,59);
+    /* margin-bottom: 10px;; */
+}
+.edit-server-button-admin{
+    border-bottom: 1px solid rgb(50,53,59);
+    /* margin-bottom: 10px;; */
+}
+.admin-abilities-button-admin{
+    border-bottom: 1px solid rgb(50,53,59);
+    /* margin-bottom: 10px;; */
+}
+.server-drop-down-admin button{
+    width: 180px;
+    height: 30px;
+    font-family: Ginto;
+    background-color: rgb(24,25,28);
+    border:none;
+    color:white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.server-drop-down-admin button:hover{
+    background-color: rgb(86,98,232);
+}
+
+
+/* lower half */
+
+
+/*lower half*/

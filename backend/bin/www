@@ -21,8 +21,8 @@ db.sequelize
     let server = app.listen(port, () => console.log(`Listening on port ${port}...`));
     io = socket(server, {
       pingTimeout: 20000,
-      maxHttpBufferSize: 1e8
-      // pingInterval: 19000
+      // maxHttpBufferSize: 1e8
+      pingInterval: 19000
     });
 
 

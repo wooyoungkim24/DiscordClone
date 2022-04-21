@@ -71,7 +71,7 @@ function App() {
         console.log('what data am i getting back', data, data.userId === user.id)
         if (data.userId == user.id) {
           dispatch(userOnline())
-          .then(dispatch(getDMs(user.id)))
+          // .then(() =>dispatch(getDMs(user.id)))
         }
       })
 
