@@ -3,8 +3,8 @@ import React, { useState, useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useParams } from "react-router-dom";
 import { getPendingServers } from "../../store/server";
-import {removeFriend,getInitialPendingSentFriends,rejectFriend, getMyFriends, getPendingFriends, acceptFriend, getNotFriends, sendAddFriend } from "../../store/session";
-
+import { removeFriend, getInitialPendingSentFriends, rejectFriend, getMyFriends, getPendingFriends, acceptFriend, getNotFriends, sendAddFriend } from "../../store/session";
+import "./index.css"
 
 
 function FriendsList({ user, friends, socket }) {
@@ -30,13 +30,13 @@ function FriendsList({ user, friends, socket }) {
     const onlineDot = (ele) => {
         if (ele.online) {
             return (
-                <div className="online-dot">
+                <div className="online-dot-friend">
                     <i class="fas fa-circle"></i>
                 </div>
             )
         } else {
             return (
-                <div className="offline-dot">
+                <div className="offline-dot-friend">
                     <i class="fas fa-circle"></i>
                 </div>
             )
@@ -46,13 +46,13 @@ function FriendsList({ user, friends, socket }) {
     const online = (ele) => {
         if (ele.online) {
             return (
-                <div className="online-status">
+                <div className="online-status-friend">
                     Online
                 </div>
             )
         } else {
             return (
-                <div className="offline-status">
+                <div className="offline-status-friend">
                     Offline
                 </div>
             )
@@ -86,30 +86,51 @@ function FriendsList({ user, friends, socket }) {
         }
     }, [socket])
 
-    const handleAll = () => {
+    const handleAll = (e) => {
+        // console.log('waht is target', e.target)
         setShowOnline(false)
         setShowAll(true)
         setShowPending(false)
         setShowAddFriend(false)
+        document.querySelectorAll(".friends-button").forEach(ele => {
+            ele.classList.remove("select")
+        })
+        e.target.classList.add("select")
+
     }
-    const handleOnline = () => {
+    const handleOnline = (e) => {
         setShowOnline(true)
         setShowAll(false)
         setShowPending(false)
         setShowAddFriend(false)
+        document.querySelectorAll(".friends-button").forEach(ele => {
+            ele.classList.remove("select")
+        })
+        e.target.classList.add("select")
+
     }
-    const handlePending = () => {
+    const handlePending = (e) => {
         setShowOnline(false)
         setShowAll(false)
         setShowPending(true)
         setShowAddFriend(false)
+        document.querySelectorAll(".friends-button").forEach(ele => {
+            ele.classList.remove("select")
+        })
+        e.target.classList.add("select")
+
     }
 
-    const handleAddFriend = () => {
+    const handleAddFriend = (e) => {
         setShowOnline(false)
         setShowAll(false)
         setShowPending(false)
         setShowAddFriend(true)
+        document.querySelectorAll(".friends-button").forEach(ele => {
+            ele.classList.remove("select")
+        })
+        e.target.classList.add("select")
+
     }
 
     const handleFriendAccept = (id) => {
@@ -119,7 +140,7 @@ function FriendsList({ user, friends, socket }) {
         }
         dispatch(acceptFriend(payload))
         dispatch(getMyFriends(user.id))
-        socket.emit("addedFriend", {userId:user.id, notify:id})
+        socket.emit("addedFriend", { userId: user.id, notify: id })
     }
 
 
@@ -132,10 +153,10 @@ function FriendsList({ user, friends, socket }) {
 
     }
 
-    const handleRemoveFriend = (id) =>{
+    const handleRemoveFriend = (id) => {
         const payload = {
-            friend1:user.id,
-            friend2:id
+            friend1: user.id,
+            friend2: id
         }
         dispatch(removeFriend(payload))
         dispatch(getMyFriends(user.id))
@@ -152,51 +173,70 @@ function FriendsList({ user, friends, socket }) {
     return (
         <div className="friends-list-container">
 
-            <div className="friends-list-type">
-                <div className="friends-list-buttons">
-                    <button onClick={handleAll}>
-                        All
-                    </button>
-                    <button onClick={handleOnline}>
-                        Online
-                    </button>
-                    <button onClick={handlePending}>
-                        Pending
-                    </button>
-                    <button onClick={handleAddFriend}>
-                        Add Friend
-                    </button>
+            <div className="friends-list-buttons">
+                <div className="friends-list-buttons-title">
+                    <i className="fas fa-user"></i> &nbsp;
+                    Friends
                 </div>
-                {showAll &&
-                    <div className="all-friends">
-                        {friends.map(ele => {
-                            return (
-                                <div className="friends-list-individual">
-                                    <div className="friend-list-image-container">
-                                        <img src={ele.profilePicture}></img>
-                                        {onlineDot(ele)}
-                                    </div>
+                <button className='all friends-button select' onClick={handleAll}>
+                    All
+                </button>
+                <button className='online friends-button' onClick={handleOnline}>
+                    Online
+                </button>
+                <button className='pending friends-button' onClick={handlePending}>
+                    Pending
+                </button>
+                <button className='add-friends-button' onClick={handleAddFriend}>
+                    Add Friend
+                </button>
+            </div>
 
-                                    <div className="friends-list-name">
-                                        {ele.username}
-                                        <div className="friends-list-online-status">
-                                            {online(ele)}
-                                        </div>
-                                    </div>
-                                    <button onClick={() => handleRemoveFriend(ele.id)}>
-                                        Remove Friend
-                                    </button>
-                                </div>
-                            )
-                        })}
-                    </div>
-                }
-                {showOnline &&
-                    <div className="online-friends">
-                        {friends.map(ele => {
-                            if (ele.online) {
+            {showAll &&
+                <div className="all-friends">
+                    All
+                    {friends.length
+                        ? <>
+                            {friends.map(ele => {
                                 return (
                                     <div className="friends-list-individual">
+                                        <div className="friends-list-individual-left">
+                                            <div className="friend-list-image-container">
+                                                <img src={ele.profilePicture}></img>
+                                                {onlineDot(ele)}
+                                            </div>
+
+                                            <div className="friends-list-name">
+                                                {ele.username}
+                                                <div className="friends-list-online-status">
+                                                    {online(ele)}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <button className='remove-friend' onClick={() => handleRemoveFriend(ele.id)}>
+                                            Remove Friend
+                                        </button>
+                                    </div>
+                                )
+                            })}
+                        </>
+                        : <div className="no-friends">
+                            No Friends Yet
+                        </div>
+
+                    }
+
+                </div>
+            }
+            {showOnline &&
+                <div className="online-friends">
+                    Online
+                    {friends.map(ele => {
+                        if (ele.online) {
+                            return (
+                                <div className="friends-list-individual">
+                                    <div className="friends-list-individual-left">
                                         <div className="friend-list-image-container">
                                             <img src={ele.profilePicture}></img>
                                             {onlineDot(ele)}
@@ -209,71 +249,83 @@ function FriendsList({ user, friends, socket }) {
                                             </div>
                                         </div>
                                     </div>
-                                )
-                            }
 
-                        })}
-                    </div>
-                }
-                {showPending &&
+                                </div>
+                            )
+                        }
+                    })}
 
-                    <div className="pending-friends">
-                        {pendingFriends.map(ele => {
-                            return (
-                                <div className="pending-friends-individual">
-                                    {/* <img src={ele.added.profilePicture}></img> */}
+                </div>
+            }
+            {showPending &&
+
+                <div className="pending-friends">
+                    These people want to be your friend!
+                    {pendingFriends.map(ele => {
+                        return (
+                            <div className="pending-friends-individual">
+                                <div className="pending-friends-left">
+                                    <img src={ele.added.profilePicture}></img>
+
                                     <div className="pending-friend-text">
                                         {ele.added.username} wants to be friends
                                     </div>
-                                    <div className="pending-friend-buttons">
-                                        <button type="button" onClick={() => handleFriendAccept(ele.id)} >
-                                            Accept
-                                        </button>
-                                        <button type="button" onClick={() => handleFriendReject(ele.id)} >
-                                            Reject
-                                        </button>
-                                    </div>
                                 </div>
-                            )
-                        })}
-                    </div>
-                }
-                {showAddFriend &&
-                    <div className="add-friends-container">
-                        {notFriends.map(ele => {
-                            let pending = false
-                            let pendingSent = [];
-                            pendingSentFriends.forEach(ele =>{
-                                pendingSent.push(ele.friend2)
-                            })
-                            if(pendingSent.includes(parseInt(ele.id))){
-                                pending = true
-                            }
 
-                            return (
-                                <div className="other-users-div">
+                                <div className="pending-friend-buttons">
+                                    <button type="button" className='accept-friend-button' onClick={() => handleFriendAccept(ele.id)} >
+                                        Accept
+                                    </button>
+                                    <button type="button" className='reject-friend-button' onClick={() => handleFriendReject(ele.id)} >
+                                        Reject
+                                    </button>
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+            }
+            {showAddFriend &&
+                <div className="add-friends-container">
+                    {notFriends.map(ele => {
+                        let pending = false
+                        let pendingSent = [];
+                        pendingSentFriends.forEach(ele => {
+                            pendingSent.push(ele.friend2)
+                        })
+                        if (pendingSent.includes(parseInt(ele.id))) {
+                            pending = true
+                        }
+
+                        return (
+                            <div className="other-users-div">
+                                <div className="other-users-div-left">
                                     <img src={ele.profilePicture}></img>
                                     <div className="other-users-name">
                                         {ele.username}
                                     </div>
-                                    {!pending &&
-                                        <button type="button" onClick={() => handleAddFriendSubmit(ele)}>
-                                            Add User
-                                        </button>
-                                    }
-                                    {pending &&
-                                        <button type="button" disabled>
-                                            Pending
-                                        </button>
-                                    }
-
                                 </div>
-                            )
-                        })}
-                    </div>
-                }
 
-            </div>
+                                {!pending &&
+                                    <button type="button" className = 'add-friend-button' onClick={() => handleAddFriendSubmit(ele)}>
+                                        Add User
+                                    </button>
+                                }
+                                {pending &&
+                                    <button type="button" disabled>
+                                        Pending
+                                    </button>
+                                }
+
+                            </div>
+                        )
+                    })}
+                </div>
+            }
+
+
+
+
         </div>
     )
 }

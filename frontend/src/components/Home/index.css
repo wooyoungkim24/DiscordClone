@@ -172,7 +172,7 @@
 .active-dms{
 
     width: 240px;
-    height: calc(100vh - 180px);
+    height: calc(100vh - 185px);
     padding-right:5px;
     padding-lefT:5px;
 }
@@ -345,4 +345,18 @@
     flex-direction: row;
     min-height:100vh;
     max-height:100vh;
+}
+
+
+/* invites css */
+.home-invites{
+    display: flex;
+    flex-direction: column;
+
+    height: 100vh;
+    width: calc(100vw - 357px);
+    background-color: rgb(54,57,63);
+    font-family: Ginto;
+    color:white;
+    padding-left: 20px;
 }

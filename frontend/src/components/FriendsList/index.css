@@ -1,0 +1,227 @@
+.friends-list-buttons{
+    display: flex;
+    flex-direction:row;
+    /* border:2px solid blue; */
+    width: calc(100vw - 357px);
+    background-color:rgb(54,57,63);
+    align-items: center;
+    height: 50px;
+    padding-left: 20px;
+}
+.friends-list-buttons-title i{
+    color: rgb(142,146,151)
+}
+.friends-list-buttons-title{
+    color:white;
+    font-family: Ginto;
+    font-size: 16px;
+    padding-right: 20px;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid rgb(65,69,76)
+}
+.friends-list-buttons button{
+    margin-left: 20px;
+    font-family: Ginto;
+    background-color: transparent;
+    color:white;
+    font-size: 16px;
+    border:none;
+    border-radius:5px;
+    cursor: pointer;
+    min-width: 40px;
+    height: 30px;
+}
+.friends-button.select{
+    background-color: rgb(66,70,77);
+}
+.friends-button:hover{
+    background-color: rgba(66,70,77,.8);
+}
+button.add-friends-button{
+    background-color: rgb(59,165,93);
+}
+.online-friends,.all-friends,.pending-friends{
+    display: flex;
+    flex-direction: column;
+
+    height: calc(100vh - 50px);
+    background-color: rgb(54,57,63);
+    font-family: Ginto;
+    color:white;
+    padding-left: 20px;
+}
+.friends-list-individual{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    padding-right: 20px;
+}
+.friends-list-individual-left{
+    display: flex;
+    flex-direction: row;
+}
+.friend-list-image-container{
+    height: 60px;
+    width: 60px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+.friend-list-image-container img{
+    height: 35px;
+    width: 35px;
+    object-fit: cover;
+    border-radius:30px;
+}
+.online-dot-friend i{
+    color:green;
+    font-size: 12px;
+}
+.offline-dot-friend i{
+    color:red;
+    font-size: 12px;
+}
+/* .active-dm-online-dot{
+    width: 0px;
+} */
+.online-dot-friend, .offline-dot-friend{
+    position: relative;
+    top: 14px;
+    right:15px;
+    width: 18px;
+    height:18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(54,57,63);
+    border-radius:20px;
+}
+.friends-list-name{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-family: GintoBold;
+    font-size: 14px;
+}
+.offline-status-friend,.online-status-friend{
+    color:rgb(179,181,184);
+    font-size: 12px;
+}
+.remove-friend{
+    font-family: Ginto;
+    background-color: transparent;
+    border:none;
+    color:white;
+    font-size:16px;
+    cursor: pointer;
+}
+.remove-friend:hover{
+    color:red;
+}
+.pending-friends-individual{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 10px;
+    padding-right: 20px;
+    padding-bottom:15px;
+
+}
+.pending-friends-individual img{
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+    border-radius:30px;
+}
+.pending-friend-text{
+    margin-left:20px;
+}
+.pending-friends-left{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.pending-friend-buttons{
+
+    width: 170px;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+}
+.pending-friend-buttons button{
+    height: 30px;
+    width: 70px;
+    cursor: pointer;
+    font-family:Ginto;
+    background-color: transparent;
+    color:white;
+    border:none;
+    font-size:16px;
+}
+.accept-friend-button:hover{
+    color:green;
+}
+.reject-friend-button:hover{
+    color:red;
+}
+.add-friends-container{
+    display: flex;
+    flex-direction: column;
+
+    height: calc(100vh - 50px);
+    background-color: rgb(54,57,63);
+    font-family: Ginto;
+    color:white;
+    padding-left: 20px;
+}
+.other-users-div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 10px;
+    padding-right: 20px;
+    padding-bottom:15px;
+}
+.other-users-div img{
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+    border-radius:30px;
+}
+.other-users-div-left{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.other-users-name{
+    margin-left:20px;
+}
+.other-users-div button{
+    height: 30px;
+    width: 100px;
+    cursor: pointer;
+    font-family:Ginto;
+    background-color: transparent;
+    color:white;
+    border:none;
+    font-size:16px;
+}
+.add-friend-button:hover{
+    color:gray
+}
+.other-users-div button:disabled{
+    cursor:not-allowed;
+    color: rgb(66,70,77);
+}

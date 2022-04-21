@@ -346,6 +346,10 @@ function Home({ inVoice, user, socket }) {
                         }
                         {showInvites &&
                             <div className="home-invites">
+                                <div className="home-invites-title">
+                                    These people want you in their servers!
+                                </div>
+
                                 {serverInvites.map(ele => {
                                     return (
                                         <div className="invite-container-individual">
