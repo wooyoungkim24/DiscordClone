@@ -115,6 +115,12 @@ export const deleteDM = (payload) => async dispatch =>{
     return data
 }
 
+export const getOtherPerson = (id) => async dispatchEvent =>{
+    const res = await csrfFetch(`/api/users/other/person/${id}`)
+    const data = await res.json()
+    return data
+}
+
 export const createDM = (payload) => async dispatch =>{
 
     const res = await csrfFetch(`/api/users/create/dm`,{

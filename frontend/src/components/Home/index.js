@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Switch, useHistory, useRouteMatch, Link, useLocation } from "react-router-dom";
 
 import { acceptInvite, getPendingServers, getServers, getTextChannels, rejectInvite } from "../../store/server";
-import { getMyFriends, getDMs, createDM , deleteDM} from "../../store/session";
+import { getMyFriends, getDMs, createDM, deleteDM } from "../../store/session";
 import DirectMessage from "../DirectMessage";
 import FriendsList from "../FriendsList";
 import UserBar from "../UserBar";
@@ -186,10 +186,10 @@ function Home({ inVoice, user, socket }) {
     }
 
 
-    const handleLeaveDM= (id) =>{
+    const handleLeaveDM = (id) => {
         const payload = {
             userId: user.id,
-            otherId:id
+            otherId: id
         }
         // console.log("where are you gettin stuck")
 
@@ -353,22 +353,25 @@ function Home({ inVoice, user, socket }) {
                                 {serverInvites.map(ele => {
                                     return (
                                         <div className="invite-container-individual">
-                                            <div className="inviter">
-                                                <img src={ele.inviter.profilePicture}></img>
-                                                {ele.inviter.username}
+                                            <div className="invite-container-left">
+                                                <div className="inviter">
+                                                    <img src={ele.inviter.profilePicture}></img>
+                                                    {ele.inviter.username}
+                                                </div>
+                                                <div className="invites-you-to">
+                                                    Invites you to
+                                                </div>
+                                                <div className="server-invite">
+                                                    <img src={ele.server.serverImage}></img>
+                                                    {ele.server.serverName}
+                                                </div>
                                             </div>
-                                            <div className="invites-you-to">
-                                                Invites you to
-                                            </div>
-                                            <div className="server-invite">
-                                                <img src={ele.server.serverImage}></img>
-                                                {ele.server.serverName}
-                                            </div>
+
                                             <div className="server-invite-buttons">
-                                                <button type="button" onClick={() => handleServerAccept(ele.id)}>
+                                                <button type="button" className="accept-server" onClick={() => handleServerAccept(ele.id)}>
                                                     Accept
                                                 </button>
-                                                <button type="button" onClick={() => handleServerReject(ele.id)}>
+                                                <button type="button" className="reject-server" onClick={() => handleServerReject(ele.id)}>
                                                     Reject
                                                 </button>
                                             </div>
@@ -380,8 +383,7 @@ function Home({ inVoice, user, socket }) {
                     </Route>
 
                     <Route exact path='/home/:id'>
-
-                        <DirectMessage  user={user} socket={socket} key={useLocation().pathname.split("/")[1]} />
+                        <DirectMessage user={user} socket={socket} key={useLocation().pathname.split("/")[1]} />
                     </Route>
                 </Switch>
             </div>

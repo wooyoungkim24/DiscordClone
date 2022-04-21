@@ -58,6 +58,13 @@ router.get("/active/messages/:id", asyncHandler(async (req, res) => {
     return res.json(dms)
 }))
 
+router.get("/other/person/:id", asyncHandler(async(req,res)=>{
+    const id = req.params.id
+    const otherPerson = await User.findByPk(id)
+    return res.json(otherPerson)
+}))
+
+
 router.get("/single/dm/:userId/:id",asyncHandler(async(req,res) =>{
     const {userId, id} = req.params
     const singleDM = await DirectMessage.findOne({
