@@ -32,7 +32,7 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
     const voiceChannels = useSelector(state => {
         return state.myServers.voiceChannels
     })
-
+    const serverDropRef = useRef();
     const [myServer, setMyServer] = useState({})
     const [myTextChannels, setMyTextChannels] = useState({})
     const [isLoaded, setIsLoaded] = useState(false)
@@ -284,13 +284,13 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
     const onlineDot = (ele) => {
         if (ele.online) {
             return (
-                <div className="online-dot">
+                <div className="online-dot-server">
                     <i class="fas fa-circle"></i>
                 </div>
             )
         } else {
             return (
-                <div className="offline-dot">
+                <div className="offline-dot-server">
                     <i class="fas fa-circle"></i>
                 </div>
             )
@@ -313,12 +313,13 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
         }
     }
     const handleServerDropDown = () => {
-        if (showServerDropDown) {
-            setShowServerDropDown(false)
-        }
-        else {
-            setShowServerDropDown(true)
-        }
+        // if (showServerDropDown) {
+        //     setShowServerDropDown(false)
+        // }
+        // else {
+        //     setShowServerDropDown(true)
+        // }
+        document.getElementsByClassName("server-dropdown-button")[0].focus();
     }
 
     const handleAddPeople = () => {
@@ -429,6 +430,36 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
         }
     }
 
+
+
+
+    const handleOutsideDropClick = (e) => {
+        const ignore = document.querySelector(".server-drop-down-member")
+        let ignore2 =document.querySelector(".server-drop-down-admin")
+        let target = e.target
+        if (document.activeElement === serverDropRef.current) {
+            return
+        } else if (ignore && (target === ignore || ignore.contains(target))) {
+            return
+        }else if(ignore2 && (target === ignore2 || ignore2.contains(target))){
+            return
+        }
+        else {
+            setShowServerDropDown(false)
+
+        }
+    }
+
+    useEffect(() => {
+        if (showServerDropDown) {
+            document.addEventListener('click', handleOutsideDropClick);
+        }
+        return (() => {
+
+            document.removeEventListener('click', handleOutsideDropClick);
+
+        })
+    }, [showServerDropDown])
     return (
 
         <>
@@ -438,9 +469,14 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
 
                     <div className="server-nav">
 
-                        <div className="server-dropdown-button">
+                        <div className="server-dropdown-button" tabIndex="0"
+                            ref={serverDropRef}
+                            onFocus={() => setShowServerDropDown(true)}>
                             <button type="button" onClick={handleServerDropDown}>
-                                {myServer.serverName}
+                                <div className="server-name">
+                                    {myServer.serverName}
+                                </div>
+                                <i className="fas fa-angle-down"></i>
                             </button>
                         </div>
 
@@ -454,7 +490,9 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                         }
                         <div className="channels">
                             <div className="server-text-channels">
-                                {myTextChannels.map((ele, i) => {
+                                {myTextChannels.sort(function (a, b) {
+                                    return a.id - b.id
+                                }).map((ele, i) => {
                                     if (ele.id === parseInt(textId)) {
                                         if (textIndex !== i) {
                                             setTextIndex(i)
@@ -529,32 +567,37 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                     <div className="server-members">
                         <div className="admin-server">
                             <div className="admin-server-title">
-                                Administrator
+                                ADMINISTRATOR
                             </div>
                             <div className="admin">
-                                <img src={membersAndAdmin.admin.User.profilePicture}></img>
-                                <div className="admin-online-dot">
-                                    {onlineDot(membersAndAdmin.admin.User)}
+                                <div className="admin-image">
+                                    <img src={membersAndAdmin.admin.User.profilePicture}></img>
+                                    <div className="admin-online-dot">
+                                        {onlineDot(membersAndAdmin.admin.User)}
+                                    </div>
                                 </div>
+
                                 <div className="server-admin-name">
                                     {membersAndAdmin.admin.User.username}
                                     {online(membersAndAdmin.admin.User)}
-
                                 </div>
                             </div>
                         </div>
-                        <div className="server-members">
+                        <div className="members-server">
                             <div className="server-members-title">
-                                Members
+                                MEMBERS
                             </div>
                             <div className="server-members-list">
                                 {membersAndAdmin.members.map(ele => {
                                     return (
                                         <div className="member-individual">
-                                            <img src={ele.receivor.profilePicture}></img>
-                                            <div className="member-online-dot">
-                                                {onlineDot(ele.receivor)}
+                                            <div className="member-individual-image">
+                                                <img src={ele.receivor.profilePicture}></img>
+                                                <div className="member-online-dot">
+                                                    {onlineDot(ele.receivor)}
+                                                </div>
                                             </div>
+
                                             <div className="member-name">
                                                 {ele.receivor.username}
                                                 {online(ele.receivor)}

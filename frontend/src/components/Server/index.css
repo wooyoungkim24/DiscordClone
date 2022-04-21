@@ -1,236 +1,424 @@
-
-
-.server-page{
+.server-page {
     display: flex;
     flex-direction: row;
 }
 
-.server-nav{
+.server-nav {
     /* border:2px solid black; */
     display: flex;
     flex-direction: column;
     height: 100vh;
     width: 240px;
-    background-color: rgb(47,49,54);
+    background-color: rgb(47, 49, 54);
 }
-.server-dropdown-button{
 
-    height:50px;
-    display:flex;
+.server-dropdown-button {
+
+    height: 50px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom:1px solid rgb(33,35,40);
+    border-bottom: 1px solid rgb(33, 35, 40);
 }
-.server-dropdown-button button{
+
+.server-dropdown-button button {
     width: 240px;
     height: 50px;
-    background-color:transparent;
+    background-color: transparent;
     font-family: GintoBold;
-    color:white;
+    color: white;
     font-size: 16px;
     cursor: pointer;
-    border:none;
-
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items:  center;
+    padding-left: 15px;
+    padding-right:20px;
 }
-.server-dropdown-button button:hover{
+
+
+.server-dropdown-button button:hover {
     background-color: rgba(66, 70, 77, .4);
 }
-.server-drop-down-member{
+
+.server-drop-down-member {
     position: absolute;
     left: 85px;
     top: 60px;
     width: 180px;
     height: 100px;
     border-radius: 10px;
-    background-color: rgb(24,25,28);
+    background-color: rgb(24, 25, 28);
     display: flex;
     flex-direction: column;
-    padding-left:10px;
-    padding-right:10px;
+    padding-left: 10px;
+    padding-right: 10px;
     /* padding:10px; */
 }
-.server-drop-down-member > div{
+
+.server-drop-down-member>div {
     height: 40px;
     width: 180px;
     cursor: pointer;
     /* border: 1px solid yellow; */
-    padding-top:5px;
-    padding-bottom:5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
 
 }
-.invite-people-member{
-    border-bottom: 1px solid rgb(50,53,59);
+
+.invite-people-member {
+    border-bottom: 1px solid rgb(50, 53, 59);
     /* margin-bottom: 10px;; */
 }
-.server-drop-down-member button{
+
+.server-drop-down-member button {
     width: 180px;
     height: 30px;
     font-family: Ginto;
-    background-color: rgb(24,25,28);
-    border:none;
-    color:white;
+    background-color: rgb(24, 25, 28);
+    border: none;
+    color: white;
     border-radius: 5px;
     cursor: pointer;
 }
-.server-drop-down-member button:hover{
-    background-color: rgb(86,98,232);
+
+.server-drop-down-member button:hover {
+    background-color: rgb(86, 98, 232);
 }
-.server-drop-down-admin{
+
+.server-drop-down-admin {
     position: absolute;
     left: 85px;
     top: 60px;
     width: 180px;
     height: 200px;
     border-radius: 10px;
-    background-color: rgb(24,25,28);
+    background-color: rgb(24, 25, 28);
     display: flex;
     flex-direction: column;
-    padding-left:10px;
-    padding-right:10px;
+    padding-left: 10px;
+    padding-right: 10px;
     z-index: 1;
     /* padding:10px; */
 }
-.server-drop-down-admin > div{
+
+.server-drop-down-admin>div {
     height: 40px;
     width: 180px;
     cursor: pointer;
     /* border: 1px solid yellow; */
-    padding-top:5px;
-    padding-bottom:5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
 
 }
-.invite-people-admin{
-    border-bottom: 1px solid rgb(50,53,59);
+
+.invite-people-admin {
+    border-bottom: 1px solid rgb(50, 53, 59);
     /* margin-bottom: 10px;; */
 }
-.edit-server-button-admin{
-    border-bottom: 1px solid rgb(50,53,59);
+
+.edit-server-button-admin {
+    border-bottom: 1px solid rgb(50, 53, 59);
     /* margin-bottom: 10px;; */
 }
-.admin-abilities-button-admin{
-    border-bottom: 1px solid rgb(50,53,59);
+
+.admin-abilities-button-admin {
+    border-bottom: 1px solid rgb(50, 53, 59);
     /* margin-bottom: 10px;; */
 }
-.server-drop-down-admin button{
+
+.server-drop-down-admin button {
     width: 180px;
     height: 30px;
     font-family: Ginto;
-    background-color: rgb(24,25,28);
-    border:none;
-    color:white;
+    background-color: rgb(24, 25, 28);
+    border: none;
+    color: white;
     border-radius: 5px;
     cursor: pointer;
 }
-.server-drop-down-admin button:hover{
-    background-color: rgb(86,98,232);
+
+.server-drop-down-admin button:hover {
+    background-color: rgb(86, 98, 232);
 }
 
 
 /* lower half */
-.channels{
+.channels {
     height: calc(100vh - 60px - 50px);
     /* border:2px solid red; */
-    padding-left:10px;
-    padding-right:10px;
-    overflow-y:auto;
-    overflow-x:hidden;
+    padding-left: 10px;
+    padding-right: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
-.server-text-channels{
+
+.server-text-channels {
 
     display: flex;
     flex-direction: column;
     margin-top: 20px;
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
-.server-text-channels >div{
-    padding:2px;
+
+.server-text-channels>div {
+    padding: 2px;
 }
-.server-text-channels button{
+
+.server-text-channels button {
     width: 210px;
     height: 35px;
     display: flex;
     flex-direction: row;
-    justify-content:left;
+    justify-content: left;
     align-items: center;
-    color:white;
-    background-color: rgb(47,49,54);
-    border:none;
-    font-family:Ginto;
+    color: white;
+    background-color: rgb(47, 49, 54);
+    border: none;
+    font-family: Ginto;
     cursor: pointer;
     border-radius: 5px;
 }
-.selected-text-channel button{
+
+.selected-text-channel button {
     border: none;
-    background-color: rgb(66,70,77);
-}
-.server-text-channels button:hover{
-    background-color: rgb(66,70,77);
+    background-color: rgb(66, 70, 77);
 }
 
-.server-voice-channels{
+.server-text-channels button:hover {
+    background-color: rgb(66, 70, 77);
+}
+
+.server-voice-channels {
 
     display: flex;
     flex-direction: column;
     margin-top: 20px;
-    margin-bottom:20px;
+    margin-bottom: 20px;
     /* border:1px solid red; */
 
 
 }
-.server-voice-channels >div{
-    padding:2px;
+
+.server-voice-channels>div {
+    padding: 2px;
 }
-.voice-channel-individual button{
+
+.voice-channel-individual button {
     border: none;
-    background-color: rgb(66,70,77);
+    background-color: rgb(66, 70, 77);
 }
-.voice-channel-individual button:hover{
-    background-color: rgb(66,70,77);
+
+.voice-channel-individual button:hover {
+    background-color: rgb(66, 70, 77);
 }
-.server-voice-channels button{
+
+.server-voice-channels button {
     width: 210px;
     height: 35px;
     display: flex;
     flex-direction: row;
-    justify-content:left;
+    justify-content: left;
     align-items: center;
-    color:white;
-    background-color: rgb(47,49,54);
-    border:none;
-    font-family:Ginto;
+    color: white;
+    background-color: rgb(47, 49, 54);
+    border: none;
+    font-family: Ginto;
     cursor: pointer;
     border-radius: 5px;
 }
 
 
-.voice-chat-inside{
+.voice-chat-inside {
     /* border: 1px solid blue; */
-    height:auto;
+    height: auto;
     display: flex;
     flex-direction: column;
 
 }
-.voice-member{
+
+.voice-member {
     display: flex;
     flex-direction: row;
     align-items: center;
     padding-left: 30px;
     font-family: Ginto;
-    color:white;
+    color: white;
     font-size: 14px;
-    margin-top:5px;
-    margin-bottom:5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
-.voice-member img{
-    width:30px;
-    height:30px;
+
+.voice-member img {
+    width: 30px;
+    height: 30px;
     object-fit: cover;
     border-radius: 20px;
 }
+
 /*lower half*/
+
+/*server members*/
+
+.server-members {
+    width: 200px;
+    height: 100vh;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(47, 49, 54);
+}
+
+.admin-server {
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+    padding-top: 40px;
+    margin-bottom: 10px;
+}
+
+.admin-server-title {
+    font-family: GintoBold;
+    color: rgb(143, 145, 150);
+    font-size: 12px;
+}
+
+.admin {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.admin img {
+    height: 35px;
+    width: 35px;
+    object-fit: cover;
+    border-radius: 30px;
+
+}
+
+.admin-image {
+    height: 60px;
+    width: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+
+.online-dot-server i {
+    color: green;
+    font-size: 12px;
+}
+
+.offline-dot-server i {
+    color: red;
+    font-size: 12px;
+}
+
+.online-dot-server,
+.offline-dot-server {
+    position: relative;
+    top: 14px;
+    right: 15px;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(41, 43, 47);
+    border-radius: 20px;
+}
+.server-admin-name{
+
+    font-family: Ginto;
+    color: white;
+    font-size: 16px;
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+}
+.server-admin-name .online-status,.server-admin-name .offline-status{
+    font-size: 12px;
+    font-family:GintoBold;
+}
+
+.members-server {
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+    padding-top: 10px;
+    margin-bottom: 10px;
+}
+
+.server-members-title {
+    font-family: GintoBold;
+    color: rgb(143, 145, 150);
+    font-size: 12px;
+}
+
+.member-individual {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.member-individual img {
+    height: 35px;
+    width: 35px;
+    object-fit: cover;
+    border-radius: 30px;
+
+}
+
+.member-individual-image{
+    height: 60px;
+    width: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+
+.online-dot-server i {
+    color: green;
+    font-size: 12px;
+}
+
+.offline-dot-server i {
+    color: red;
+    font-size: 12px;
+}
+
+.online-dot-server,
+.offline-dot-server {
+    position: relative;
+    top: 14px;
+    right: 15px;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(41, 43, 47);
+    border-radius: 20px;
+}
+.member-name{
+    font-family: Ginto;
+    color: white;
+    font-size: 16px;
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+}
+.member-name .online-status,.member-name .offline-status{
+    font-size: 12px;
+    font-family:GintoBold;
+}

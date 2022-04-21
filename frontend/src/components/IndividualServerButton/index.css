@@ -78,3 +78,7 @@
 .single-your-server img:hover{
     border-radius:10px
 }
+.single-your-server:disabled{
+    pointer-events: none;
+    opacity: 0.3;
+}

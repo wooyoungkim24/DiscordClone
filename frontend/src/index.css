@@ -15,9 +15,16 @@ body{
     padding:0px;
     /* min-height: 100vh; */
     max-height: 100vh;
+    overflow-y: hidden;
 
 }
 .app-holder{
     display: flex;
     flex-direction: row;
+    height:0px;
+
+}
+html{
+    height:100vh;
+
 }

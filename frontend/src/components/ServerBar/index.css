@@ -26,6 +26,10 @@
     cursor:pointer;
     border:none;
 }
+.home-button:disabled{
+    pointer-events: none;
+    opacity: 0.3;
+}
 .home-button i{
     font-size:30px;
     color:white;

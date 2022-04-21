@@ -2,15 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
 import moment from 'moment'
-import { getServers, getTextChannels, setMessages , setInitialMessages} from "../../store/server";
-
-
+import { getServers, getTextChannels, setMessages, setInitialMessages } from "../../store/server";
+import "./index.css"
 
 
 function Chat({ socket, user, roomName, textId }) {
 
     const [text, setText] = useState("");
-    const [textChannelId, setTextChannelId] = useState(textId)
+    // const [textChannelId, setTextChannelId] = useState(textId)
 
     const updateText = (e) => {
         setText(e.target.value)
@@ -20,7 +19,7 @@ function Chat({ socket, user, roomName, textId }) {
         return state.myServers.messageHistory
     })
 
-    const messageDispatch = (data) =>{
+    const messageDispatch = (data) => {
         let messageHistory = data.text
 
 
@@ -39,7 +38,7 @@ function Chat({ socket, user, roomName, textId }) {
         return () => socket.off("message", messageDispatch)
     }, [socket]);
 
-    useEffect(() =>{
+    useEffect(() => {
         dispatch(setInitialMessages(textId))
     }, [dispatch])
 
@@ -60,13 +59,32 @@ function Chat({ socket, user, roomName, textId }) {
     const scrollToBottom = () => {
         messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     };
+    const handleDate = (date) => {
+        let now = new Date();
+        let messageDate = new Date(date)
+        let diff = now - messageDate
+        if ((diff / 100 / 60 / 60) >= 24) {
+            return (
+                <div className="more-than-24">
+                    {moment(messageDate).format("MMMM D YYYY")}
+                </div>
+            )
+        } else {
+            return (
+                <div className="less-than-24">
+                    {moment(messageDate).format('h:mm a')}
+                </div>
+            )
+        }
+    }
 
     useEffect(scrollToBottom,
         [messages]);
-    console.log("#######", roomName)
+    // console.log("#######", roomName)
     return (
-        <div className="text-channel-caontainer">
+        <div className="text-channel-container">
             <div className="text-channel-title">
+                <i className="fas fa-hashtag"></i>
                 {roomName}
             </div>
             <div className="text-channel-content">
@@ -74,40 +92,50 @@ function Chat({ socket, user, roomName, textId }) {
 
                     <>
                         {messages.map((i) => {
-                            if (i.username === user.username) {
-                                return (
-                                    <div className="message-mine">
+                            // if (i.username === user.username) {
+                            return (
+                                <div className="text">
+                                    <div className="text-left">
                                         <img src={i.picture}></img>
-                                        <div>
-                                            {moment(i.date).format("MMMM D YYYY")}
-                                        </div>
-                                        <p>{i.text}</p>
-                                        <span>{i.username}</span>
                                     </div>
-                                );
-                            } else {
-                                return (
-                                    <div className="message">
-                                        <img src={i.picture}></img>
-                                        <div>
-                                            {moment(i.date).format("MMMM D YYYY")}
+
+                                    <div className="text-right">
+                                        <div className="text-right-top">
+                                            {i.username}&nbsp;&nbsp;
+                                            {handleDate(i.date)}
                                         </div>
-                                        <p>{i.text} </p>
-                                        <span>{i.username}</span>
+                                        <div className="text-right-bottom">
+                                            {i.text}
+                                        </div>
+
                                     </div>
-                                );
-                            }
+                                </div>
+
+                            );
+                            // } else {
+                            //     return (
+                            //         <div className="message">
+                            //             <img src={i.picture}></img>
+                            //             <div>
+                            //                 {moment(i.date).format("MMMM D YYYY")}
+                            //             </div>
+                            //             <p>{i.text} </p>
+                            //             <span>{i.username}</span>
+                            //         </div>
+                            //     );
+                            // }
                         })}
+                        <div ref={messagesEndRef} />
                     </>
                 }
 
 
-                <div ref={messagesEndRef} />
+
             </div>
             <div className="text-channel-input">
                 <input
                     type="text"
-                    placeholder="Message"
+                    placeholder={`Message #${roomName}`}
                     value={text}
                     onChange={updateText}
                     onKeyPress={(e) => {
@@ -117,7 +145,7 @@ function Chat({ socket, user, roomName, textId }) {
                     }}>
 
                 </input>
-                <button onClick={sendData}>Send</button>
+                {/* <button onClick={sendData}>Send</button> */}
             </div>
 
         </div>
