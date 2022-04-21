@@ -11,11 +11,18 @@ import io from "socket.io-client";
 import "./index.css"
 import { getServers } from "../../frontend/src/store/server";
 import Home from "./components/Home";
-import { userOnline } from "./store/session";
+import { userOnline, getDMs } from "./store/session";
 
 
 
-const socket = io.connect('/');
+const socket = io.connect('/',{
+  'reconnection': true,
+  'reconnectionDelay': 500,
+  'reconnectionAttempts': 10
+});
+socket.on('error', function(){
+  socket.socket.reconnect();
+});
 function App() {
 
   const dispatch = useDispatch();
@@ -59,11 +66,14 @@ function App() {
   useEffect(() => {
     if (isLoaded) {
       socket.on("loggedOn", (data) => {
-        // console.log('what data am i getting back', data, data.userId === user.id)
+        console.log('what data am i getting back', data, data.userId === user.id)
         if (data.userId == user.id) {
           dispatch(userOnline())
+          .then(dispatch(getDMs(user.id)))
         }
       })
+
+      //Future, logged off dynamic
       // socket.on("loggedOff", dispatch(sessionActions.restoreUser()))
     }
     return () => {

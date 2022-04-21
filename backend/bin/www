@@ -20,9 +20,11 @@ db.sequelize
     // Start listening for connections
     let server = app.listen(port, () => console.log(`Listening on port ${port}...`));
     io = socket(server, {
-      pingTimeout: 3000,
-      pingInterval: 3000
+      pingTimeout: 20000,
+      maxHttpBufferSize: 1e8
+      // pingInterval: 19000
     });
+
 
     io.on("connection", (socket) => {
       //for a new user joining the room
@@ -53,7 +55,7 @@ db.sequelize
           online: true
         }
         let userUpdated = await userUpdate.update(newBody)
-        
+
         io.emit("loggedOn", {
           userId
         })
