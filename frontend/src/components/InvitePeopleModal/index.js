@@ -19,7 +19,7 @@ function InvitePeopleModal({ user, server }) {
     const serverMembers = useSelector(state => {
         return state.myServers.serverMembers
     })
-    const pendingServerMembers = useSelector(state =>{
+    const pendingServerMembers = useSelector(state => {
         return state.myServers.pendingServerMembers
     })
 
@@ -45,7 +45,7 @@ function InvitePeopleModal({ user, server }) {
 
     return (
         <div className="invite-people-modal-container">
-            <div>
+            <div className='invite-people-modal-title'>
                 Invite friends to {server.serverName}
             </div>
             {isLoaded &&
@@ -55,13 +55,16 @@ function InvitePeopleModal({ user, server }) {
                         if (!serverMembers.includes(ele.id) && !pendingServerMembers.includes(ele.id)) {
                             return (
                                 <div className='individual-invite-friend'>
-                                    <div className='individual-friend-modal-image'>
-                                        <img src={ele.profilePicture}></img>
+                                    <div className='individual-invite-left'>
+                                        <div className='individual-friend-modal-image'>
+                                            <img src={ele.profilePicture}></img>
+                                        </div>
+                                        <div className='individual-friend-modal-name'>
+                                            {ele.username}
+                                        </div>
                                     </div>
-                                    <div className='individual-friend-modal-name'>
-                                        {ele.username}
-                                    </div>
-                                    <div>
+
+                                    <div className='individual-invite-right'>
                                         <button type='button' onClick={() => handleInvitePeople(ele.id)}>
                                             Invite
                                         </button>
