@@ -437,80 +437,84 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                 <div className="server-page">
 
                     <div className="server-nav">
-                        <div className="server-title">
-                            <div className="server-dropdown-button">
-                                <button type="button" onClick={handleServerDropDown}>
-                                    {myServer.serverName}
-                                </button>
+
+                        <div className="server-dropdown-button">
+                            <button type="button" onClick={handleServerDropDown}>
+                                {myServer.serverName}
+                            </button>
+                        </div>
+
+                        {showServerDropDown &&
+                            serverDropdown()
+                        }
+                        {showServerModal &&
+                            <Modal onClose={() => setShowServerModal(false)}>
+                                <InvitePeopleModal user={user} server={myServer} />
+                            </Modal>
+                        }
+                        <div className="channels">
+                            <div className="server-text-channels">
+                                {myTextChannels.map((ele, i) => {
+                                    if (ele.id === parseInt(textId)) {
+                                        if (textIndex !== i) {
+                                            setTextIndex(i)
+
+                                        }
+                                        return (
+                                            <div key={i} className="selected-text-channel">
+                                                <button type="button">
+                                                    <i className="fas fa-hashtag"></i> &nbsp;&nbsp;
+                                                    {ele.channelName}
+                                                </button>
+                                            </div>
+                                        )
+                                    } else {
+                                        return (
+                                            <div key={i} className="unselected-text-channel">
+                                                <button type="button" onClick={() => handleTextChange(ele.id)}>
+                                                    <i className="fas fa-hashtag"></i> &nbsp;&nbsp;
+                                                    {ele.channelName}
+                                                </button>
+
+                                            </div>
+                                        )
+                                    }
+
+                                })}
                             </div>
 
-                            {showServerDropDown &&
-                                serverDropdown()
-                            }
-                            {showServerModal &&
-                                <Modal onClose={() => setShowServerModal(false)}>
-                                    <InvitePeopleModal user={user} server={myServer} />
-                                </Modal>
-                            }
-
-                        </div>
-                        <div className="server-text-channels">
-                            {myTextChannels.map((ele, i) => {
-                                if (ele.id === parseInt(textId)) {
-                                    if (textIndex !== i) {
-                                        setTextIndex(i)
-
-                                    }
+                            <div className="server-voice-channels">
+                                {voiceChannels.map((ele, i) => {
                                     return (
-                                        <div key={i} className="selected-text-channel">
-                                            <button type="button">
+                                        <div className="voice-channel-individual">
+
+                                            <button className="voice-channel-button" disabled={inVoice} onClick={() => handleEnterVoice(ele)}>
+                                                <i className="fas fa-bullhorn"></i>&nbsp;&nbsp;
                                                 {ele.channelName}
                                             </button>
-                                        </div>
-                                    )
-                                } else {
-                                    return (
-                                        <div key={i} className="unselected-text-channel">
-                                            <button type="button" onClick={() => handleTextChange(ele.id)}>
-                                                {ele.channelName}
-                                            </button>
+                                            <div className="voice-chat-inside">
+                                                {voiceMembers.map(ele => {
+                                                    // console.log("$$$", ele)
+                                                    return (
+                                                        <div className="voice-member">
+                                                            <img src={ele.profilePicture}></img>&nbsp;&nbsp;
+                                                            {ele.username}
+                                                        </div>
+                                                    )
+
+                                                })}
+
+                                            </div>
+
 
                                         </div>
                                     )
-                                }
 
-                            })}
+                                })}
+                            </div>
                         </div>
-                        <div className="server-voice-channels">
-                            {voiceChannels.map((ele, i) => {
-                                return (
-                                    <div className="voice-channel-individual">
-                                        <i className="fas fa-bullhorn"></i>
-                                        <button className="voice-channel-button" disabled={inVoice} onClick={() => handleEnterVoice(ele)}>
-                                            {ele.channelName}
-                                        </button>
-                                        <div className="voice-chat-inside">
-
-                                            {voiceMembers.map(ele => {
-                                                // console.log("$$$", ele)
-                                                return (
-                                                    <div className="voice-member">
-                                                        <img src={ele.profilePicture}></img>
-                                                        {ele.username}
-                                                    </div>
-                                                )
-
-                                            })}
 
 
-                                        </div>
-
-
-                                    </div>
-                                )
-
-                            })}
-                        </div>
                         <div className="user-bar">
 
                             <UserBar serverId={id} voiceId={voiceId} voiceMembers={voiceMembers} setInVoice={setInVoice} inVoice={inVoice} socket={socket} user={user} />

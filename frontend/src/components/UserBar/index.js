@@ -77,6 +77,7 @@ function UserBar({ serverId, voiceId, voiceMembers, setVoiceMembers, user, socke
             {inVoice &&
                 <div className="in-voice-user">
                     <button onClick={handleHangUp}>
+                        <i className="fas fa-phone-slash"></i>&nbsp;&nbsp;
                         Hang Up
                     </button>
                 </div>

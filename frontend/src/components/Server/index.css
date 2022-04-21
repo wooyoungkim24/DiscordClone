@@ -1,7 +1,4 @@
-.selected-text-channel button{
-    border: none;
-    border: 2px solid blue;
-}
+
 
 .server-page{
     display: flex;
@@ -136,6 +133,104 @@
 
 
 /* lower half */
+.channels{
+    height: calc(100vh - 60px - 50px);
+    /* border:2px solid red; */
+    padding-left:10px;
+    padding-right:10px;
+    overflow-y:auto;
+    overflow-x:hidden;
+}
+.server-text-channels{
+
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom:20px;
+}
+.server-text-channels >div{
+    padding:2px;
+}
+.server-text-channels button{
+    width: 210px;
+    height: 35px;
+    display: flex;
+    flex-direction: row;
+    justify-content:left;
+    align-items: center;
+    color:white;
+    background-color: rgb(47,49,54);
+    border:none;
+    font-family:Ginto;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.selected-text-channel button{
+    border: none;
+    background-color: rgb(66,70,77);
+}
+.server-text-channels button:hover{
+    background-color: rgb(66,70,77);
+}
+
+.server-voice-channels{
+
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom:20px;
+    /* border:1px solid red; */
 
 
+}
+.server-voice-channels >div{
+    padding:2px;
+}
+.voice-channel-individual button{
+    border: none;
+    background-color: rgb(66,70,77);
+}
+.voice-channel-individual button:hover{
+    background-color: rgb(66,70,77);
+}
+.server-voice-channels button{
+    width: 210px;
+    height: 35px;
+    display: flex;
+    flex-direction: row;
+    justify-content:left;
+    align-items: center;
+    color:white;
+    background-color: rgb(47,49,54);
+    border:none;
+    font-family:Ginto;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+
+.voice-chat-inside{
+    /* border: 1px solid blue; */
+    height:auto;
+    display: flex;
+    flex-direction: column;
+
+}
+.voice-member{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 30px;
+    font-family: Ginto;
+    color:white;
+    font-size: 14px;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+.voice-member img{
+    width:30px;
+    height:30px;
+    object-fit: cover;
+    border-radius: 20px;
+}
 /*lower half*/

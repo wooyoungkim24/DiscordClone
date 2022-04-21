@@ -378,10 +378,29 @@
 .user-bar-settings i {
     font-size: 16px;
     color: rgb(185, 187, 190);
+
 }
 
 .in-voice-user {
     position: absolute;
+    border-bottom: 1px solid rgb(33,35,40);
+    border-top: 1px solid rgb(33,35,40);
+    z-index:1;
+    bottom:60px;
+    width: 240px;
+    left:70px;
+}
+.in-voice-user button{
+    font-family: Ginto;
+    background-color: transparent;
+    color:white;
+    width: 240px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    justify-content: left;
+    border:none;
 }
 
 /* user bar css */
