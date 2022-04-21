@@ -18,13 +18,14 @@ import { userOnline, getDMs } from "./store/session";
 const socket = io.connect('/',{
   'reconnection': true,
   'reconnectionDelay': 500,
-  'reconnectionAttempts': 10
+  'reconnectionAttempts': Infinity
 });
-socket.on('error', function(){
-  socket.socket.reconnect();
-});
-function App() {
 
+function App() {
+  // socket.on('error', function(){
+  //   console.log("attempting to reconnect$$$")
+  //   socket.socket.reconnect();
+  // });
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
   // const [myUser, setMyUser] = useState({})
@@ -64,6 +65,7 @@ function App() {
 
 
   useEffect(() => {
+    console.log("did you give me hope")
     if (isLoaded) {
       socket.on("loggedOn", (data) => {
         console.log('what data am i getting back', data, data.userId === user.id)
