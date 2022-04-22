@@ -350,7 +350,7 @@ function Home({ inVoice, user, socket }) {
                     <UserBar socket={socket} user={user} />
                 </>
             </div>
-            <div className="home-container-right">
+
                 <Switch>
                     <Route exact path="/home">
                         {showFriends &&
@@ -406,7 +406,7 @@ function Home({ inVoice, user, socket }) {
                         <DirectMessage user={user} socket={socket} key={useLocation().pathname.split("/")[1]} />
                     </Route>
                 </Switch>
-            </div>
+
 
         </div>
 

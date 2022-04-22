@@ -7,7 +7,8 @@
     /* border:2px solid black; */
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100vh ;
+    /* height: calc(100vh + 3px); */
     width: 250px;
     background-color: rgb(47, 49, 54);
 }
@@ -270,7 +271,8 @@
 .server-members {
     width: 200px;
     height: 100vh;
-    max-height: 100vh;
+    /* height: calc(100vh + 3px); */
+    /* max-height: 100vh; */
     display: flex;
     flex-direction: column;
     background-color: rgb(47, 49, 54);

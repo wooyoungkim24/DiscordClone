@@ -2,8 +2,9 @@
     background-color: rgb(32,34,37);
     width: 80px;
     min-width:70px;
-    min-height: 100vh;
-    max-height: 100vh;
+    height: 100vh;
+    /* min-height: 100vh;
+    max-height: 100vh; */
     overflow: scroll;
     overflow-x: hidden;
     display: flex;

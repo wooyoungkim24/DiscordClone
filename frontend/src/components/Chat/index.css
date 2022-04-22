@@ -2,6 +2,7 @@
     background-color: rgb(54, 57, 63);
     width: calc(100vw - 527px);
     height: 100vh;
+    /* height: calc(100vh + 3px); */
 }
 
 .text-channel-title {
@@ -98,7 +99,7 @@
 
 .text-channel-input {
     /* border: 1px solid purple; */
-    height: 80px;
+    height: 75px;
     display: flex;
     align-items: center;
     padding-left:20px;
