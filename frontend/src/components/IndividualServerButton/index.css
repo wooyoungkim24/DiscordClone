@@ -75,6 +75,7 @@
     height:55px;
     border-radius: 30px;
     transition: border-radius .5s;
+    object-fit: cover;
 }
 .single-your-server img:hover{
     border-radius:10px
