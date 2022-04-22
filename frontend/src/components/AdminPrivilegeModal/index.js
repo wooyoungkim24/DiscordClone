@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams, useHistory } from "react-router-dom";
 import { Modal } from "../../context/modal"
-import {getAllNotAdminMembers, getTextChannel, kickServer, deleteTextChannel , getMembersAndAdmins} from "../../store/server";
+import { getAllNotAdminMembers, getTextChannel, kickServer, deleteTextChannel, getMembersAndAdmins, createNewText } from "../../store/server";
 import EditTextChannelModal from "../EditTextChannelModal";
 import CreateNewTextModal from "../CreateNewTextModal";
-
+import "./index.css"
 
 function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextChannels }) {
     const dispatch = useDispatch()
@@ -14,7 +14,12 @@ function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextCha
     const [showEditModal, setShowEditModal] = useState(false)
     const [showNewTextModal, setShowNewTextModal] = useState(false)
     const [currChannelIndex, setCurrChannelIndex] = useState(0)
+    const [newChannelName, setNewChannelName] = useState("")
 
+
+    const handleNewChannelName = (e) => {
+        setNewChannelName(e.target.value)
+    }
     const notAdminMembers = useSelector(state => {
         return state.myServers.nonAdminServerMembers
     })
@@ -39,6 +44,7 @@ function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextCha
     }
 
     const handleKickPush = () => {
+        setShowNewTextModal(false)
         setShowKick(true)
         setShowEditText(false)
     }
@@ -51,6 +57,7 @@ function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextCha
     const handleEditPush = () => {
         setShowKick(false)
         setShowEditText(true)
+        setShowNewTextModal(false)
     }
 
     const handleEditClick = (i) => {
@@ -58,6 +65,16 @@ function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextCha
         setShowEditModal(true)
     }
 
+    const handleNewTextSubmit = () => {
+        const payload = {
+            channelName: newChannelName,
+            serverId: server.id
+        }
+        dispatch(createNewText(payload))
+            .then((returnData) => setMyTextChannels([...returnData]))
+        setShowNewTextModal(false)
+
+    }
     const handleDeleteClick = (channel) => {
         if (myTextChannels.length > 1) {
             const payload = {
@@ -73,32 +90,59 @@ function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextCha
     }
     return (
         <div className="admin-privileges-container">
-            <div className="admin-buttons">
-                <button type="button" onClick={handleKickPush}>
-                    Kick Members
-                </button>
-                <button type="button" onClick={handleEditPush}>
-                    Edit Text Channels
-                </button>
-                <button type="button" onClick={handleNewTextPush}>
-                    Create Text Channel
-                </button>
-                {showNewTextModal &&
-                    <Modal onClose={() => setShowNewTextModal(false)}>
-                        <CreateNewTextModal setShowNewTextModal = {setShowNewTextModal} setMyTextChannels={setMyTextChannels} server={server}/>
-                    </Modal>
-                }
+            <div className="admin-top">
+                Admin Privileges
+                <div className="admin-buttons">
+                    <button type="button" id='kick-members-category' onClick={handleKickPush}>
+                        Kick Members
+                    </button>
+                    <button type="button" id='edit-text-category' onClick={handleEditPush}>
+                        Edit Text Channels
+                    </button>
+                    <button type="button" onClick={handleNewTextPush}>
+                        Create Text Channel
+                    </button>
+                </div>
+
+
 
             </div>
+            {showNewTextModal &&
+
+                <div className="create-text-modal-container">
+                    <div className="create-text-modal-title">
+                        Give your new text channel a name!
+                    </div>
+                    <div className="create-text-modal-input">
+                        <input
+                            type="text"
+                            required
+                            value={newChannelName}
+                            onChange={handleNewChannelName}
+                        >
+                        </input>
+                    </div>
+                    <div className="create-text-button">
+                        <button type="button" onClick={handleNewTextSubmit}>
+                            Create
+                        </button>
+                    </div>
+
+                </div>
+
+            }
             {showKick &&
                 <div className="kick-members-div">
                     {notAdminMembers.map(ele => {
                         return (
                             <div className="kick-list-individual">
-                                <img src={ele.receivor.profilePicture}></img>
-                                {ele.receivor.username}
+                                <div className="kick-individual-left">
+                                    <img src={ele.receivor.profilePicture}></img>&nbsp;&nbsp;&nbsp;
+                                    {ele.receivor.username}
+                                </div>
+
                                 <button type="button" onClick={() => handleKickUser(ele)}>
-                                    Kick this user
+                                    KICK USER
                                 </button>
                             </div>
                         )
@@ -107,16 +151,18 @@ function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextCha
             }
             {showEditText &&
                 <div className="edit-text-div">
-                    {myTextChannels.map((ele, i) => {
+                    {myTextChannels.sort(function (a, b) {
+                        return a.id - b.id
+                    }).map((ele, i) => {
                         return (
                             <div className="edit-text-list-individual">
                                 {ele.channelName}
                                 <div className="edit-text-buttons">
-                                    <button type="button" onClick={() => handleEditClick(i)}>
+                                    <button type="button" id='edit-text-channel-button' onClick={() => handleEditClick(i)}>
                                         Edit
                                     </button>
 
-                                    <button type="button" onClick={() => handleDeleteClick(ele)}>
+                                    <button type="button" id='delete-text-channel-button' onClick={() => handleDeleteClick(ele)}>
                                         Delete
                                     </button>
                                 </div>

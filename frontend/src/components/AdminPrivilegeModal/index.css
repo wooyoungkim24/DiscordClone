@@ -1,0 +1,233 @@
+/* .create-text-modal-container{
+    width: 450px;
+    height:400px;
+    background-color: white;;
+} */
+
+
+
+.admin-privileges-container{
+    background-color: white;
+    border-radius:10px;
+    width: 500px;
+    height: auto;
+    max-height: 400px;
+    padding-left: 20px;
+    padding-bottom: 15px;
+}
+.admin-top{
+    display: flex;
+    flex-direction:column;
+
+    padding-top:20px;
+    font-family: GintoBold;
+    font-size:20px;
+}
+.admin-buttons{
+    display:flex;
+    flex-direction: row;
+    margin-top:10px;
+}
+.admin-buttons button{
+    font-family:Ginto;
+    background-color: rgb(86, 98, 232);
+    border:none;
+    border-radius: 5px;
+    height: 35px;
+    color:white;
+    padding-left:20px;
+    padding-right:20px;
+    cursor: pointer;
+}
+
+.kick-members-div{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    overflow-y:auto;
+}
+
+.kick-members-div img{
+    width:50px;
+    height:50px;
+    border-radius: 30px;
+    object-fit: cover;
+}
+#kick-members-category{
+    margin-right:20px;
+}
+#edit-text-category{
+    margin-right:20px;
+}
+.kick-list-individual{
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+    margin-bottom: 20px;
+    justify-content: space-between;
+    padding-right:25px;
+}
+.kick-individual-left{
+    display: flex;
+    align-items: center;
+    font-family: Ginto;
+}
+.kick-list-individual button{
+    border: 1px solid red;
+    cursor: pointer;
+    background-color: transparent;
+
+    font-family:GintoBold;
+    border-radius:5px;
+    width: 100px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.kick-list-individual button:hover{
+    background-color: red;
+    color:white;
+}
+.edit-text-div{
+    display: flex;
+    flex-direction: column;
+    margin-top:20px;
+}
+.edit-text-list-individual{
+    display: flex;
+    flex-direction:row;
+    justify-content: space-between;
+    padding-right:25px;
+    align-items: center;
+    font-family: Ginto;
+    margin-bottom:10px;
+}
+.edit-text-buttons{
+    display: flex;
+    flex-direction: row;
+}
+#edit-text-channel-button{
+    border: 1px solid green;
+    cursor: pointer;
+    background-color: transparent;
+    font-family:GintoBold;
+    border-radius:5px;
+    width: 80px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#delete-text-channel-button{
+    border: 1px solid red;
+    cursor: pointer;
+    background-color: transparent;
+    font-family:GintoBold;
+    border-radius:5px;
+    width: 80px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left:10px;
+}
+#delete-text-channel-button:hover{
+    background-color: red;
+    color:white;
+
+}
+#edit-text-channel-button:hover{
+    background-color: green;
+    color:white;
+}
+.edit-text-modal-container{
+    background-color: white;
+    width: 300px;
+    height: 140px;
+    border-radius:10px;
+    padding-left:10px;
+    padding-top:20px;
+}
+.edit-text-modal-title{
+    font-family:GintoBold;
+    font-size:20px;
+}
+.edit-text-modal-input{
+    margin-top:10px;
+
+}
+.edit-text-modal-input input{
+    width: 265px;
+    background-color: rgb(227,229,232);
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    height: 40px;
+    font-family: Ginto;
+    font-size: 14px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.edit-text-button{
+    display: flex;
+    justify-content:end;
+    padding-right:15px;
+    margin-top:15px;
+}
+.edit-text-modal-container button{
+    background-color: rgb(88,101,242);
+    font-family: Ginto;
+    color: white;
+    font-size: 13px;
+    width: 110px;
+    height: 35px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}
+.create-text-modal-container{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+.create-text-modal-title{
+    font-family:GintoBold;
+    font-size:16px;
+}
+.create-text-modal-input {
+    margin-top:10px;
+}
+.create-text-modal-input input{
+    width: 455px;
+    background-color: rgb(227,229,232);
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    height: 40px;
+    font-family: Ginto;
+    font-size: 14px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.create-text-button{
+    display: flex;
+    justify-content:end;
+    padding-right:25px;
+    margin-top:15px;
+}
+.create-text-button button{
+    background-color: rgb(88,101,242);
+    font-family: Ginto;
+    color: white;
+    font-size: 13px;
+    width: 110px;
+    height: 35px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}

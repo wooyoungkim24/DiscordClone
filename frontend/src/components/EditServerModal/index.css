@@ -1,0 +1,76 @@
+.edit-server-modal-container{
+    background-color: white;
+    width: 400px;
+    height:300px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+}
+.edit-server-modal-title{
+
+    display: flex;
+    justify-content: center;
+    font-family: GintoBold;
+    font-size: 20px;
+    padding-top: 20px;
+    padding-bottom:20px;
+
+}
+.edit-server-picture-div{
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+    margin-top:10px;
+    font-family: GintoBold;
+    font-size: 12px;
+}
+.edit-server-picture-div input{
+    margin-top:10px;
+    width: 340px;
+    height: 40px;
+    font-family:Ginto;
+    padding-left:10px;
+    border:none;
+    border-radius:5px;
+    padding-right:10px;
+    background-color: rgb(227,229,232);
+
+}
+.edit-server-name-div{
+    margin-top:20px;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    font-family: GintoBold;
+    font-size: 12px;
+}
+.edit-server-name-div input{
+    margin-top:10px;
+    padding-left:10px;
+    padding-right:10px;
+    width: 340px;
+    height: 40px;
+    border:none;
+    border-radius:5px;
+    font-family:Ginto;
+    background-color: rgb(227,229,232);
+}
+.edit-server-button{
+    display: flex;
+    align-items: center;
+
+    height: 70px;
+    justify-content: right;
+    padding-right: 20px;
+}
+.edit-server-button button {
+    background-color: rgb(88,101,242);
+    font-family: Ginto;
+    color: white;
+    font-size: 13px;
+    width: 90px;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+  }

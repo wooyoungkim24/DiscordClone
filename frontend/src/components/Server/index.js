@@ -313,13 +313,14 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
         }
     }
     const handleServerDropDown = () => {
-        // if (showServerDropDown) {
-        //     setShowServerDropDown(false)
-        // }
-        // else {
-        //     setShowServerDropDown(true)
-        // }
-        document.getElementsByClassName("server-dropdown-button")[0].focus();
+        if (showServerDropDown) {
+            setShowServerDropDown(false)
+        }
+        else {
+            setShowServerDropDown(true)
+        }
+
+        // document.getElementsByClassName("server-dropdown-button")[0].focus();
     }
 
     const handleAddPeople = () => {
@@ -435,31 +436,44 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
 
     const handleOutsideDropClick = (e) => {
         const ignore = document.querySelector(".server-drop-down-member")
-        let ignore2 =document.querySelector(".server-drop-down-admin")
+        const ignore2 = document.querySelector(".server-drop-down-admin")
+        const ignore3 = document.querySelector(".admin-privileges-container")
+        const ignore4 = document.querySelector(".edit-server-modal-container")
+        const ignore5 = document.querySelector(".edit-text-modal-container")
+
         let target = e.target
+        console.log("oogobooka &&&&&&&&&&&")
         if (document.activeElement === serverDropRef.current) {
             return
         } else if (ignore && (target === ignore || ignore.contains(target))) {
             return
-        }else if(ignore2 && (target === ignore2 || ignore2.contains(target))){
+        } else if (ignore2 && (target === ignore2 || ignore2.contains(target))) {
+            return
+        } else if (ignore3 && (target === ignore3 || ignore3.contains(target))) {
+            return
+        } else if (ignore4 && (target === ignore4 || ignore4.contains(target))) {
+            return
+        } else if (ignore5 && (target === ignore5 || ignore5.contains(target))) {
+            console.log('are you here yet 777')
             return
         }
+
         else {
             setShowServerDropDown(false)
 
         }
     }
 
-    useEffect(() => {
-        if (showServerDropDown) {
-            document.addEventListener('click', handleOutsideDropClick);
-        }
-        return (() => {
+    // useEffect(() => {
+    //     if (showServerDropDown) {
+    //         document.addEventListener('click', handleOutsideDropClick);
+    //     }
+    //     return (() => {
 
-            document.removeEventListener('click', handleOutsideDropClick);
+    //         document.removeEventListener('click', handleOutsideDropClick);
 
-        })
-    }, [showServerDropDown])
+    //     })
+    // }, [showServerDropDown])
     return (
 
         <>
@@ -469,9 +483,11 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
 
                     <div className="server-nav">
 
-                        <div className="server-dropdown-button" tabIndex="0"
-                            ref={serverDropRef}
-                            onFocus={() => setShowServerDropDown(true)}>
+                        <div className="server-dropdown-button"
+                            // tabIndex="0"
+                            // ref={serverDropRef}
+                            // onFocus={() => setShowServerDropDown(true)}
+                        >
                             <button type="button" onClick={handleServerDropDown}>
                                 <div className="server-name">
                                     {myServer.serverName}
