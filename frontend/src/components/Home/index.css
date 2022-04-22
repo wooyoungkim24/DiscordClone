@@ -419,7 +419,7 @@
     flex-direction: column;
 
     height: 100vh;
-    width: calc(100vw - 357px);
+    width: calc(100vw - 350px);
     background-color: rgb(54, 57, 63);
     font-family: Ginto;
     color: white;
