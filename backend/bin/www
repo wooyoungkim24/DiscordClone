@@ -218,7 +218,7 @@ db.sequelize
           io.to(p_user.room).emit("message", {
 
 
-            text: updated.messageHistory
+            text: updated
           });
         }
       });

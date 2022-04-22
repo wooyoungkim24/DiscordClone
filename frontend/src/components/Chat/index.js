@@ -20,12 +20,16 @@ function Chat({ socket, user, roomName, textId }) {
     })
 
     const messageDispatch = (data) => {
-        let messageHistory = data.text
+
+        if (textId === data.text.id) {
+            let messageHistory = data.text.messageHistory
 
 
-        // console.log('how many times does this hit')
+            // console.log('how many times does this hit')
 
-        dispatch(setMessages(messageHistory))
+            dispatch(setMessages(messageHistory))
+        }
+
     }
 
     useEffect(() => {
