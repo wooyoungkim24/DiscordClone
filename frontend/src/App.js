@@ -11,11 +11,11 @@ import io from "socket.io-client";
 import "./index.css"
 import { getServers } from "../../frontend/src/store/server";
 import Home from "./components/Home";
-import { userOnline, getDMs } from "./store/session";
+import { userNowOnline, getDMs } from "./store/session";
 
 
 
-const socket = io.connect('/',{
+const socket = io.connect('/', {
   'reconnection': true,
   'reconnectionDelay': 500,
   'reconnectionAttempts': Infinity
@@ -46,18 +46,23 @@ function App() {
 
 
   useEffect(() => {
+    // console.log('are you even running')
     dispatch(sessionActions.restoreUser())
       .then((user) => {
         if (user) {
           dispatch(getServers(user.id))
+
+          // dispatch(userOnline())
           // .then(servers => setYourServers(servers))
         }
+        if (navigator.mediaDevices) {
+          navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+            // console.log("should only run once")
+            setStream(stream)
+            setMadiaRecorder(new MediaRecorder(stream))
+          })
+        }
 
-        navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-          console.log("should only run once")
-          setStream(stream)
-          setMadiaRecorder(new MediaRecorder(stream))
-        })
       })
       .then(() => setIsLoaded(true));
 
@@ -65,30 +70,38 @@ function App() {
 
 
   useEffect(() => {
-    console.log("did you give me hope")
-    if (isLoaded) {
-      socket.on("loggedOn", (data) => {
-        console.log('what data am i getting back', data, data.userId === user.id)
-        if (data.userId == user.id) {
-          dispatch(userOnline())
-          // .then(() =>dispatch(getDMs(user.id)))
-        }
-      })
+    // console.log("did you give me hope")
+    if (user && !user.online) {
+      dispatch(userNowOnline(user.id))
+      // .then(() => dispatch(getDMs(user.id)))
+      dispatch(getDMs(user.id))
 
-      //Future, logged off dynamic
-      // socket.on("loggedOff", dispatch(sessionActions.restoreUser()))
     }
-    return () => {
-      socket.off("loggedOn", (data) => {
-        if (data.userId == user.id) {
-          dispatch(userOnline())
-        }
-      })
-      // socket.off("loggedOff",dispatch(sessionActions.restoreUser()))
-    }
+    //   console.log('why everything sucks ^^^^^^^^')
+    //     // console.log("i am not online you better be running", data.userId, user.id)
+    //   socket.on("loggedOn", (data) => {
+
+    //     if (data.userId == user.id) {
 
 
-  }, [socket, isLoaded])
+    //       // .then(() =>dispatch(getDMs(user.id)))
+    //     }
+    //   })
+
+    //   //Future, logged off dynamic
+    //   // socket.on("loggedOff", dispatch(sessionActions.restoreUser()))
+    // }
+    // return () => {
+    //   socket.off("loggedOn", (data) => {
+    //     if (data.userId == user.id) {
+    //       dispatch(userOnline())
+    //     }
+    //   })
+    //   // socket.off("loggedOff",dispatch(sessionActions.restoreUser()))
+    // }
+
+
+  }, [socket,user])
 
   useEffect(() => {
 
@@ -132,7 +145,7 @@ function App() {
       {isLoaded && user &&
 
         <div className="app-holder">
-          <ServerBar inVoice={inVoice} isLoaded={isLoaded} user={user} socket={socket}  />
+          <ServerBar inVoice={inVoice} isLoaded={isLoaded} user={user} socket={socket} />
 
           <Switch>
             <Route exact path="/">

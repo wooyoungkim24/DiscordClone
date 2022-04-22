@@ -11,9 +11,10 @@ const SET_PENDING_SENT_FRIENDS = 'session/setPendingSentFriends'
 const SET_INITIAL_PENDING_SENT_FRIENDS = 'session/setInitialPendingSentFriends'
 const USER_ONLINE = 'session/userOnline'
 
-export const userOnline = ()=>{
+const userOnline = (user)=>{
     return {
-        type: USER_ONLINE
+        type: USER_ONLINE,
+        payload:user
     }
 }
 
@@ -82,6 +83,17 @@ const removeUser = () => {
 };
 
 
+export const userNowOnline = (id) => async dispatch =>{
+    console.log("is it here breaking")
+    const res = await csrfFetch(`/api/users/user/online`, {
+        method:"PUT",
+        body:JSON.stringify({id})
+    })
+    let data = await res.json()
+    dispatch(userOnline(data))
+    return data
+}
+
 export const getDMsTemp =(id) => async dispatch =>{
     const res = await csrfFetch(`/api/users/get/dms/temp/${id}`)
     const data = await res.json()
@@ -89,9 +101,11 @@ export const getDMsTemp =(id) => async dispatch =>{
 }
 
 export const getDMs = (id) => async dispatch =>{
+    console.log('wher are you running')
     const res = await csrfFetch(`/api/users/active/messages/${id}`)
     const data= await res.json()
     dispatch(setMyMessages(data))
+
     return data
 }
 
@@ -148,7 +162,7 @@ export const getPendingFriends = (id) => async dispatch =>{
 }
 
 export const getInitialPendingSentFriends = (userId) => async dispatch =>{
-    console.log("is it break here", userId)
+    // console.log("is it break here", userId)
     const res = await csrfFetch(`/api/users/all/pending/sent/${userId}`)
     const data = await res.json()
 
@@ -268,7 +282,7 @@ const sessionReducer = (state = initialState, action) => {
         case USER_ONLINE:
             return {
                 ...state,
-                user:{...state.user, online:true}
+                user:{...action.payload}
             }
         case SET_FRIENDS:
             // let b = [];
@@ -307,7 +321,7 @@ const sessionReducer = (state = initialState, action) => {
                 notFriends:[...action.payload]
             }
         case SET_MY_MESSAGES:
-            console.log('what are my messages', action.payload)
+            // console.log('what are my messages', action.payload)
 
             return {
                 ...state,

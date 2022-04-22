@@ -31,13 +31,13 @@ function FriendsList({ user, friends, socket }) {
         if (ele.online) {
             return (
                 <div className="online-dot-friend">
-                    <i class="fas fa-circle"></i>
+                    <i className="fas fa-circle"></i>
                 </div>
             )
         } else {
             return (
                 <div className="offline-dot-friend">
-                    <i class="fas fa-circle"></i>
+                    <i className="fas fa-circle"></i>
                 </div>
             )
         }
@@ -206,13 +206,13 @@ function FriendsList({ user, friends, socket }) {
                     All
                     {friends.length
                         ? <>
-                            {friends.map(ele => {
+                            {friends.map((ele,i) => {
                                 return (
-                                    <div className="friends-list-individual">
+                                    <div key = {i} className="friends-list-individual">
                                         <div className="friends-list-individual-left">
                                             <div className="friend-list-image-container">
                                                 <img onError={({ currentTarget }) => {
-                                                    console.log("i am erroring", currentTarget)
+                                                    // console.log("i am erroring", currentTarget)
                                                     currentTarget.onerror = null;
                                                     currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                                                 }} src={ele.profilePicture} alt="profile picture"></img>
@@ -245,14 +245,14 @@ function FriendsList({ user, friends, socket }) {
             {showOnline &&
                 <div className="online-friends">
                     Online
-                    {friends.map(ele => {
+                    {friends.map((ele,i) => {
                         if (ele.online) {
                             return (
-                                <div className="friends-list-individual">
+                                <div key = {i} className="friends-list-individual">
                                     <div className="friends-list-individual-left">
                                         <div className="friend-list-image-container">
                                             <img onError={({ currentTarget }) => {
-                                                console.log("i am erroring", currentTarget)
+                                                // console.log("i am erroring", currentTarget)
                                                 currentTarget.onerror = null;
                                                 currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                                             }} src={ele.profilePicture} alt="profile picture"></img>
@@ -278,12 +278,12 @@ function FriendsList({ user, friends, socket }) {
 
                 <div className="pending-friends">
                     These people want to be your friend!
-                    {pendingFriends.map(ele => {
+                    {pendingFriends.map((ele,i) => {
                         return (
-                            <div className="pending-friends-individual">
+                            <div key = {i} className="pending-friends-individual">
                                 <div className="pending-friends-left">
                                     <img onError={({ currentTarget }) => {
-                                        console.log("i am erroring", currentTarget)
+                                        // console.log("i am erroring", currentTarget)
                                         currentTarget.onerror = null;
                                         currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                                     }} src={ele.added.profilePicture} alt="profile picture"></img>
@@ -308,7 +308,7 @@ function FriendsList({ user, friends, socket }) {
             }
             {showAddFriend &&
                 <div className="add-friends-container">
-                    {notFriends.map(ele => {
+                    {notFriends.map((ele,i) => {
                         let pending = false
                         let pendingSent = [];
                         pendingSentFriends.forEach(ele => {
@@ -319,10 +319,10 @@ function FriendsList({ user, friends, socket }) {
                         }
 
                         return (
-                            <div className="other-users-div">
+                            <div key = {i} className="other-users-div">
                                 <div className="other-users-div-left">
                                     <img onError={({ currentTarget }) => {
-                                        console.log("i am erroring", currentTarget)
+                                        // console.log("i am erroring", currentTarget)
                                         currentTarget.onerror = null;
                                         currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                                     }} src={ele.profilePicture} alt="profile picture"></img>

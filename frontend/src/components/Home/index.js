@@ -12,7 +12,7 @@ import "./index.css"
 
 
 function Home({ inVoice, user, socket }) {
-    console.log("are you rerendering???")
+    // console.log("are you rerendering???")
     const [showFriends, setShowFriends] = useState(true)
     const [showInvites, setShowInvites] = useState(false)
     const history = useHistory()
@@ -80,13 +80,13 @@ function Home({ inVoice, user, socket }) {
         if (ele.online) {
             return (
                 <div className="online-dot-dm">
-                    <i class="fas fa-circle"></i>
+                    <i className="fas fa-circle"></i>
                 </div>
             )
         } else {
             return (
                 <div className="offline-dot-dm">
-                    <i class="fas fa-circle"></i>
+                    <i className="fas fa-circle"></i>
                 </div>
             )
         }
@@ -212,7 +212,7 @@ function Home({ inVoice, user, socket }) {
                     </button>
                     <button type="button" id='invites-home-button' onClick={handleCheckInvites}>
                         <div>
-                            <i class="fas fa-user-plus"></i>
+                            <i className="fas fa-user-plus"></i>
                         </div>
 
                         Invites
@@ -251,7 +251,7 @@ function Home({ inVoice, user, socket }) {
                                                     <div className="dm-popout-friend-individual-left">
                                                         <div className="dm-individual-picture">
                                                             <img onError={({ currentTarget }) => {
-                                                                console.log("i am erroring", currentTarget)
+                                                                // console.log("i am erroring", currentTarget)
                                                                 currentTarget.onerror = null;
                                                                 currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                                                             }} src={ele.profilePicture} alt="profile picture"></img>
@@ -293,7 +293,7 @@ function Home({ inVoice, user, socket }) {
                                     <div key={ele.id} onClick={() => handleDmPush(ele)} className={`list-element-active-dm user${ele.id} select`}>
                                         <div className="active-dm-image-container">
                                             <img onError={({ currentTarget }) => {
-                                                console.log("i am erroring", currentTarget)
+                                                // console.log("i am erroring", currentTarget)
                                                 currentTarget.onerror = null;
                                                 currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                                             }} src={ele.profilePicture} alt="profile picture"></img>
@@ -319,7 +319,7 @@ function Home({ inVoice, user, socket }) {
                                     <div key={ele.id} onClick={() => handleDmPush(ele)} className={`list-element-active-dm user${ele.id}`}>
                                         <div className="active-dm-image-container">
                                             <img onError={({ currentTarget }) => {
-                                                console.log("i am erroring", currentTarget)
+                                                // console.log("i am erroring", currentTarget)
                                                 currentTarget.onerror = null;
                                                 currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                                             }} src={ele.profilePicture} alt="profile picture"></img>
@@ -368,7 +368,7 @@ function Home({ inVoice, user, socket }) {
                                             <div className="invite-container-left">
                                                 <div className="inviter">
                                                     <img onError={({ currentTarget }) => {
-                                                        console.log("i am erroring", currentTarget)
+                                                        // console.log("i am erroring", currentTarget)
                                                         currentTarget.onerror = null;
                                                         currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                                                     }} src={ele.inviter.profilePicture} alt="profile picture"></img>
@@ -379,7 +379,7 @@ function Home({ inVoice, user, socket }) {
                                                 </div>
                                                 <div className="server-invite">
                                                     <img onError={({ currentTarget }) => {
-                                                        console.log("i am erroring", currentTarget)
+                                                        // console.log("i am erroring", currentTarget)
                                                         currentTarget.onerror = null;
                                                         currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                                                     }} src={ele.server.serverImage} alt="profile picture"></img>

@@ -74,7 +74,7 @@ function IndividualServerButton({ inVoice, server, user, socket }) {
         <div className="single-server-container">
             <button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleServerClick} disabled={inVoice} className='single-your-server' >
                 <img onError={({ currentTarget }) => {
-                    console.log("i am erroring", currentTarget)
+                    // console.log("i am erroring", currentTarget)
                     currentTarget.onerror = null;
                     currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                 }} className='single-server-image' alt="profile picture" src={server.serverImage}></img>

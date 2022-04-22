@@ -12,7 +12,7 @@ function UserBar({ serverId, voiceId, voiceMembers, setVoiceMembers, user, socke
     const dispatch = useDispatch();
 
     const onlineDot = (ele) => {
-        console.log("am i online", ele, ele.online)
+        // console.log("am i online", ele, ele.online)
         if (ele.online) {
             return (
                 <div className="online-dot-user">
@@ -32,7 +32,7 @@ function UserBar({ serverId, voiceId, voiceMembers, setVoiceMembers, user, socke
     const settingVoiceMembersAfter = (data) => {
         // console.log("%%%", voices[0], voices[0].voiceRoom, voiceId)
         // console.log("$$now what", data.serversIds, servers)
-        console.log("what is my server id hang", data.serverId, serverId)
+        // console.log("what is my server id hang", data.serverId, serverId)
         if (data.serverId == serverId) {
             dispatch(setVoices(data.voices.voiceMembers))
 
@@ -87,7 +87,7 @@ function UserBar({ serverId, voiceId, voiceMembers, setVoiceMembers, user, socke
             <div className="user-bar-container">
                 <div className="user-bar-image">
                     <img onError={({currentTarget}) => {
-                        console.log("i am erroring", currentTarget)
+                        // console.log("i am erroring", currentTarget)
                         currentTarget.onerror = null;
                         currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                     }} src={user.profilePicture} alt="profile picture"></img>
@@ -100,12 +100,12 @@ function UserBar({ serverId, voiceId, voiceMembers, setVoiceMembers, user, socke
                 </div>
                 <div className="user-bar-settings">
                     <button type="button" onClick={() => setShowUserSettings(true)}>
-                        <i class="fas fa-bars"></i>
+                        <i className="fas fa-bars"></i>
                     </button>
                 </div>
                 {showUserSettings &&
                     <Modal onClose={() => setShowUserSettings(false)}>
-                        <UserSettings socket={socket} />
+                        <UserSettings user = {user} voiceId ={voiceId} serverId ={serverId} inVoice = {inVoice} setInVoice = {setInVoice} socket={socket} />
                     </Modal>
                 }
             </div>

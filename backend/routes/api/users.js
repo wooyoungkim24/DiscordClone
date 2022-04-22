@@ -45,6 +45,16 @@ router.post(
     }),
 );
 
+
+router.put("/user/online", asyncHandler(async(req,res) =>{
+    const {id} = req.body
+    const updateUser = await User.findByPk(id)
+    let updatedUser = await updateUser.update({online:true})
+    let newUser = await User.findByPk(id)
+    return res.json(newUser)
+}))
+
+
 router.get("/active/messages/:id", asyncHandler(async (req, res) => {
     const id = req.params.id
     const activeDirectMessages = await User.findOne({
@@ -395,7 +405,7 @@ router.delete("/delete/friend", asyncHandler(async (req, res) => {
 
 router.delete("/remove/friend", asyncHandler(async (req, res) => {
     const {friend1,friend2 } = req.body
-    console.log("##hitting correctly", friend1, friend2)
+    // console.log("##hitting correctly", friend1, friend2)
     let destroyedFriend = await UserFriend.findOne({
         where:{
             [Op.or]:[

@@ -20,7 +20,7 @@ function join_User(id, username, room, picture) {
     }
     // c_users.push(p_user)
     c_users.push({ ...p_user, voiceRoom: oldVoice });
-    console.log("###1")
+    // console.log("###1")
     console.log(c_users, "users");
 
 
@@ -34,7 +34,7 @@ function join_User_Voice(username, voiceRoom) {
     let newUser = { ...oldUser, voiceRoom: voiceRoom }
 
     c_users.splice(oldUserIndex, 1, newUser)
-    console.log("###2")
+    // console.log("###2")
     console.log(c_users, "users");
     return newUser
 }
@@ -44,7 +44,7 @@ function leave_User_Voice(username) {
     let oldUserIndex = c_users.findIndex(ele => ele.username === username)
     let newUser = { ...oldUser, voiceRoom: undefined }
     c_users.splice(oldUserIndex, 1, newUser)
-    console.log("###3")
+    // console.log("###3")
     console.log(c_users, "users");
     return oldUser
 }
@@ -74,7 +74,7 @@ function get_all_voice(room) {
 function get_my_voice_after(room) {
     let inVoice = [];
     c_users.forEach(ele => {
-        console.log("$$$otherlog", ele, ele.voiceRoom)
+        // console.log("$$$otherlog", ele, ele.voiceRoom)
 
         if (ele.voiceRoom === undefined) {
             inVoice.push(ele)
@@ -89,7 +89,7 @@ console.log("user out", c_users);
 
 // Gets a particular user id to return the current user
 function get_Current_User(id) {
-    console.log('these are the users', c_users, id)
+    // console.log('these are the users', c_users, id)
     return c_users.find((p_user) => p_user.id === id);
 }
 

@@ -66,7 +66,7 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
 
     useEffect(() => {
         if (inVoice) {
-            console.log("this is 0###")
+            // console.log("this is 0###")
             let time = 700;
             madiaRecorder.start();
 
@@ -145,7 +145,7 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
 
             if (madiaRecorder) {
                 if (madiaRecorder.state !== "inactive" && inVoice) {
-                    console.log("this is 2###")
+                    // console.log("this is 2###")
                     stream.getTracks().forEach(track => track.stop());
                     madiaRecorder.stop()
                     // madiaRecorder.removeEventListener("dataavailable", function (event) {
@@ -173,10 +173,13 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                     //         madiaRecorder.stop();
                     //     }, time);
                     // });
-                    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-                        setStream(stream)
-                        setMadiaRecorder(new MediaRecorder(stream))
-                    })
+                    if (navigator.mediaDevices) {
+                        navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+                            setStream(stream)
+                            setMadiaRecorder(new MediaRecorder(stream))
+                        })
+                    }
+
                 }
             }
 
@@ -248,13 +251,13 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
 
 
         }
-    }, [isLoaded, id])
+    }, [isLoaded, id,user])
 
 
     const settingVoiceMembers = (data) => {
         // console.log("%%%", voices[0], voices[0].voiceRoom, voiceId)
         // console.log("$$what am i working with", data.serverIds, servers)
-        console.log("what is my server id", data.serverId, id)
+        // console.log("what is my server id", data.serverId, id)
         if (data.serverId == id) {
             dispatch(setVoices(data.voices.voiceMembers))
 
@@ -293,13 +296,13 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
         if (ele.online) {
             return (
                 <div className="online-dot-server">
-                    <i class="fas fa-circle"></i>
+                    <i className="fas fa-circle"></i>
                 </div>
             )
         } else {
             return (
                 <div className="offline-dot-server">
-                    <i class="fas fa-circle"></i>
+                    <i className="fas fa-circle"></i>
                 </div>
             )
         }
@@ -450,7 +453,7 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
         const ignore5 = document.querySelector(".edit-text-modal-container")
 
         let target = e.target
-        console.log("oogobooka &&&&&&&&&&&")
+        // console.log("oogobooka &&&&&&&&&&&")
         if (document.activeElement === serverDropRef.current) {
             return
         } else if (ignore && (target === ignore || ignore.contains(target))) {
@@ -462,7 +465,7 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
         } else if (ignore4 && (target === ignore4 || ignore4.contains(target))) {
             return
         } else if (ignore5 && (target === ignore5 || ignore5.contains(target))) {
-            console.log('are you here yet 777')
+            // console.log('are you here yet 777')
             return
         }
 
@@ -483,10 +486,10 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
     //     })
     // }, [showServerDropDown])
 
-    const handleRoomName = () =>{
-        if(myTextChannels[textIndex]){
+    const handleRoomName = () => {
+        if (myTextChannels[textIndex]) {
             return myTextChannels[textIndex].channelName
-        }else{
+        } else {
             return myTextChannels[0].channelName
         }
 
@@ -529,7 +532,7 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                                     if (ele.id === parseInt(textId)) {
                                         if (textIndex !== i) {
                                             setTextIndex(i)
-                                            console.log('what is the index', textIndex)
+                                            // console.log('what is the index', textIndex)
                                         }
                                         return (
                                             <div key={i} className="selected-text-channel">
@@ -554,39 +557,42 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                                 })}
                             </div>
 
-                            <div className="server-voice-channels">
-                                {voiceChannels.map((ele, i) => {
-                                    return (
-                                        <div className="voice-channel-individual">
+                            {navigator.mediaDevices &&
+                                <div className="server-voice-channels">
+                                    {voiceChannels.map((ele, i) => {
+                                        return (
+                                            <div key = {i} className="voice-channel-individual">
 
-                                            <button className="voice-channel-button" disabled={inVoice} onClick={() => handleEnterVoice(ele)}>
-                                                <i className="fas fa-bullhorn"></i>&nbsp;&nbsp;
-                                                {ele.channelName}
-                                            </button>
-                                            <div className="voice-chat-inside">
-                                                {voiceMembers.map(ele => {
-                                                    // console.log("$$$", ele)
-                                                    return (
-                                                        <div className="voice-member">
-                                                            <img onError={({ currentTarget }) => {
-                                                                console.log("i am erroring", currentTarget)
-                                                                currentTarget.onerror = null;
-                                                                currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
-                                                            }} alt="profile picture" src={ele.profilePicture}></img>&nbsp;&nbsp;
-                                                            {ele.username}
-                                                        </div>
-                                                    )
+                                                <button className="voice-channel-button" disabled={inVoice} onClick={() => handleEnterVoice(ele)}>
+                                                    <i className="fas fa-bullhorn"></i>&nbsp;&nbsp;
+                                                    {ele.channelName}
+                                                </button>
+                                                <div className="voice-chat-inside">
+                                                    {voiceMembers.map((ele,i) => {
+                                                        // console.log("$$$", ele)
+                                                        return (
+                                                            <div key = {i} className="voice-member">
+                                                                <img onError={({ currentTarget }) => {
+                                                                    // console.log("i am erroring", currentTarget)
+                                                                    currentTarget.onerror = null;
+                                                                    currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                                                }} alt="profile picture" src={ele.profilePicture}></img>&nbsp;&nbsp;
+                                                                {ele.username}
+                                                            </div>
+                                                        )
 
-                                                })}
+                                                    })}
+
+                                                </div>
+
 
                                             </div>
+                                        )
 
+                                    })}
+                                </div>
+                            }
 
-                                        </div>
-                                    )
-
-                                })}
-                            </div>
                         </div>
 
 
@@ -609,7 +615,7 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                             <div className="admin">
                                 <div className="admin-image">
                                     <img onError={({ currentTarget }) => {
-                                        console.log("i am erroring", currentTarget)
+                                        // console.log("i am erroring", currentTarget)
                                         currentTarget.onerror = null;
                                         currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                                     }} alt="profile picture" src={membersAndAdmin.admin.User.profilePicture}></img>
@@ -629,12 +635,12 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                                 MEMBERS
                             </div>
                             <div className="server-members-list">
-                                {membersAndAdmin.members.map(ele => {
+                                {membersAndAdmin.members.map((ele,i) => {
                                     return (
-                                        <div className="member-individual">
+                                        <div key = {i} className="member-individual">
                                             <div className="member-individual-image">
                                                 <img onError={({ currentTarget }) => {
-                                                    console.log("i am erroring", currentTarget)
+                                                    // console.log("i am erroring", currentTarget)
                                                     currentTarget.onerror = null;
                                                     currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                                                 }} alt="profile picture" src={ele.receivor.profilePicture}></img>

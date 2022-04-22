@@ -31,6 +31,7 @@ function LoginFormPage() {
 
   const handleDemoLogin = () => {
     dispatch(sessionActions.login({ credential: 'Demo-lition', password: 'password' }))
+
   }
 
   return (
@@ -43,23 +44,23 @@ function LoginFormPage() {
 
 
         <div id="github-menu">
-          <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open" />
-          <label class="menu-open-button" for="menu-open">
+          <input type="checkbox" href="#" className="menu-open" name="menu-open" id="menu-open" />
+          <label className="menu-open-button" htmlFor="menu-open">
             <div id="github" >
-              <i class="fa-brands fa-github"></i>
+              <i className="fa-brands fa-github"></i>
             </div>
           </label>
-          <a class="menu-item woo" target="blank" href="https://github.com/wooyoungkim24">Wooyoung Kim</a>
+          <a className="menu-item woo" target="blank" href="https://github.com/wooyoungkim24">Wooyoung Kim</a>
         </div>
 
         <div id="linked-in-menu">
-          <input type="checkbox" href="#" class="menu-openli" name="menu-openli" id="menu-openli" />
-          <label class="menu-open-buttonli" for="menu-openli">
+          <input type="checkbox" href="#" className="menu-openli" name="menu-openli" id="menu-openli" />
+          <label className="menu-open-buttonli" htmlFor="menu-openli">
             <div id="linked-in" >
-              <i class="fa-brands fa-linkedin"></i>
+              <i className="fa-brands fa-linkedin"></i>
             </div>
           </label>
-          <a class="menu-itemli wooli" target="blank" href="https://www.linkedin.com/in/wooyoung-kim-718618143/">Wooyoung Kim</a>
+          <a className="menu-itemli wooli" target="blank" href="https://www.linkedin.com/in/wooyoung-kim-718618143/">Wooyoung Kim</a>
 
         </div>
 

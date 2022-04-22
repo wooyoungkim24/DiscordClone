@@ -7,7 +7,7 @@ import { editTextChannel } from "../../store/server";
 
 
 function EditTextChannelModal({ channel, setShowEditModal, setMyTextChannels }) {
-    console.log('starting', channel)
+    // console.log('starting', channel)
     const dispatch = useDispatch()
 
     const [channelName, setChannelName] = useState(channel.channelName)

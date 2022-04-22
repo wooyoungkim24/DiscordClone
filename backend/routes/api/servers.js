@@ -238,7 +238,7 @@ router.delete("/delete/member", asyncHandler(async (req, res) => {
             id: id
         }
     })
-    console.log('###did you delete')
+    // console.log('###did you delete')
     return res.json(deletedMember)
 }))
 
@@ -357,12 +357,12 @@ router.get("/all/voice/members/:username/:id", asyncHandler(async (req, res) => 
     let oldMembers = voiceChannel.voiceMembers
 
     let oldIndex = oldMembers.findIndex(ele => ele.username === username)
-    console.log("###oldies before", oldMembers, oldIndex)
+    // console.log("###oldies before", oldMembers, oldIndex)
     if (oldIndex !== -1) {
         oldMembers.splice(oldIndex, 1)
     }
 
-    console.log("###oldies", oldMembers)
+    // console.log("###oldies", oldMembers)
     await voiceChannel.update({
         voiceMembers: oldMembers
     })

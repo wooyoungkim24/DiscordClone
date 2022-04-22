@@ -125,7 +125,7 @@ export const setVoices = (members) =>{
 }
 
 export const setInitialVoices = (payload) => async dispatch =>{
-    console.log("when are you running???", payload)
+    // console.log("when are you running???", payload)
     const {id, username} = payload
     const res = await csrfFetch(`/api/servers/all/voice/members/${username}/${id}`)
     const data = await res.json();
@@ -133,7 +133,7 @@ export const setInitialVoices = (payload) => async dispatch =>{
     // console.log("$$before", data)
     // data.splice(yourIndex, 1)
     // console.log("$$after", data)
-    console.log("missing data",data)
+    // console.log("missing data",data)
     dispatch(setVoices(data))
     return data
 }
@@ -147,8 +147,8 @@ export const getMembersAndAdmins = (serverId) => async dispatch =>{
     const res2 = await csrfFetch(`/api/servers/all/admins/${serverId}`)
     const admin = await res2.json()
 
-    console.log("what are the members", members)
-    console.log("what is my admin", admin)
+    // console.log("what are the members", members)
+    // console.log("what is my admin", admin)
     const payload = {
         members:members,
         admin:admin
@@ -163,7 +163,7 @@ export const getAllServerMembers = (serverId) => async dispatch =>{
     return data
 }
 export const getAllServerMembersPending = (serverId) => async dispatch => {
-    console.log("is it here")
+    // console.log("is it here")
     const res = await csrfFetch(`/api/servers/all/pending/members/${serverId}`)
     const data= await res.json();
     dispatch(setAllServerMembersPending(data))
@@ -255,7 +255,7 @@ export const setInitialMessages = (id) => async dispatch =>{
 export const getPendingServers = (id) => async dispatch =>{
     const res = await csrfFetch(`/api/servers/all/pending/${id}`)
     const data = await res.json();
-    console.log("what is my datanow", data)
+    // console.log("what is my datanow", data)
     dispatch(setPendingServers(data))
     return data
 }
@@ -278,7 +278,7 @@ export const getTextChannel = (id) => async dispatch => {
 }
 
 export const editTextChannel = (payload)=> async dispatch =>{
-    console.log('whats my payload', payload)
+    // console.log('whats my payload', payload)
     const res = await csrfFetch(`/api/servers/text`, {
         method: "PUT",
         body: JSON.stringify(payload)
@@ -391,7 +391,7 @@ const serverReducer = (state = initialState, action) => {
 
             }
         case SET_MY_TEXT:
-            console.log('what is the action', action.payload)
+            // console.log('what is the action', action.payload)
             return {
                 ...state,
                 myTextChannels:[...action.payload]
@@ -404,7 +404,7 @@ const serverReducer = (state = initialState, action) => {
                 voiceChannels:[...action.payload]
             }
         case SET_VOICES:
-            console.log('$$$down here', action.payload)
+            // console.log('$$$down here', action.payload)
             return {
                 ...state,
                 voices:[...action.payload]

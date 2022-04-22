@@ -18,7 +18,7 @@ function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextCha
 
 
     const handleNewChannelName = (e) => {
-        console.log("value", typeof e.target.value)
+        // console.log("value", typeof e.target.value)
         setNewChannelName(e.target.value)
 
     }
@@ -152,7 +152,7 @@ function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextCha
                             <div className="kick-list-individual">
                                 <div className="kick-individual-left">
                                     <img onError={({ currentTarget }) => {
-                                        console.log("i am erroring", currentTarget)
+                                        // console.log("i am erroring", currentTarget)
                                         currentTarget.onerror = null;
                                         currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                                     }} src={ele.receivor.profilePicture} alt="profile picture"></img>&nbsp;&nbsp;&nbsp;

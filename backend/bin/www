@@ -223,7 +223,7 @@ db.sequelize
         }
       });
       socket.on("dm", async (payload) => {
-        console.log('are you working ###', socket.id)
+        // console.log('are you working ###', socket.id)
         const { text, userId, otherId } = payload
         const p_user = get_Current_User(socket.id);
         const toUpdate = await DirectMessage.findOne({

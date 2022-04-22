@@ -58,7 +58,7 @@ function InvitePeopleModal({ user, server }) {
                                     <div className='individual-invite-left'>
                                         <div className='individual-friend-modal-image'>
                                             <img onError={({ currentTarget }) => {
-                                                console.log("i am erroring", currentTarget)
+                                                // console.log("i am erroring", currentTarget)
                                                 currentTarget.onerror = null;
                                                 currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                                             }} src={ele.profilePicture} alt="profile picture"></img>

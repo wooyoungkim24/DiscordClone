@@ -72,7 +72,7 @@ function DirectMessage({ user, socket }) {
         let messageHistory = data.text
         let sender = data.userId
         // future audio notif work around?
-        console.log('differences', sender, user.id)
+        // console.log('differences', sender, user.id)
         if (parseInt(sender) !== parseInt(user.id)) {
             const audio = new Audio("https://citybrbphotos.s3.amazonaws.com/Discord_notification_-_sound_effect.mp3");
             audio.play();
@@ -176,7 +176,7 @@ function DirectMessage({ user, socket }) {
                                         <div className="message">
                                             <div className="message-left">
                                                 <img onError={({ currentTarget }) => {
-                                                    console.log("i am erroring", currentTarget)
+                                                    // console.log("i am erroring", currentTarget)
                                                     currentTarget.onerror = null;
                                                     currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
                                                 }} src={i.picture} alt="profile picture"></img>
