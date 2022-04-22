@@ -43,3 +43,5 @@ Logged in users can perform the following actions.
 * Speak with other users in real time through direct message
 * Invite other users who are friends to servers that you yourself are part of
 * Add other users to be friends
+
+  ## If getting an error in the browser console concerning getUserMedia, make sure that your browser is allowing you to use a microphone
