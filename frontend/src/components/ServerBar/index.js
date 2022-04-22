@@ -9,23 +9,28 @@ import NewServerModal from "../NewServerModal";
 
 
 
-function ServerBar({inVoice, user, socket, servers , isLoaded}) {
+function ServerBar({ inVoice, user, socket, isLoaded }) {
     const dispatch = useDispatch();
     const current_location = useLocation()
     const [newServer, setNewServer] = useState(false)
     const history = useHistory();
 
-    const handleHomePush = () =>{
+    useEffect(() =>{
+        dispatch(getServers(user.id))
+    },[dispatch])
+    const handleHomePush = () => {
         history.push("/home")
     }
-
+    const servers = useSelector(state => {
+        return state.myServers.myServers
+    })
 
 
     return (
         // onClick ={history.push("/servers/me")}
-        <div  className="serverBar">
-            <button onClick ={handleHomePush} disabled ={inVoice} className="home-button">
-                <i  className="fab fa-discord"></i>
+        <div className="serverBar">
+            <button onClick={handleHomePush} disabled={inVoice} className="home-button">
+                <i className="fab fa-discord"></i>
             </button>
             <div className="server-divider">
 
@@ -33,13 +38,13 @@ function ServerBar({inVoice, user, socket, servers , isLoaded}) {
             {isLoaded &&
                 <div className="your-servers">
                     {servers.map((ele, i) => (
-                        <IndividualServerButton inVoice = {inVoice} key={i} server={ele} user={user} socket={socket} />
+                        <IndividualServerButton inVoice={inVoice} key={i} server={ele} user={user} socket={socket} />
                     ))}
                 </div>
             }
 
             <div className="new-server">
-                <button className="new-server-button" onClick = {() => setNewServer(true)} >
+                <button className="new-server-button" onClick={() => setNewServer(true)} >
                     <i className="fas fa-plus"></i>
                 </button>
 
@@ -47,7 +52,7 @@ function ServerBar({inVoice, user, socket, servers , isLoaded}) {
 
             {newServer &&
                 <Modal onClose={() => setNewServer(false)}>
-                    <NewServerModal user={user} setNewServer = {setNewServer}/>
+                    <NewServerModal user={user} setNewServer={setNewServer} />
                 </Modal>
             }
 

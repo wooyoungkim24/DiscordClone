@@ -250,7 +250,11 @@ function Home({ inVoice, user, socket }) {
                                                 <div className="dm-popout-friend-individual">
                                                     <div className="dm-popout-friend-individual-left">
                                                         <div className="dm-individual-picture">
-                                                            <img src={ele.profilePicture}></img>
+                                                            <img onError={({ currentTarget }) => {
+                                                                console.log("i am erroring", currentTarget)
+                                                                currentTarget.onerror = null;
+                                                                currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                                            }} src={ele.profilePicture} alt="profile picture"></img>
                                                         </div>
                                                         <div className="new-dm-popout-friends-name">
                                                             {ele.username}
@@ -288,7 +292,11 @@ function Home({ inVoice, user, socket }) {
                                 return (
                                     <div key={ele.id} onClick={() => handleDmPush(ele)} className={`list-element-active-dm user${ele.id} select`}>
                                         <div className="active-dm-image-container">
-                                            <img src={ele.profilePicture}></img>
+                                            <img onError={({ currentTarget }) => {
+                                                console.log("i am erroring", currentTarget)
+                                                currentTarget.onerror = null;
+                                                currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                            }} src={ele.profilePicture} alt="profile picture"></img>
                                             <div className="active-dm-online-dot">
                                                 {onlineDot(ele)}
                                             </div>
@@ -310,7 +318,11 @@ function Home({ inVoice, user, socket }) {
                                 return (
                                     <div key={ele.id} onClick={() => handleDmPush(ele)} className={`list-element-active-dm user${ele.id}`}>
                                         <div className="active-dm-image-container">
-                                            <img src={ele.profilePicture}></img>
+                                            <img onError={({ currentTarget }) => {
+                                                console.log("i am erroring", currentTarget)
+                                                currentTarget.onerror = null;
+                                                currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                            }} src={ele.profilePicture} alt="profile picture"></img>
 
                                             {onlineDot(ele)}
 
@@ -355,14 +367,22 @@ function Home({ inVoice, user, socket }) {
                                         <div className="invite-container-individual">
                                             <div className="invite-container-left">
                                                 <div className="inviter">
-                                                    <img src={ele.inviter.profilePicture}></img>
+                                                    <img onError={({ currentTarget }) => {
+                                                        console.log("i am erroring", currentTarget)
+                                                        currentTarget.onerror = null;
+                                                        currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                                    }} src={ele.inviter.profilePicture} alt="profile picture"></img>
                                                     {ele.inviter.username}
                                                 </div>
                                                 <div className="invites-you-to">
                                                     Invites you to
                                                 </div>
                                                 <div className="server-invite">
-                                                    <img src={ele.server.serverImage}></img>
+                                                    <img onError={({ currentTarget }) => {
+                                                        console.log("i am erroring", currentTarget)
+                                                        currentTarget.onerror = null;
+                                                        currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                                    }} src={ele.server.serverImage} alt="profile picture"></img>
                                                     {ele.server.serverName}
                                                 </div>
                                             </div>

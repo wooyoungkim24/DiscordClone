@@ -1,0 +1,206 @@
+.signup-page{
+    height:100vh;
+}
+.signup-page img{
+    object-fit: cover;
+    height: 100vh;
+    width: 100vw;
+    z-index:0;
+}
+.signup-container{
+    z-index:1;
+
+    border-radius:10px;
+    background-color: rgb(54,57,63);
+    width: 485px;
+    height: auto;
+
+    position: absolute;
+    bottom: calc((100vh - 500px)/4);
+    left: calc((100vw - 500px) /2);
+    padding:32px;
+    display: flex;
+    flex-direction: column;
+}
+.signup-title{
+    /* border:2px solid blue; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.signup-title-top{
+    font-family:GintoBold;
+    color:white;
+    font-size: 24px;
+    padding-top: 10px;
+    padding-bottom:10px;
+}
+.signup-title-bottom{
+    font-family:Ginto;
+    color:rgb(154,156,160);
+    padding-bottom:10px;
+}
+.signup-form{
+    display: flex;
+    flex-direction: column;
+
+}
+.signup-email-field{
+    display: flex;
+    flex-direction: column;
+    font-family: GintoBold;
+    color:rgb(154,156,160);
+    font-size:12px;
+
+}
+.signup-email-field input{
+    margin-top:10px;
+    height: 40px;
+    background-color:rgb(32,34,37);
+    font-family:Ginto;
+    color:rgb(154,156,160);
+    font-size: 14px;
+    outline:none;
+    border:none;
+    border-radius: 5px;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+.signup-username-field{
+    display: flex;
+    flex-direction: column;
+    font-family: GintoBold;
+    color:rgb(154,156,160);
+    font-size:12px;
+    margin-top: 20px;
+}
+.signup-username-field input{
+    margin-top:10px;
+    height: 40px;
+    background-color:rgb(32,34,37);
+    font-family:Ginto;
+    color:rgb(154,156,160);
+    font-size: 14px;
+    outline:none;
+    border:none;
+    border-radius: 5px;
+    padding-left:10px;
+    padding-right:10px;
+}
+.signup-picture-field{
+    display: flex;
+    flex-direction: column;
+    font-family: GintoBold;
+    color:rgb(154,156,160);
+    font-size:12px;
+    margin-top: 20px;
+}
+.signup-picture-field input{
+    margin-top:10px;
+    height: 40px;
+    background-color:rgb(32,34,37);
+    font-family:Ginto;
+    color:rgb(154,156,160);
+    font-size: 14px;
+    outline:none;
+    border:none;
+    border-radius: 5px;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+.signup-password-field{
+    display: flex;
+    flex-direction: column;
+    font-family: GintoBold;
+    color:rgb(154,156,160);
+    font-size:12px;
+    margin-top:20px;
+}
+.signup-password-field input{
+    margin-top:10px;
+    height: 40px;
+    background-color:rgb(32,34,37);
+    font-family:Ginto;
+    color:rgb(154,156,160);
+    font-size: 14px;
+    outline:none;
+    border:none;
+    border-radius: 5px;
+    padding-left:10px;
+    padding-right:10px;
+}
+.signup-confirm-field{
+    display: flex;
+    flex-direction: column;
+    font-family: GintoBold;
+    color:rgb(154,156,160);
+    font-size:12px;
+    margin-top:20px;
+}
+.signup-confirm-field input{
+    margin-top:10px;
+    height: 40px;
+    background-color:rgb(32,34,37);
+    font-family:Ginto;
+    color:rgb(154,156,160);
+    font-size: 14px;
+    outline:none;
+    border:none;
+    border-radius: 5px;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+
+/* Change the white to any color
+.login-username-field input:-webkit-autofill,
+.login-username-field input:-webkit-autofill:hover,
+.login-username-field input:-webkit-autofill:focus,
+.login-username-field input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+} */
+
+.signup-container button{
+    background-color: rgb(88,101,242);
+    margin-top: 40px;
+    height: 50px;
+    font-family: Ginto;
+    color:white;
+    font-size: 16px;
+    border:none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.signup-bottom-left a{
+    text-decoration: none;
+    color: rgb(9,155,213);
+    font-family:Ginto;
+
+}
+.signup-bottom{
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+    color:rgb(96,100,107);
+    font-family: Ginto;
+    font-size: 12px;
+    justify-content: space-between;
+    align-items: center;
+}
+.signup-bottom-left{
+    display: flex;
+    flex-direction: row;
+}
+.signup-bottom-right button{
+    margin:0px;
+    height:40px;
+    cursor: pointer;
+}
+.error-list{
+    list-style-type: none;
+    padding:0px;
+    font-family:Ginto;
+    color:white;
+}

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import * as sessionActions from '../../store/session';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect, useHistory, Link } from 'react-router-dom';
 import io from "socket.io-client";
-
+import "./index.css"
 
 function LoginFormPage() {
   const dispatch = useDispatch();
-  const history  = useHistory();
+  const history = useHistory();
   const sessionUser = useSelector(state => state.session.user);
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
@@ -29,31 +29,71 @@ function LoginFormPage() {
       });
   }
 
+  const handleDemoLogin = () =>{
+    dispatch(sessionActions.login({ credential: 'Demo-lition', password: 'password' }))
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
-      <ul>
-        {errors.map((error, idx) => <li key={idx}>{error}</li>)}
-      </ul>
-      <label>
-        Username or Email
-        <input
-          type="text"
-          value={credential}
-          onChange={(e) => setCredential(e.target.value)}
-          required
-        />
-      </label>
-      <label>
-        Password
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </label>
-      <button type="submit">Log In</button>
-    </form>
+    <div className='login-page'>
+      <img src="https://theme.zdassets.com/theme_assets/678183/b7e9dce75f9edb23504e13b4699e208f204e5015.png"></img>
+      <div className='login-container'>
+        <div className='login-title'>
+          <div className='login-title-top'>
+            Welcome back!
+          </div>
+          <div className='login-title-bottom'>
+            We're so excited to see you again!
+          </div>
+        </div>
+        <div className='login-form' >
+          <ul className='error-list'>
+            {errors.map((error, idx) => <li key={idx}>{error}</li>)}
+          </ul>
+          <div className='login-username-field'>
+
+            USERNAME OR EMAIL
+
+            <input
+              type="text"
+              value={credential}
+              onChange={(e) => setCredential(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className='login-password-field'>
+
+            PASSWORD
+
+
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+
+          <button type="button" onClick={handleSubmit}>Login</button>
+        </div>
+        <div className='login-bottom'>
+          <div className='login-bottom-left'>
+            Need an account? &nbsp;
+            <div className='signup-login-link'>
+              <Link to="/signup">Register</Link>
+            </div>
+          </div>
+          <div className='login-bottom-right'>
+            <button type='button' onClick={handleDemoLogin}>
+              Demo User
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
   );
 }
 

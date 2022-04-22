@@ -35,16 +35,19 @@ function EditTextChannelModal({ channel, setShowEditModal, setMyTextChannels }) 
                 Change channel name
             </div>
             <div className="edit-text-modal-input">
-                <input
-                    type="text"
-                    required
-                    value={channelName}
-                    onChange={handleChannelName}
-                >
-                </input>
+                <form id="edit-text-form" onSubmit={handleEditSubmit}>
+                    <input
+                        type="text"
+                        required
+                        value={channelName}
+                        onChange={handleChannelName}
+                    >
+                    </input>
+                </form>
+
             </div>
             <div className="edit-text-button">
-                <button type="button" onClick={handleEditSubmit}>
+                <button type="submit" form='edit-text-form' >
                     Submit Change
                 </button>
             </div>

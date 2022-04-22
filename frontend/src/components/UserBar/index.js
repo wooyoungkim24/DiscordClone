@@ -72,6 +72,7 @@ function UserBar({ serverId, voiceId, voiceMembers, setVoiceMembers, user, socke
         // })
     }
 
+
     return (
         <div className="user-bar-include-voice">
             {inVoice &&
@@ -85,7 +86,11 @@ function UserBar({ serverId, voiceId, voiceMembers, setVoiceMembers, user, socke
 
             <div className="user-bar-container">
                 <div className="user-bar-image">
-                    <img src={user.profilePicture}></img>
+                    <img onError={({currentTarget}) => {
+                        console.log("i am erroring", currentTarget)
+                        currentTarget.onerror = null;
+                        currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                    }} src={user.profilePicture} alt="profile picture"></img>
                     <div>
                         {onlineDot(user)}
                     </div>

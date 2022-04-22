@@ -1,7 +1,7 @@
 .edit-server-modal-container{
     background-color: white;
     width: 400px;
-    height:300px;
+    height:auto;
     display: flex;
     flex-direction: column;
     border-radius: 10px;
@@ -74,3 +74,11 @@
     border: none;
     outline: none;
   }
+.change-server-error{
+    font-family: Ginto;
+    padding-left:20px;
+}
+.change-server-name-error{
+    font-family: Ginto;
+    padding-left:20px;
+}

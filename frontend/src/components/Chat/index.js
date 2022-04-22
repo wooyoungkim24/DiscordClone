@@ -78,6 +78,7 @@ function Chat({ socket, user, roomName, textId }) {
         }
     }
 
+
     useEffect(scrollToBottom,
         [messages]);
     // console.log("#######", roomName)
@@ -96,7 +97,11 @@ function Chat({ socket, user, roomName, textId }) {
                             return (
                                 <div className="text">
                                     <div className="text-left">
-                                        <img src={i.picture}></img>
+                                        <img onError={({ currentTarget }) => {
+                                            console.log("i am erroring", currentTarget)
+                                            currentTarget.onerror = null;
+                                            currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                        }} src={i.picture} alt="profile picture"></img>
                                     </div>
 
                                     <div className="text-right">

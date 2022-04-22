@@ -170,6 +170,15 @@ function FriendsList({ user, friends, socket }) {
         dispatch(rejectFriend(payload))
         dispatch(getMyFriends(user.id))
     }
+    function handleBrokenImg(el) {
+
+        /*
+        Perhaps show different broken image icons depending on various conditions
+        Or add some style to it.. a border, background color, whatever..
+      */
+        el.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+    }
+
     return (
         <div className="friends-list-container">
 
@@ -202,7 +211,11 @@ function FriendsList({ user, friends, socket }) {
                                     <div className="friends-list-individual">
                                         <div className="friends-list-individual-left">
                                             <div className="friend-list-image-container">
-                                                <img src={ele.profilePicture}></img>
+                                                <img onError={({ currentTarget }) => {
+                                                    console.log("i am erroring", currentTarget)
+                                                    currentTarget.onerror = null;
+                                                    currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                                }} src={ele.profilePicture} alt="profile picture"></img>
                                                 {onlineDot(ele)}
                                             </div>
 
@@ -238,7 +251,11 @@ function FriendsList({ user, friends, socket }) {
                                 <div className="friends-list-individual">
                                     <div className="friends-list-individual-left">
                                         <div className="friend-list-image-container">
-                                            <img src={ele.profilePicture}></img>
+                                            <img onError={({ currentTarget }) => {
+                                                console.log("i am erroring", currentTarget)
+                                                currentTarget.onerror = null;
+                                                currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                            }} src={ele.profilePicture} alt="profile picture"></img>
                                             {onlineDot(ele)}
                                         </div>
 
@@ -265,7 +282,11 @@ function FriendsList({ user, friends, socket }) {
                         return (
                             <div className="pending-friends-individual">
                                 <div className="pending-friends-left">
-                                    <img src={ele.added.profilePicture}></img>
+                                    <img onError={({ currentTarget }) => {
+                                        console.log("i am erroring", currentTarget)
+                                        currentTarget.onerror = null;
+                                        currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                    }} src={ele.added.profilePicture} alt="profile picture"></img>
 
                                     <div className="pending-friend-text">
                                         {ele.added.username} wants to be friends
@@ -300,14 +321,18 @@ function FriendsList({ user, friends, socket }) {
                         return (
                             <div className="other-users-div">
                                 <div className="other-users-div-left">
-                                    <img src={ele.profilePicture}></img>
+                                    <img onError={({ currentTarget }) => {
+                                        console.log("i am erroring", currentTarget)
+                                        currentTarget.onerror = null;
+                                        currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                    }} src={ele.profilePicture} alt="profile picture"></img>
                                     <div className="other-users-name">
                                         {ele.username}
                                     </div>
                                 </div>
 
                                 {!pending &&
-                                    <button type="button" className = 'add-friend-button' onClick={() => handleAddFriendSubmit(ele)}>
+                                    <button type="button" className='add-friend-button' onClick={() => handleAddFriendSubmit(ele)}>
                                         Add User
                                     </button>
                                 }

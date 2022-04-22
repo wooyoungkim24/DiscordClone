@@ -142,6 +142,16 @@ function DirectMessage({ user, socket }) {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
     }
 
+
+    function handleBrokenImg(el) {
+
+        /*
+        Perhaps show different broken image icons depending on various conditions
+        Or add some style to it.. a border, background color, whatever..
+      */
+        el.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+    }
+
     useEffect(() => {
         scrollToBottom()
     }, [dmHistory]);
@@ -165,7 +175,11 @@ function DirectMessage({ user, socket }) {
                                     return (
                                         <div className="message">
                                             <div className="message-left">
-                                                <img src={i.picture}></img>
+                                                <img onError={({ currentTarget }) => {
+                                                    console.log("i am erroring", currentTarget)
+                                                    currentTarget.onerror = null;
+                                                    currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                                }} src={i.picture} alt="profile picture"></img>
                                             </div>
                                             <div className="message-right">
                                                 <div className="message-right-top">

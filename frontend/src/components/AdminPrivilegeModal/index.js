@@ -14,11 +14,13 @@ function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextCha
     const [showEditModal, setShowEditModal] = useState(false)
     const [showNewTextModal, setShowNewTextModal] = useState(false)
     const [currChannelIndex, setCurrChannelIndex] = useState(0)
-    const [newChannelName, setNewChannelName] = useState("")
+    const [newChannelName, setNewChannelName] = useState()
 
 
     const handleNewChannelName = (e) => {
+        console.log("value", typeof e.target.value)
         setNewChannelName(e.target.value)
+
     }
     const notAdminMembers = useSelector(state => {
         return state.myServers.nonAdminServerMembers
@@ -66,6 +68,7 @@ function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextCha
     }
 
     const handleNewTextSubmit = () => {
+
         const payload = {
             channelName: newChannelName,
             serverId: server.id
@@ -87,6 +90,14 @@ function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextCha
             // window.alert("That's your last channel, can't delete that!");
             alert("That's your last channel, can't delete that!");
         }
+    }
+    function handleBrokenImg(el) {
+
+        /*
+        Perhaps show different broken image icons depending on various conditions
+        Or add some style to it.. a border, background color, whatever..
+      */
+        el.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
     }
     return (
         <div className="admin-privileges-container">
@@ -114,16 +125,19 @@ function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextCha
                         Give your new text channel a name!
                     </div>
                     <div className="create-text-modal-input">
-                        <input
-                            type="text"
-                            required
-                            value={newChannelName}
-                            onChange={handleNewChannelName}
-                        >
-                        </input>
+                        <form id='new-text-form' onSubmit={handleNewTextSubmit}>
+                            <input
+                                type="text"
+                                required
+                                value={newChannelName}
+                                onChange={handleNewChannelName}
+                            >
+                            </input>
+                        </form>
+
                     </div>
                     <div className="create-text-button">
-                        <button type="button" onClick={handleNewTextSubmit}>
+                        <button type="submit" form="new-text-form" >
                             Create
                         </button>
                     </div>
@@ -137,7 +151,11 @@ function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextCha
                         return (
                             <div className="kick-list-individual">
                                 <div className="kick-individual-left">
-                                    <img src={ele.receivor.profilePicture}></img>&nbsp;&nbsp;&nbsp;
+                                    <img onError={({ currentTarget }) => {
+                                        console.log("i am erroring", currentTarget)
+                                        currentTarget.onerror = null;
+                                        currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                    }} src={ele.receivor.profilePicture} alt="profile picture"></img>&nbsp;&nbsp;&nbsp;
                                     {ele.receivor.username}
                                 </div>
 

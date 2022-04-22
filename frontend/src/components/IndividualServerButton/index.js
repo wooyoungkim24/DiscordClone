@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, Switch , useHistory} from "react-router-dom";
+import { Route, Switch, useHistory } from "react-router-dom";
 import { getServers, getTextChannels, getAllVoiceChannels } from "../../store/server";
 
 import "./index.css"
 
 
 
-function IndividualServerButton({ inVoice, server,user , socket}) {
+function IndividualServerButton({ inVoice, server, user, socket }) {
     const dispatch = useDispatch();
     const [isLoaded, setIsLoaded] = useState(false);
     const [showHover, setShowHover] = useState(false)
@@ -22,7 +22,7 @@ function IndividualServerButton({ inVoice, server,user , socket}) {
     //     socket.emit("joinRoom", {username, roomId})
 
     // }
-    const handleServerClick = (e) =>{
+    const handleServerClick = (e) => {
         // sendData()
 
         dispatch(getAllVoiceChannels(server.id))
@@ -30,7 +30,7 @@ function IndividualServerButton({ inVoice, server,user , socket}) {
 
     }
 
-    const textChannels = useSelector(state =>{
+    const textChannels = useSelector(state => {
         return state.myServers.textChannels
     })
 
@@ -66,14 +66,18 @@ function IndividualServerButton({ inVoice, server,user , socket}) {
         // console.log(e.target)
         setShowHover(false)
     }
-    useEffect(() =>{
+    useEffect(() => {
         dispatch(getTextChannels(server.id))
     }, [dispatch])
 
     return (
         <div className="single-server-container">
-            <button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}  onClick={handleServerClick}  disabled = {inVoice} className='single-your-server' >
-                <img className='single-server-image' src={server.serverImage}></img>
+            <button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleServerClick} disabled={inVoice} className='single-your-server' >
+                <img onError={({ currentTarget }) => {
+                    console.log("i am erroring", currentTarget)
+                    currentTarget.onerror = null;
+                    currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                }} className='single-server-image' alt="profile picture" src={server.serverImage}></img>
             </button>
             {showHover &&
                 <div className="hover-bubble">

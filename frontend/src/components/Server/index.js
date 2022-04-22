@@ -10,12 +10,16 @@ import UserBar from "../UserBar";
 import EditServerModal from "../EditServerModal";
 import AdminPrivilegeModal from "../AdminPrivilegeModal";
 
-function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madiaRecorder, socket, servers, user, isFirstLoaded }) {
+function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madiaRecorder, socket, user, isFirstLoaded }) {
     const { id, textId } = useParams();
     // console.log('are you hitting here?', servers)
     const dispatch = useDispatch();
 
     const history = useHistory();
+    const servers = useSelector(state => {
+        return state.myServers.myServers
+    })
+
     let serverIds = [];
     servers.forEach(ele => {
         serverIds.push(ele.id)
@@ -139,40 +143,43 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
         return (() => {
             let time = 700
 
-            if (madiaRecorder.state !== "inactive" && inVoice) {
-                console.log("this is 2###")
-                stream.getTracks().forEach(track => track.stop());
-                madiaRecorder.stop()
-                // madiaRecorder.removeEventListener("dataavailable", function (event) {
-                //     audioChunks.push(event.data);
-                // });
-                // madiaRecorder.removeEventListener("stop", function () {
-                //     var audioBlob = new Blob(audioChunks);
+            if (madiaRecorder) {
+                if (madiaRecorder.state !== "inactive" && inVoice) {
+                    console.log("this is 2###")
+                    stream.getTracks().forEach(track => track.stop());
+                    madiaRecorder.stop()
+                    // madiaRecorder.removeEventListener("dataavailable", function (event) {
+                    //     audioChunks.push(event.data);
+                    // });
+                    // madiaRecorder.removeEventListener("stop", function () {
+                    //     var audioBlob = new Blob(audioChunks);
 
-                //     audioChunks = [];
+                    //     audioChunks = [];
 
-                //     var fileReader = new FileReader();
-                //     fileReader.readAsDataURL(audioBlob);
-                //     fileReader.onloadend = function () {
-
-
-                //         var base64String = fileReader.result;
-                //         socket.emit("voice", base64String);
-
-                //     };
-
-                //     madiaRecorder.start();
+                    //     var fileReader = new FileReader();
+                    //     fileReader.readAsDataURL(audioBlob);
+                    //     fileReader.onloadend = function () {
 
 
-                //     setTimeout(function () {
-                //         madiaRecorder.stop();
-                //     }, time);
-                // });
-                navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-                    setStream(stream)
-                    setMadiaRecorder(new MediaRecorder(stream))
-                })
+                    //         var base64String = fileReader.result;
+                    //         socket.emit("voice", base64String);
+
+                    //     };
+
+                    //     madiaRecorder.start();
+
+
+                    //     setTimeout(function () {
+                    //         madiaRecorder.stop();
+                    //     }, time);
+                    // });
+                    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+                        setStream(stream)
+                        setMadiaRecorder(new MediaRecorder(stream))
+                    })
+                }
             }
+
 
         })
 
@@ -200,6 +207,7 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
             // servers.forEach(ele =>{
             //     dispatch(getAllVoiceChannels(ele.id))
             // })
+            dispatch(getServers(user.id))
 
 
             dispatch(getTextChannels(id))
@@ -484,9 +492,9 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                     <div className="server-nav">
 
                         <div className="server-dropdown-button"
-                            // tabIndex="0"
-                            // ref={serverDropRef}
-                            // onFocus={() => setShowServerDropDown(true)}
+                        // tabIndex="0"
+                        // ref={serverDropRef}
+                        // onFocus={() => setShowServerDropDown(true)}
                         >
                             <button type="button" onClick={handleServerDropDown}>
                                 <div className="server-name">
@@ -551,7 +559,11 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                                                     // console.log("$$$", ele)
                                                     return (
                                                         <div className="voice-member">
-                                                            <img src={ele.profilePicture}></img>&nbsp;&nbsp;
+                                                            <img onError={({ currentTarget }) => {
+                                                                console.log("i am erroring", currentTarget)
+                                                                currentTarget.onerror = null;
+                                                                currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                                            }} alt="profile picture" src={ele.profilePicture}></img>&nbsp;&nbsp;
                                                             {ele.username}
                                                         </div>
                                                     )
@@ -587,7 +599,11 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                             </div>
                             <div className="admin">
                                 <div className="admin-image">
-                                    <img src={membersAndAdmin.admin.User.profilePicture}></img>
+                                    <img onError={({ currentTarget }) => {
+                                        console.log("i am erroring", currentTarget)
+                                        currentTarget.onerror = null;
+                                        currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                    }} alt="profile picture" src={membersAndAdmin.admin.User.profilePicture}></img>
                                     <div className="admin-online-dot">
                                         {onlineDot(membersAndAdmin.admin.User)}
                                     </div>
@@ -608,7 +624,11 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                                     return (
                                         <div className="member-individual">
                                             <div className="member-individual-image">
-                                                <img src={ele.receivor.profilePicture}></img>
+                                                <img onError={({ currentTarget }) => {
+                                                    console.log("i am erroring", currentTarget)
+                                                    currentTarget.onerror = null;
+                                                    currentTarget.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+                                                }} alt="profile picture" src={ele.receivor.profilePicture}></img>
                                                 <div className="member-online-dot">
                                                     {onlineDot(ele.receivor)}
                                                 </div>

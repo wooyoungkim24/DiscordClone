@@ -129,10 +129,10 @@ function App() {
 
       }
 
-      {isLoaded && user && yourServers.length &&
+      {isLoaded && user &&
 
         <div className="app-holder">
-          <ServerBar inVoice={inVoice} isLoaded={isLoaded} user={user} socket={socket} servers={yourServers} />
+          <ServerBar inVoice={inVoice} isLoaded={isLoaded} user={user} socket={socket}  />
 
           <Switch>
             <Route exact path="/">
@@ -140,7 +140,7 @@ function App() {
             </Route>
 
             <Route exact path="/servers/:id/:textId">
-              <Server inVoice={inVoice} setInVoice={setInVoice} key={current_location} setStream={setStream} setMadiaRecorder={setMadiaRecorder} stream={stream} madiaRecorder={madiaRecorder} isFirstLoaded={isLoaded} socket={socket} servers={yourServers} user={user} />
+              <Server inVoice={inVoice} setInVoice={setInVoice} key={current_location} setStream={setStream} setMadiaRecorder={setMadiaRecorder} stream={stream} madiaRecorder={madiaRecorder} isFirstLoaded={isLoaded} socket={socket} user={user} />
             </Route>
 
 
