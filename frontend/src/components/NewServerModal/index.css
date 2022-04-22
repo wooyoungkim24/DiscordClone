@@ -1,6 +1,6 @@
 .new-server-modal-container{
     width: 450px;
-    height:350px;
+    height:auto;
     background-color: white;
     border-radius:10px;
     display: flex;
@@ -116,4 +116,14 @@
     border:none;
     outline:none;
     cursor: pointer;
+}
+.add-server-error{
+    font-family: Ginto;
+    font-size:14px;
+    margin-bottom:10px;
+}
+.add-server-name-error{
+    font-family: Ginto;
+    font-size:14px;
+    margin-bottom:10px;
 }

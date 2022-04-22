@@ -223,7 +223,7 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                 })
         }
 
-    }, [textId, id, isFirstLoaded])
+    }, [id, isFirstLoaded])
 
 
     useEffect(() => {
@@ -482,6 +482,15 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
 
     //     })
     // }, [showServerDropDown])
+
+    const handleRoomName = () =>{
+        if(myTextChannels[textIndex]){
+            return myTextChannels[textIndex].channelName
+        }else{
+            return myTextChannels[0].channelName
+        }
+
+    }
     return (
 
         <>
@@ -520,7 +529,7 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                                     if (ele.id === parseInt(textId)) {
                                         if (textIndex !== i) {
                                             setTextIndex(i)
-
+                                            console.log('what is the index', textIndex)
                                         }
                                         return (
                                             <div key={i} className="selected-text-channel">
@@ -589,7 +598,7 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                         </div>
                     </div>
 
-                    <Chat socket={socket} user={user} key={parseInt(textId)} textId={textId} roomName={myTextChannels[textIndex].channelName} />
+                    <Chat socket={socket} user={user} key={parseInt(textId)} textId={textId} roomName={handleRoomName()} />
 
 
                     <div className="server-members">

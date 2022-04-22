@@ -8,7 +8,8 @@ function NewServerModal({ user, setNewServer }) {
     const dispatch = useDispatch()
     const [photoURL, setPhotoURL] = useState("")
     const [serverName, setServerName] = useState("")
-
+    const [imageError, setImageError] = useState(false)
+    const [emptyName, setEmptyName] = useState(false)
     const updatePhotoURL = (e) => {
         setPhotoURL(e.target.value)
     }
@@ -18,13 +19,31 @@ function NewServerModal({ user, setNewServer }) {
 
 
     const handleNewServerSubmit = () => {
-        const payload = {
-            serverImage: photoURL,
-            serverName,
-            userId: user.id
+        const regex = /\.(jpg|jpeg|png|webp|avif|gif|svg)$/;
+        if (regex.test(photoURL) && serverName) {
+            const payload = {
+                serverImage: photoURL,
+                serverName,
+                userId: user.id
+            }
+            dispatch(createNewServer(payload))
+            setNewServer(false)
         }
-        dispatch(createNewServer(payload))
-        setNewServer(false)
+        if(!regex.test(photoURL) && serverName){
+            setEmptyName(false)
+            setImageError(true)
+        }
+        if(regex.test(photoURL) && !serverName){
+            setEmptyName(true)
+            setImageError(false)
+        }
+        if(!regex.test(photoURL)){
+            setImageError(true)
+        }
+        if(!serverName){
+            setEmptyName(true)
+        }
+
 
     }
 
@@ -39,6 +58,16 @@ function NewServerModal({ user, setNewServer }) {
                 </div>
             </div>
             <div className="new-server-photo-upload">
+                {imageError &&
+                    <div className="add-server-error">
+                        Image not valid.
+                    </div>
+                }
+                {emptyName &&
+                    <div className="add-server-name-error">
+                        Please give your server a name.
+                    </div>
+                }
                 SERVER PHOTO URL
                 <div className="new-server-photo-upload-input">
                     <input
@@ -67,7 +96,7 @@ function NewServerModal({ user, setNewServer }) {
 
             </div>
             <div className="new-server-buttons">
-                <button type="button"  onClick={() => setNewServer(false)} id="new-server-back-button">
+                <button type="button" onClick={() => setNewServer(false)} id="new-server-back-button">
                     Back
                 </button>
                 <button type="button" onClick={handleNewServerSubmit} id="new-server-create-button">

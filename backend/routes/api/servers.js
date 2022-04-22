@@ -156,6 +156,10 @@ router.post("/", asyncHandler(async (req, res) => {
         channelName: "General",
         serverId: newServerId
     })
+    const newVoiceChannel = await VoiceChannel.create({
+        channelName: "VoiceChat1",
+        serverId: newServerId
+    })
     // console.log("###what is the memebr object", findNewMember.Server)
     return res.json(findNewAdmin.Server)
 }))

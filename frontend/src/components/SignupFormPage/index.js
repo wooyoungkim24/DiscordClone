@@ -20,7 +20,7 @@ function SignupFormPage() {
     e.preventDefault();
     if (password === confirmPassword) {
       setErrors([]);
-      return dispatch(sessionActions.signup({ email, username, password, profilePicture:picture }))
+      return dispatch(sessionActions.signup({ email, username, password, profilePicture: picture }))
         .catch(async (res) => {
           const data = await res.json();
           if (data && data.errors) setErrors(data.errors);
@@ -36,7 +36,33 @@ function SignupFormPage() {
 
     <div className='signup-page'>
       <img src="https://theme.zdassets.com/theme_assets/678183/b7e9dce75f9edb23504e13b4699e208f204e5015.png"></img>
+
+
+
       <div className='signup-container'>
+
+        <div id="github-menu">
+          <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open" />
+          <label class="menu-open-button" for="menu-open">
+            <div id="github" >
+              <i class="fa-brands fa-github"></i>
+            </div>
+          </label>
+          <a class="menu-item woo" target="blank" href="https://github.com/wooyoungkim24">Wooyoung Kim</a>
+        </div>
+
+        <div id="linked-in-menu">
+          <input type="checkbox" href="#" class="menu-openli" name="menu-openli" id="menu-openli" />
+          <label class="menu-open-buttonli" for="menu-openli">
+            <div id="linked-in" >
+              <i class="fa-brands fa-linkedin"></i>
+            </div>
+          </label>
+          <a class="menu-itemli wooli" target="blank" href="https://www.linkedin.com/in/wooyoung-kim-718618143/">Wooyoung Kim</a>
+
+        </div>
+
+
         <div className='signup-title'>
           <div className='signup-title-top'>
             Create an account
