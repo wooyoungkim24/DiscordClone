@@ -65,9 +65,10 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
 
 
     useEffect(() => {
-        if (inVoice) {
+        if (inVoice && madiaRecorder) {
             // console.log("this is 0###")
             let time = 700;
+
             madiaRecorder.start();
 
             var audioChunks = [];
