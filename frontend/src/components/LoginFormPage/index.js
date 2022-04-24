@@ -67,9 +67,12 @@ function LoginFormPage() {
 
         <div className='login-title'>
           <div className='login-title-top'>
-            Welcome back!
+            Welcome back to Discord-Me!
           </div>
           <div className='login-title-bottom'>
+            <div className='login-title-bottom-top'>
+              My clone of Discord!
+            </div>
             We're so excited to see you again!
           </div>
         </div>
