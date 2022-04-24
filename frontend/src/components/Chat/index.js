@@ -97,10 +97,10 @@ function Chat({ socket, user, roomName, textId }) {
                 {messages &&
 
                     <>
-                        {messages.map((i) => {
+                        {messages.map((i, index) => {
                             // if (i.username === user.username) {
                             return (
-                                <div className="text">
+                                <div key = {index} className="text">
                                     <div className="text-left">
                                         <img onError={({ currentTarget }) => {
                                             // console.log("i am erroring", currentTarget)

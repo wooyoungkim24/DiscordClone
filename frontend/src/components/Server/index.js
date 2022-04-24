@@ -558,13 +558,14 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                                 })}
                             </div>
 
-                            {navigator.mediaDevices &&
+                            {navigator.mediaDevices && madiaRecorder &&
                                 <div className="server-voice-channels">
                                     {voiceChannels.map((ele, i) => {
+
                                         return (
                                             <div key = {i} className="voice-channel-individual">
 
-                                                <button className="voice-channel-button" disabled={inVoice} onClick={() => handleEnterVoice(ele)}>
+                                                <button className="voice-channel-button" disabled={inVoice || !navigator.mediaDevices} onClick={() => handleEnterVoice(ele)}>
                                                     <i className="fas fa-bullhorn"></i>&nbsp;&nbsp;
                                                     {ele.channelName}
                                                 </button>

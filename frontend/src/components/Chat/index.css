@@ -126,6 +126,10 @@
     display: flex;
     align-items: center;
     width: 70px;
+
+}
+.text-right .text-right-top .more-than-24{
+    width: 130px;
 }
 
 .text-right-bottom {
