@@ -1,4 +1,16 @@
-# DiscordClone
+# Discord-Me
+This is my Discord Clone, where you can connect with other users through shared interests inside servers, and communicate with other users through text channels and direct messaging (as well as a prototype voice chat for each server) ! [Discord-Me](https://discord-me.herokuapp.com/)
+
+### Login
+![image](https://user-images.githubusercontent.com/90213352/164995421-fa620b29-348b-4472-bed3-e431dc9d8a66.png)
+
+### Home Page
+![image](https://user-images.githubusercontent.com/90213352/164995456-3390a478-174a-4305-9455-549da66fbb9c.png)
+
+### Server Page
+![image](https://user-images.githubusercontent.com/90213352/164995482-3483137c-4831-4a14-847c-4fbe5bf2c8b3.png)
+
+
 1. Clone repo
      * git clone git@github.com:wooyoungkim24/DiscordClone.git
 2. Install dependencies 
@@ -44,4 +56,7 @@ Logged in users can perform the following actions.
 * Invite other users who are friends to servers that you yourself are part of
 * Add other users to be friends
 
-  ## If getting an error in the browser console concerning getUserMedia, make sure that your browser is allowing you to use a microphone
+### Future Ideas
+* To implement roles and more admin capabilties
+* To improve voice chat funcitonality, as well as allowing users to create their own 
+* Searching for Users instead of looking through one drop down with all users when adding friends
