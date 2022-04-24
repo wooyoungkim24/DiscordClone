@@ -84,7 +84,7 @@ const removeUser = () => {
 
 
 export const userNowOnline = (id) => async dispatch =>{
-    console.log("is it here breaking")
+    // console.log("is it here breaking")
     const res = await csrfFetch(`/api/users/user/online`, {
         method:"PUT",
         body:JSON.stringify({id})
@@ -101,7 +101,7 @@ export const getDMsTemp =(id) => async dispatch =>{
 }
 
 export const getDMs = (id) => async dispatch =>{
-    console.log('wher are you running')
+
     const res = await csrfFetch(`/api/users/active/messages/${id}`)
     const data= await res.json()
     dispatch(setMyMessages(data))

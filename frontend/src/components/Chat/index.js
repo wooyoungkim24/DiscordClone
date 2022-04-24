@@ -20,12 +20,12 @@ function Chat({ socket, user, roomName, textId }) {
     })
 
     const messageDispatch = (data) => {
-        console.log("whats wrong here", textId, data.textId)
+        // console.log("whats wrong here", textId, data.textId)
         if (parseInt(textId) === parseInt(data.textId)) {
             let messageHistory = data.text
 
 
-            console.log('how many times does this hit', messageHistory)
+            // console.log('how many times does this hit', messageHistory)
 
             dispatch(setMessages(messageHistory))
         }

@@ -106,7 +106,7 @@ function App() {
   useEffect(() => {
 
     if (isLoaded && user) {
-      console.log("are you running")
+      // console.log("are you running")
       socket.emit("online", { username: user.username, userId: user.id })
     }
   }, [isLoaded])
