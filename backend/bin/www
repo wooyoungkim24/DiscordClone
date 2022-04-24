@@ -187,7 +187,7 @@ db.sequelize
       //user sending message
       socket.on("chat", async (payload) => {
         //gets the room user and the message sent
-        const { text, textId } = payload
+        const { text, textId, userId } = payload
         const p_user = get_Current_User(socket.id);
 
         let toUpdate = await TextChannel.findByPk(parseInt(textId))
@@ -204,7 +204,7 @@ db.sequelize
           const updated = await toUpdate.update(newBody)
           io.to(p_user.room).emit("message", {
 
-
+            userId: userId,
             text: updated.messageHistory
           });
         } else {
@@ -217,7 +217,7 @@ db.sequelize
           const updated = await toUpdate.update(newBody)
           io.to(p_user.room).emit("message", {
 
-
+            userId: userId,
             text: updated
           });
         }

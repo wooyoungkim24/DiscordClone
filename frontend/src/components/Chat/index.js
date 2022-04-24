@@ -20,12 +20,12 @@ function Chat({ socket, user, roomName, textId }) {
     })
 
     const messageDispatch = (data) => {
+        // console.log("whats wrong here", textId, data.userId)
+        if (parseInt(textId) === parseInt(data.userId)) {
+            let messageHistory = data.text
 
-        if (textId === data.text.id) {
-            let messageHistory = data.text.messageHistory
 
-
-            // console.log('how many times does this hit')
+            // console.log('how many times does this hit', messageHistory)
 
             dispatch(setMessages(messageHistory))
         }
@@ -50,6 +50,7 @@ function Chat({ socket, user, roomName, textId }) {
         if (text !== "") {
             //encrypt here
             const payload = {
+                userId:user.id,
                 text,
                 textId
             }
