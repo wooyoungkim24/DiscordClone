@@ -13,15 +13,16 @@ import { getServers } from "../../frontend/src/store/server";
 import Home from "./components/Home";
 import { userNowOnline, getDMs } from "./store/session";
 
-
-
-const socket = io.connect('/', {
+let socket = io.connect('/', {
   'reconnection': true,
   'reconnectionDelay': 500,
   'reconnectionAttempts': Infinity
 });
 
 function App() {
+
+
+
   // socket.on('error', function(){
   //   console.log("attempting to reconnect$$$")
   //   socket.socket.reconnect();
@@ -75,8 +76,16 @@ function App() {
       dispatch(userNowOnline(user.id))
       // .then(() => dispatch(getDMs(user.id)))
       dispatch(getDMs(user.id))
+      if (!socket.connected && socket.disconnected) {
 
+        socket = io.connect('/', {
+          'reconnection': true,
+          'reconnectionDelay': 500,
+          'reconnectionAttempts': Infinity
+        });
+      }
     }
+
     //   console.log('why everything sucks ^^^^^^^^')
     //     // console.log("i am not online you better be running", data.userId, user.id)
     //   socket.on("loggedOn", (data) => {
@@ -101,7 +110,7 @@ function App() {
     // }
 
 
-  }, [socket,user])
+  }, [socket, user])
 
   useEffect(() => {
 
@@ -109,7 +118,7 @@ function App() {
       // console.log("are you running")
       socket.emit("online", { username: user.username, userId: user.id })
     }
-  }, [isLoaded])
+  }, [isLoaded, user])
 
 
 

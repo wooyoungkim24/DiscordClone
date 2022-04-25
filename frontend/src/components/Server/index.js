@@ -369,7 +369,7 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
 
         if (!inVoice) {
             setVoiceId(ele.id)
-            // console.log("sugma",ele.id)
+            console.log("what happening", socket)
             socket.emit("joinVoice", { username: user.username, voiceRoomId: `voice${ele.id}` })
             // let ids = [];
             // servers.forEach(ele => {

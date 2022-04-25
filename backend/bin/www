@@ -116,7 +116,7 @@ db.sequelize
 
 
       socket.on("getVoicesPre", async ({ voiceId, username, picture,serverId}) => {
-
+        console.log("###sugma")
         const allChannels = await VoiceChannel.findAll()
         let oldChannelId;
         allChannels.forEach(ele => {
