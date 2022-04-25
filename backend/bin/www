@@ -183,6 +183,27 @@ db.sequelize
         newData = newData[0] + newData[1];
         socket.broadcast.to(p_user.voiceRoom).emit("send", newData);
       });
+      socket.on("deletedText", (payload)=>{
+        const {id} = payload;
+
+        io.emit("deletedTextResponse", {
+          serverId: id
+        })
+      } )
+      socket.on("deletedDM", (payload)=>{
+        const {id} = payload;
+
+        io.emit("deletedDMResponse", {
+          userId: id
+        })
+      } )
+      socket.on("deletedServer", (payload)=>{
+        const {serverId} = payload;
+
+        io.emit("deletedServerResponse", {
+          serverId: serverId
+        })
+      } )
 
       //user sending message
       socket.on("chat", async (payload) => {

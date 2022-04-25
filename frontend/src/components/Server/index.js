@@ -272,6 +272,13 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
 
     }
 
+    const handleDeletedServerResponse = (data)=>{
+        const {serverId} = data;
+        if(parseInt(serverId) ===  parseInt(id)){
+            window.location.reload();
+        }
+    }
+
     useEffect(() => {
         socket.on("updateVoices", settingVoiceMembers);
         socket.on("send", function (data) {
@@ -279,7 +286,14 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
             var audio = new Audio(data);
             audio.play();
         });
-
+        socket.on("deletedTextResponse", function(data){
+            const {serverId} = data;
+            console.log("are you here", id, serverId)
+            if(serverId === id){
+                window.location.reload();
+            }
+        })
+        socket.on("deletedServerResponse", handleDeletedServerResponse);
         // socket.on("send", (data)=> console.log('is you coming here',data))
 
         return () => {
@@ -289,6 +303,13 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
                 var audio = new Audio(data);
                 audio.play();
             });
+            socket.off("deletedTextResponse", function(data){
+                const {textChannelId} = data;
+                if(textChannelId === textId){
+                    window.location.reload();
+                }
+            })
+            socket.off("deletedServerResponse", handleDeletedServerResponse);
         }
     }, [socket, id])
 
@@ -347,7 +368,9 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
 
     const handleDeleteServer = () => {
         dispatch(deleteServer(myServer.id))
+        socket.emit('deletedServer', {serverId: id})
         history.push("/");
+
     }
 
     const handleLeaveServer = () => {
@@ -412,7 +435,7 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
 
                     {showAdminPrivilege &&
                         <Modal onClose={() => setShowAdminPrivilege(false)}>
-                            <AdminPrivilegeModal setMyTextChannels={setMyTextChannels} server={myServer} user={user} setShowAdminPrivilege={setShowAdminPrivilege} />
+                            <AdminPrivilegeModal id = {id} socket={socket} setMyTextChannels={setMyTextChannels} server={myServer} user={user} setShowAdminPrivilege={setShowAdminPrivilege} />
                         </Modal>
                     }
                     <div className="leave-server-admin">
@@ -446,35 +469,35 @@ function Server({ inVoice, setInVoice, setStream, setMadiaRecorder, stream, madi
 
 
 
-    const handleOutsideDropClick = (e) => {
-        const ignore = document.querySelector(".server-drop-down-member")
-        const ignore2 = document.querySelector(".server-drop-down-admin")
-        const ignore3 = document.querySelector(".admin-privileges-container")
-        const ignore4 = document.querySelector(".edit-server-modal-container")
-        const ignore5 = document.querySelector(".edit-text-modal-container")
+    // const handleOutsideDropClick = (e) => {
+    //     const ignore = document.querySelector(".server-drop-down-member")
+    //     const ignore2 = document.querySelector(".server-drop-down-admin")
+    //     const ignore3 = document.querySelector(".admin-privileges-container")
+    //     const ignore4 = document.querySelector(".edit-server-modal-container")
+    //     const ignore5 = document.querySelector(".edit-text-modal-container")
 
-        let target = e.target
-        // console.log("oogobooka &&&&&&&&&&&")
-        if (document.activeElement === serverDropRef.current) {
-            return
-        } else if (ignore && (target === ignore || ignore.contains(target))) {
-            return
-        } else if (ignore2 && (target === ignore2 || ignore2.contains(target))) {
-            return
-        } else if (ignore3 && (target === ignore3 || ignore3.contains(target))) {
-            return
-        } else if (ignore4 && (target === ignore4 || ignore4.contains(target))) {
-            return
-        } else if (ignore5 && (target === ignore5 || ignore5.contains(target))) {
-            // console.log('are you here yet 777')
-            return
-        }
+    //     let target = e.target
+    //     // console.log("oogobooka &&&&&&&&&&&")
+    //     if (document.activeElement === serverDropRef.current) {
+    //         return
+    //     } else if (ignore && (target === ignore || ignore.contains(target))) {
+    //         return
+    //     } else if (ignore2 && (target === ignore2 || ignore2.contains(target))) {
+    //         return
+    //     } else if (ignore3 && (target === ignore3 || ignore3.contains(target))) {
+    //         return
+    //     } else if (ignore4 && (target === ignore4 || ignore4.contains(target))) {
+    //         return
+    //     } else if (ignore5 && (target === ignore5 || ignore5.contains(target))) {
+    //         // console.log('are you here yet 777')
+    //         return
+    //     }
 
-        else {
-            setShowServerDropDown(false)
+    //     else {
+    //         setShowServerDropDown(false)
 
-        }
-    }
+    //     }
+    // }
 
     // useEffect(() => {
     //     if (showServerDropDown) {

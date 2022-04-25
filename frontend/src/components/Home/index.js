@@ -48,11 +48,20 @@ function Home({ inVoice, user, socket }) {
 
     }
 
+    const handleDeletedDMResponse =(data) =>{
+        const {userId} = data
+        if(parseInt(userId) === parseInt(user.id)){
+            window.location.reload();
+        }
+    }
+
     useEffect(() => {
         socket.on("youGotAdded", handleYouGotAdded)
+        socket.on("deletedDMResponse", handleDeletedDMResponse)
 
         return () => {
             socket.off("youGotAdded", handleYouGotAdded)
+            socket.off("deletedDMResponse", handleDeletedDMResponse)
 
         }
     }, [socket])
@@ -194,7 +203,8 @@ function Home({ inVoice, user, socket }) {
         // console.log("where are you gettin stuck")
 
         dispatch(deleteDM(payload))
-        window.location.reload();
+        socket.emit("deletedDM", {id: id} )
+
 
     }
 

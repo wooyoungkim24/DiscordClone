@@ -6,8 +6,9 @@ import { getAllNotAdminMembers, getTextChannel, kickServer, deleteTextChannel, g
 import EditTextChannelModal from "../EditTextChannelModal";
 import CreateNewTextModal from "../CreateNewTextModal";
 import "./index.css"
+import { Socket } from "socket.io-client";
 
-function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextChannels }) {
+function AdminPrivilegeModal({ id, socket, server, user, setShowAdminPrivilege, setMyTextChannels }) {
     const dispatch = useDispatch()
     const [showKick, setShowKick] = useState(false)
     const [showEditText, setShowEditText] = useState(false)
@@ -86,19 +87,23 @@ function AdminPrivilegeModal({ server, user, setShowAdminPrivilege, setMyTextCha
             }
             dispatch(deleteTextChannel(payload))
                 .then((returnData) => setMyTextChannels([...returnData]))
+                // .then(()=> window.location.reload())
+
+            socket.emit("deletedText", {id: id} )
+
         } else {
             // window.alert("That's your last channel, can't delete that!");
             alert("That's your last channel, can't delete that!");
         }
     }
-    function handleBrokenImg(el) {
+    // function handleBrokenImg(el) {
 
-        /*
-        Perhaps show different broken image icons depending on various conditions
-        Or add some style to it.. a border, background color, whatever..
-      */
-        el.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
-    }
+    //     /*
+    //     Perhaps show different broken image icons depending on various conditions
+    //     Or add some style to it.. a border, background color, whatever..
+    //   */
+    //     el.src = 'https://awik.io/wp-content/uploads/2018/12/broken-img.png';
+    // }
     return (
         <div className="admin-privileges-container">
             <div className="admin-top">
