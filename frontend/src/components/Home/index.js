@@ -204,7 +204,7 @@ function Home({ inVoice, user, socket }) {
 
         dispatch(deleteDM(payload))
         socket.emit("deletedDM", {id: id} )
-
+        window.location.reload()
 
     }
 
